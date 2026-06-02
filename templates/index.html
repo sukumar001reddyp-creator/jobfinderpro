@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Finder Pro</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
+body{background:linear-gradient(135deg,#eef2ff,#f8fafc)}
+.header{
+background:linear-gradient(135deg,#0f172a,#1d4ed8,#7c3aed);
+color:#fff;text-align:center;padding:70px 20px
+}
+.header h1{font-size:52px}
+.header p{margin-top:10px;font-size:18px;opacity:.9}
+.search{
+max-width:1100px;margin:-30px auto 20px;background:#fff;
+padding:20px;border-radius:20px;display:flex;gap:10px;
+box-shadow:0 15px 35px rgba(0,0,0,.12)
+}
+.search input{flex:1;padding:14px;border:1px solid #ddd;border-radius:12px}
+.search button{padding:14px 24px;border:none;background:#2563eb;color:#fff;border-radius:12px;cursor:pointer}
+.wrap{max-width:1100px;margin:auto;display:flex;gap:20px;padding:10px}
+.sidebar{
+width:280px;background:#fff;padding:20px;border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.08)
+}
+.role{
+padding:14px;margin:10px 0;border-radius:12px;
+background:linear-gradient(135deg,#dbeafe,#eef2ff);
+cursor:pointer;font-weight:600
+}
+.role:hover{transform:translateX(5px)}
+.content{flex:1}
+.card{
+background:#fff;padding:20px;border-radius:20px;
+margin-bottom:15px;box-shadow:0 10px 25px rgba(0,0,0,.08)
+}
+.card a{color:#2563eb;font-weight:bold;text-decoration:none}
+.footer{text-align:center;padding:30px;color:#666}
+@media(max-width:768px){
+.wrap{flex-direction:column}
+.sidebar{width:100%}
+.search{flex-direction:column}
+.header h1{font-size:36px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>Job Finder Pro</h1>
+<p>Search Jobs Across LinkedIn, Naukri, Indeed, Foundit & Freshersworld</p>
+</div>
+
+<div class="search">
+<input id="job" placeholder="Job Role">
+<input id="location" placeholder="Location">
+<button onclick="searchJobs()">Search</button>
+</div>
+
+<div class="wrap">
+<div class="sidebar">
+<h3>Popular Roles</h3>
+<div class="role" onclick="fillRole('Graphic Designer')">🎨 Graphic Designer</div>
+<div class="role" onclick="fillRole('Video Editor')">🎬 Video Editor</div>
+<div class="role" onclick="fillRole('Python Developer')">🐍 Python Developer</div>
+<div class="role" onclick="fillRole('Data Entry')">📊 Data Entry</div>
+<div class="role" onclick="fillRole('UI/UX Designer')">🎯 UI/UX Designer</div>
+</div>
+
+<div class="content" id="results">
+<div class="card">
+<h3>🚀 Featured Job Sites</h3>
+<p>Click a role or search manually to generate job links.</p>
+</div>
+</div>
+</div>
+
+<div class="footer">© 2026 Job Finder Pro</div>
+
+<script>
+function fillRole(role){
+ document.getElementById('job').value=role;
+ searchJobs();
+}
+
+function searchJobs(){
+ let job=document.getElementById('job').value;
+ let location=document.getElementById('location').value;
+
+ document.getElementById('results').innerHTML=`
+ <div class="card"><h3>💼 LinkedIn Jobs</h3><p>${job} - ${location}</p>
+ <a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(job)}">Open LinkedIn Jobs</a></div>
+
+ <div class="card"><h3>💼 Naukri Jobs</h3><p>${job} - ${location}</p>
+ <a target="_blank" href="https://www.naukri.com/jobs-in-india?keyword=${encodeURIComponent(job)}/">Open Naukri</a></div>
+
+ <div class="card"><h3>💼 Indeed Jobs</h3><p>${job} - ${location}</p>
+ <a target="_blank" href="https://in.indeed.com/jobs?q=${encodeURIComponent(job)}">Open Indeed</a></div>
+
+ <div class="card"><h3>💼 Foundit Jobs</h3><p>${job} - ${location}</p>
+ <a target="_blank" href="https://www.foundit.in/srp/results?query=${encodeURIComponent(job)}/">Open Foundit</a></div>
+
+ `;
+}
+</script>
+
+</body>
+</html>
