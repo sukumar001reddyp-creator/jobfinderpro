@@ -115,6 +115,8 @@ def dashboard():
     if "user" not in session:
         return redirect("/login")
 
+    return f"Logged in as: {session['user']}"
+
     conn = sqlite3.connect("users.db")
     cursor = conn.cursor()
 
