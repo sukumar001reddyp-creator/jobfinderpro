@@ -4,6 +4,7 @@ import sqlite3
 app = Flask(__name__)
 app.secret_key = "jobfinder_secret"
 
+# Create database
 conn = sqlite3.connect("users.db")
 cursor = conn.cursor()
 
@@ -35,8 +36,9 @@ def register():
 
         name = request.form["name"]
         email = request.form["email"]
-        password = request.form["password"]
-        confirm_password = request.form["confirm_password"]
+
+        password = request.form.get("password", "").strip()
+        confirm_password = request.form.get("confirm_password", "").strip()
 
         if password != confirm_password:
             return "Passwords do not match"
@@ -50,9 +52,21 @@ def register():
 
         try:
             cursor.execute(
-                "INSERT INTO users (name,email,password,jobrole,location,experience) VALUES (?,?,?,?,?,?)",
-                (name, email, password, jobrole, location, experience)
+                """
+                INSERT INTO users
+                (name,email,password,jobrole,location,experience)
+                VALUES (?,?,?,?,?,?)
+                """,
+                (
+                    name,
+                    email,
+                    password,
+                    jobrole,
+                    location,
+                    experience
+                )
             )
+
             conn.commit()
 
         except:
@@ -60,6 +74,7 @@ def register():
             return "Email already exists"
 
         conn.close()
+
         return redirect("/login")
 
     return render_template("register.html")
@@ -87,11 +102,32 @@ def login():
 
         if user:
             session["user"] = email
-            return redirect("/")
-        else:
-            return "Invalid Login"
+            return redirect("/dashboard")
+
+        return "Invalid Login"
 
     return render_template("login.html")
+
+
+@app.route("/dashboard")
+def dashboard():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT name,email,jobrole,location,experience FROM users WHERE email=?",
+        (session["user"],)
+    )
+
+    user = cursor.fetchone()
+
+    conn.close()
+
+    return render_template("dashboard.html", user=user)
 
 
 @app.route("/logout")
