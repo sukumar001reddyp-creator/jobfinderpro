@@ -8,13 +8,14 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
 body{background:linear-gradient(135deg,#eef2ff,#f8fafc)}
 .header{
+position:relative;
 background:linear-gradient(135deg,#0f172a,#1d4ed8,#7c3aed);
 color:#fff;text-align:center;padding:70px 20px
 }
 .header h1{font-size:52px}
 .header p{margin-top:10px;font-size:18px;opacity:.9}
 .search{
-max-width:1100px;margin:-30px auto 20px;background:#fff;
+max-width:1100px;margin:20px auto 20px;background:#fff;
 padding:20px;border-radius:20px;display:flex;gap:10px;
 box-shadow:0 15px 35px rgba(0,0,0,.12)
 }
@@ -49,8 +50,41 @@ margin-bottom:15px;box-shadow:0 10px 25px rgba(0,0,0,.08)
 <body>
 
 <div class="header">
+
+<div style="position:absolute;top:20px;right:20px;">
+
+<a href="/login"
+style="
+background:white;
+color:#2563eb;
+padding:10px 20px;
+border-radius:10px;
+text-decoration:none;
+margin-right:10px;
+font-weight:bold;">
+Login
+</a>
+
+<a href="/register"
+style="
+background:#22c55e;
+color:white;
+padding:10px 20px;
+border-radius:10px;
+text-decoration:none;
+font-weight:bold;">
+Register
+</a>
+
+</div>
+
 <h1>Job Finder Pro</h1>
-<p>Search Jobs Across LinkedIn, Naukri, Indeed, Foundit & Freshersworld</p>
+
+<p>
+Search Jobs Across LinkedIn, Naukri, Indeed,
+Foundit & Freshersworld
+</p>
+
 </div>
 
 <div class="search">
