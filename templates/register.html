@@ -67,9 +67,39 @@ button:hover{
     text-align:center;
     margin-top:15px;
 }
+
+#msg{
+    margin-top:8px;
+    font-weight:bold;
+}
 </style>
 
 </head>
+<script>
+function checkPassword() {
+
+    let password =
+    document.querySelector('input[name="password"]').value;
+
+    let confirm =
+    document.getElementById("confirm_password").value;
+
+    let msg = document.getElementById("msg");
+
+    if(confirm.length === 0){
+        msg.innerHTML = "";
+        return;
+    }
+
+    if(password === confirm){
+        msg.innerHTML = "✅ Passwords match";
+        msg.style.color = "green";
+    } else {
+        msg.innerHTML = "❌ Passwords do not match";
+        msg.style.color = "red";
+    }
+}
+</script>
 
 <body>
 
@@ -100,8 +130,14 @@ required>
 <input
 type="password"
 name="confirm_password"
+id="confirm_password"
 placeholder="Confirm Password"
+onkeyup="checkPassword()"
 required>
+
+<p id="msg" style="font-weight:bold;margin-top:8px;"></p>
+
+<p id="msg"></p>
 
 <input
 type="text"
@@ -139,6 +175,37 @@ Already have an account?
 </a>
 
 </div>
+
+<script>
+function checkPassword() {
+
+    let password =
+    document.querySelector('input[name="password"]').value;
+
+    let confirm =
+    document.getElementById("confirm_password").value;
+
+    let msg = document.getElementById("msg");
+
+    if(confirm.length === 0){
+        msg.innerHTML = "";
+        return;
+    }
+
+    if(confirm.length < password.length){
+        msg.innerHTML = "";
+        return;
+    }
+
+    if(password === confirm){
+        msg.innerHTML = "✅ Passwords match";
+        msg.style.color = "green";
+    } else {
+        msg.innerHTML = "❌ Passwords do not match";
+        msg.style.color = "red";
+    }
+}
+</script>
 
 </body>
 </html>
