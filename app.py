@@ -4,24 +4,29 @@ import sqlite3
 app = Flask(__name__)
 app.secret_key = "jobfinder_secret"
 
-# Create database
-conn = sqlite3.connect("users.db")
-cursor = conn.cursor()
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    email TEXT UNIQUE,
-    password TEXT,
-    jobrole TEXT,
-    location TEXT,
-    experience TEXT
-)
-""")
+# Create Database
+def init_db():
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
 
-conn.commit()
-conn.close()
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        email TEXT UNIQUE,
+        password TEXT,
+        jobrole TEXT,
+        location TEXT,
+        experience TEXT
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
+
+init_db()
 
 
 @app.route("/")
@@ -37,8 +42,8 @@ def register():
         name = request.form["name"]
         email = request.form["email"]
 
-        password = request.form.get("password", "").strip()
-        confirm_password = request.form.get("confirm_password", "").strip()
+        password = request.form["password"]
+        confirm_password = request.form["confirm_password"]
 
         if password != confirm_password:
             return "Passwords do not match"
@@ -69,7 +74,7 @@ def register():
 
             conn.commit()
 
-        except:
+        except sqlite3.IntegrityError:
             conn.close()
             return "Email already exists"
 
@@ -92,7 +97,11 @@ def login():
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT * FROM users WHERE email=? AND password=?",
+            """
+            SELECT *
+            FROM users
+            WHERE email=? AND password=?
+            """,
             (email, password)
         )
 
@@ -118,18 +127,24 @@ def dashboard():
     conn = sqlite3.connect("users.db")
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM users")
+    cursor.execute(
+        """
+        SELECT name,email,jobrole,location,experience
+        FROM users
+        WHERE email=?
+        """,
+        (session["user"],)
+    )
 
-    users = cursor.fetchall()
+    user = cursor.fetchone()
 
     conn.close()
 
-    return str(users)
-
-    if user is None:
-        return "User not found in database"
+    if not user:
+        return "User not found"
 
     return render_template("dashboard.html", user=user)
+
 
 @app.route("/logout")
 def logout():
@@ -138,4 +153,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
