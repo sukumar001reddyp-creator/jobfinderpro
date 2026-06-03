@@ -115,19 +115,16 @@ def dashboard():
     if "user" not in session:
         return redirect("/login")
 
-    return f"Logged in as: {session['user']}"
-
     conn = sqlite3.connect("users.db")
     cursor = conn.cursor()
 
-    cursor.execute(
-        "SELECT name,email,jobrole,location,experience FROM users WHERE email=?",
-        (session["user"],)
-    )
+    cursor.execute("SELECT * FROM users")
 
-    user = cursor.fetchone()
+    users = cursor.fetchall()
 
     conn.close()
+
+    return str(users)
 
     if user is None:
         return "User not found in database"
