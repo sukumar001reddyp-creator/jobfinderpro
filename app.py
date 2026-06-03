@@ -127,8 +127,10 @@ def dashboard():
 
     conn.close()
 
-    return render_template("dashboard.html", user=user)
+    if user is None:
+        return "User not found in database"
 
+    return render_template("dashboard.html", user=user)
 
 @app.route("/logout")
 def logout():
