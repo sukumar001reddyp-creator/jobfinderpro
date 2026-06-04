@@ -1,144 +1,328 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Job Finder Pro</title>
+<title>JobFinder Pro</title>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
-body{background:linear-gradient(135deg,#eef2ff,#f8fafc)}
+
+    .website-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f4f7fb;
+}
+
 .header{
-position:relative;
-background:linear-gradient(135deg,#0f172a,#1d4ed8,#7c3aed);
-color:#fff;text-align:center;padding:70px 20px
+    background:linear-gradient(135deg,#0f172a,#1d4ed8,#7c3aed);
+    color:white;
+    text-align:center;
+    padding:60px 20px;
 }
-.header h1{font-size:52px}
-.header p{margin-top:10px;font-size:18px;opacity:.9}
-.search{
-max-width:1100px;margin:20px auto 20px;background:#fff;
-padding:20px;border-radius:20px;display:flex;gap:10px;
-box-shadow:0 15px 35px rgba(0,0,0,.12)
+
+.header h1{
+    margin:0;
+    font-size:45px;
 }
-.search input{flex:1;padding:14px;border:1px solid #ddd;border-radius:12px}
-.search button{padding:14px 24px;border:none;background:#2563eb;color:#fff;border-radius:12px;cursor:pointer}
-.wrap{max-width:1100px;margin:auto;display:flex;gap:20px;padding:10px}
-.sidebar{
-width:280px;background:#fff;padding:20px;border-radius:20px;
-box-shadow:0 10px 25px rgba(0,0,0,.08)
+
+.header p{
+    font-size:18px;
 }
-.role{
-padding:14px;margin:10px 0;border-radius:12px;
-background:linear-gradient(135deg,#dbeafe,#eef2ff);
-cursor:pointer;font-weight:600
+
+.search-box{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+    max-width:1100px;
+    margin:30px auto;
 }
-.role:hover{transform:translateX(5px)}
-.content{flex:1}
+
+.search-box input,
+.search-box select{
+    width:220px;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+}
+
+.search-box button{
+    padding:14px 25px;
+    border:none;
+    border-radius:10px;
+    background:#22c55e;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.search-box button:hover{
+    background:#16a34a;
+}
+
+.auth{
+    margin-top:25px;
+}
+
+.auth a{
+    text-decoration:none;
+    color:white;
+    margin:0 10px;
+    padding:12px 20px;
+    border:1px solid white;
+    border-radius:8px;
+}
+
+.container{
+    max-width:1200px;
+    margin:40px auto;
+    padding:20px;
+}
+
+.main-sections{
+    display:grid;
+    grid-template-columns:25% 75%;
+    gap:25px;
+    align-items:start;
+}
+.website-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:20px;
+}
+
+.left-section,
+.right-section{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.role-card{
+    background:white;
+    padding:18px;
+    border-radius:12px;
+    box-shadow:0 5px 20px rgba(0,0,0,.1);
+    text-decoration:none;
+    color:black;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.role-card:hover{
+    transform:translateY(-3px);
+}
+
 .card{
-background:#fff;padding:20px;border-radius:20px;
-margin-bottom:15px;box-shadow:0 10px 25px rgba(0,0,0,.08)
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.1);
+    text-align:center;
 }
-.card a{color:#2563eb;font-weight:bold;text-decoration:none}
-.footer{text-align:center;padding:30px;color:#666}
-@media(max-width:768px){
-.wrap{flex-direction:column}
-.sidebar{width:100%}
-.search{flex-direction:column}
-.header h1{font-size:36px}
+
+.card a{
+    display:inline-block;
+    margin-top:10px;
+    text-decoration:none;
+    background:#2563eb;
+    color:white;
+    padding:10px 18px;
+    border-radius:8px;
 }
+
+.features{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+    margin-top:40px;
+}
+
+.feature{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 5px 20px rgba(0,0,0,.1);
+}
+
+.footer{
+    text-align:center;
+    padding:30px;
+    color:#666;
+}
+
+@media(max-width:900px){
+
+.main-sections{
+    grid-template-columns:1fr;
+}
+
+.search-box input,
+.search-box select{
+    width:100%;
+}
+
+}
+
 </style>
 </head>
+
 <body>
 
 <div class="header">
 
-<div style="position:absolute;top:20px;right:20px;">
+<h1>🚀 JobFinder Pro</h1>
 
-<a href="/login"
-style="
-background:white;
-color:#2563eb;
-padding:10px 20px;
-border-radius:10px;
-text-decoration:none;
-margin-right:10px;
-font-weight:bold;">
-Login
+<p>Find Your Dream Job Faster</p>
+
+<form class="search-box" action="/search">
+
+<input
+type="text"
+name="role"
+placeholder="Job Role"
+required>
+
+<input
+type="text"
+name="location"
+placeholder="Location">
+
+<select name="experience">
+<option value="">Experience</option>
+<option>Fresher</option>
+<option>1-3 Years</option>
+<option>3-5 Years</option>
+<option>5+ Years</option>
+</select>
+
+<button type="submit">
+🔍 Search Jobs
+</button>
+
+</form>
+
+<div class="auth">
+<a href="/login">Login</a>
+<a href="/register">Register</a>
+</div>
+
+</div>
+
+<div class="container">
+
+<div class="main-sections">
+
+<div class="left-section">
+
+<h2>🔥 Popular Job Roles</h2>
+
+<a class="role-card" href="/search?role=Graphic+Designer&location=Hyderabad&experience=Fresher">
+🎨 Graphic Designer
 </a>
 
-<a href="/register"
-style="
-background:#22c55e;
-color:white;
-padding:10px 20px;
-border-radius:10px;
-text-decoration:none;
-font-weight:bold;">
-Register
+<a class="role-card" href="/search?role=Python+Developer&location=Hyderabad&experience=Fresher">
+💻 Python Developer
+</a>
+
+<a class="role-card" href="/search?role=Frontend+Developer&location=Hyderabad&experience=Fresher">
+📱 Frontend Developer
+</a>
+
+<a class="role-card" href="/search?role=Data+Analyst&location=Hyderabad&experience=Fresher">
+📊 Data Analyst
+</a>
+
+<a class="role-card" href="/search?role=Digital+Marketing&location=Hyderabad&experience=Fresher">
+📢 Digital Marketing
+</a>
+
+<a class="role-card" href="/search?role=Video+Editor&location=Hyderabad&experience=Fresher">
+🎬 Video Editor
 </a>
 
 </div>
 
-<h1>Job Finder Pro</h1>
+<div class="right-section">
 
-<p>
-Search Jobs Across LinkedIn, Naukri, Indeed,
-Foundit & Freshersworld
-</p>
 
-</div>
+<div class="right-section">
 
-<div class="search">
-<input id="job" placeholder="Job Role">
-<input id="location" placeholder="Location">
-<button onclick="searchJobs()">Search</button>
-</div>
+<h2>💼 Top Job Websites</h2>
 
-<div class="wrap">
-<div class="sidebar">
-<h3>Popular Roles</h3>
-<div class="role" onclick="fillRole('Graphic Designer')">🎨 Graphic Designer</div>
-<div class="role" onclick="fillRole('Video Editor')">🎬 Video Editor</div>
-<div class="role" onclick="fillRole('Python Developer')">🐍 Python Developer</div>
-<div class="role" onclick="fillRole('Data Entry')">📊 Data Entry</div>
-<div class="role" onclick="fillRole('UI/UX Designer')">🎯 UI/UX Designer</div>
-</div>
+<div class="website-grid">
 
-<div class="content" id="results">
 <div class="card">
-<h3>🚀 Featured Job Sites</h3>
-<p>Click a role or search manually to generate job links.</p>
-</div>
-</div>
+<h3>LinkedIn Jobs</h3>
+<a href="https://www.linkedin.com/jobs/" target="_blank">Open</a>
 </div>
 
-<div class="footer">© 2026 Job Finder Pro</div>
+<div class="card">
+<h3>Naukri</h3>
+<a href="https://www.naukri.com" target="_blank">Open</a>
+</div>
 
-<script>
-function fillRole(role){
- document.getElementById('job').value=role;
- searchJobs();
-}
+<div class="card">
+<h3>Indeed</h3>
+<a href="https://in.indeed.com" target="_blank">Open</a>
+</div>
 
-function searchJobs(){
- let job=document.getElementById('job').value;
- let location=document.getElementById('location').value;
+<div class="card">
+<h3>Foundit</h3>
+<a href="https://www.foundit.in" target="_blank">Open</a>
+</div>
 
- document.getElementById('results').innerHTML=`
- <div class="card"><h3>💼 LinkedIn Jobs</h3><p>${job} - ${location}</p>
- <a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(job)}">Open LinkedIn Jobs</a></div>
+<div class="card">
+<h3>Freshersworld</h3>
+<a href="https://www.freshersworld.com" target="_blank">Open</a>
+</div>
 
- <div class="card"><h3>💼 Naukri Jobs</h3><p>${job} - ${location}</p>
- <a target="_blank" href="https://www.naukri.com/jobs-in-india?keyword=${encodeURIComponent(job)}/">Open Naukri</a></div>
+<div class="card">
+<h3>Shine</h3>
+<a href="https://www.shine.com" target="_blank">Open</a>
+</div>
 
- <div class="card"><h3>💼 Indeed Jobs</h3><p>${job} - ${location}</p>
- <a target="_blank" href="https://in.indeed.com/jobs?q=${encodeURIComponent(job)}">Open Indeed</a></div>
+</div>
 
- <div class="card"><h3>💼 Foundit Jobs</h3><p>${job} - ${location}</p>
- <a target="_blank" href="https://www.foundit.in/srp/results?query=${encodeURIComponent(job)}/">Open Foundit</a></div>
+</div>
 
- `;
-}
-</script>
+</div>
+
+<h2 style="text-align:center;margin-top:50px;">
+⭐ Why Choose JobFinder Pro?
+</h2>
+
+<div class="features">
+
+<div class="feature">
+<h3>⚡ Fast Search</h3>
+<p>Find jobs in seconds.</p>
+</div>
+
+<div class="feature">
+<h3>🌍 Multiple Portals</h3>
+<p>Search across top job websites.</p>
+</div>
+
+<div class="feature">
+<h3>🎯 Better Opportunities</h3>
+<p>Discover more relevant jobs.</p>
+</div>
+
+</div>
+
+</div>
+
+<div class="footer">
+© 2026 JobFinder Pro | All Rights Reserved
+</div>
 
 </body>
 </html>
