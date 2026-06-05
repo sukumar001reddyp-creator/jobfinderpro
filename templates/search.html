@@ -7,19 +7,26 @@
 
 body{
     font-family:Arial,sans-serif;
-    background:#f4f7fb;
+    background:#0f172a;
+    color:white;
     margin:0;
-    padding:20px;
+    padding:30px;
 }
 
 .hero{
-    background:linear-gradient(135deg,#1d4ed8,#7c3aed);
+    background:linear-gradient(
+    135deg,
+    #1e3a8a,
+    #7c3aed
+    );
     color:white;
-    padding:40px;
-    border-radius:15px;
+    padding:30px;
+    border-radius:20px;
     text-align:center;
     margin-bottom:30px;
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
 }
+
 
 .cards{
     display:grid;
@@ -28,31 +35,40 @@ body{
 }
 
 .card{
-    background:white;
+    background:#1e293b;
     padding:25px;
-    border-radius:15px;
+    border-radius:18px;
     text-align:center;
-    box-shadow:0 5px 20px rgba(0,0,0,.1);
+    border:1px solid #334155;
+    box-shadow:0 10px 25px rgba(0,0,0,.3);
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
 }
 
 .card a{
     display:inline-block;
-    margin-top:10px;
-    background:#2563eb;
+    margin-top:15px;
+    background:linear-gradient(
+    135deg,
+    #2563eb,
+    #7c3aed
+    );
     color:white;
-    padding:10px 18px;
+    padding:12px 22px;
     text-decoration:none;
-    border-radius:8px;
+    border-radius:10px;
 }
-
 .back{
     display:inline-block;
     margin-top:30px;
     text-decoration:none;
-    background:#6b7280;
+    background:#334155;
     color:white;
-    padding:12px 20px;
-    border-radius:8px;
+    padding:12px 22px;
+    border-radius:10px;
 }
 
 </style>
@@ -62,16 +78,16 @@ body{
 
 <div class="hero">
 
-<h1>🔍 Job Search Results</h1>
+<h1>🚀 JobFinder Pro</h1>
 
-<h2>{{ role }}</h2>
+<h2>{{ role if role else "All Jobs" }}</h2>
 
 <p>
-📍 {{ location }}
+📍 {{ location if location else "All Locations" }}
 </p>
 
 <p>
-💼 {{ experience }}
+💼 {{ experience if experience else "Any Experience" }}
 </p>
 
 </div>
@@ -88,6 +104,7 @@ View Jobs
 </a>
 
 </div>
+
 
 <div class="card">
 <h3>💼 Naukri</h3>
