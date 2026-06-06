@@ -97,7 +97,7 @@ body{
 <p>Professional jobs and networking</p>
 
 <a target="_blank"
-href="https://www.linkedin.com/jobs/search/?keywords={{ role }}">
+href="https://www.linkedin.com/jobs/search/?keywords={{ role }}&location={{ location }}">
 View Jobs
 </a>
 
@@ -109,7 +109,7 @@ View Jobs
 <p>India's largest job portal</p>
 
 <a target="_blank"
-href=https://www.naukri.com/jobs?k={{ role }}>
+href="https://www.naukri.com/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}">
 View Jobs
 </a>
 
@@ -120,7 +120,7 @@ View Jobs
 <p>Millions of jobs worldwide</p>
 
 <a target="_blank"
-href="https://in.indeed.com/jobs?q={{ role }}&l={{ location }}">
+href="https://in.indeed.com/jobs?q={{ role }}+{{ location }}">
 View Jobs
 </a>
 
@@ -131,7 +131,7 @@ View Jobs
 <p>Find jobs by skills</p>
 
 <a target="_blank"
-href=https://www.foundit.in/srp/results?query={{ role }}>
+href="https://www.foundit.in/srp/results?query={{ role }}&locations={{ location }}">
 View Jobs
 </a>
 
@@ -141,7 +141,7 @@ View Jobs
 <h3>💼 Shine</h3>
 
 <a target="_blank"
-href=https://www.shine.com/job-search/{{ role }}-jobs>
+href="https://www.shine.com/job-search/{{ role }}-jobs-in-{{ location }}">
 View Jobs
 </a>
 
