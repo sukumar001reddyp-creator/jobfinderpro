@@ -18,7 +18,7 @@
     --slate: #475569;
     --light-slate: #94a3b8;
     --bg-body: #f5f8ff;
-    --bg-gateway-card: #e0f2fe; /* Matching permanent light blue color */
+    --bg-gateway-card: #e0f2fe; 
     --bg-gateway-hover: #bae6fd;
     --border: #e2e8f0;
     --radius-lg: 16px;
@@ -174,7 +174,7 @@ body{
     word-break: break-all;
 }
 
-/* Back and Logout Actions System */
+/* Dashboard Nav Controls System */
 .profile-actions {
     display: flex;
     flex-direction: column;
@@ -266,7 +266,7 @@ body{
 
 .card:hover {
     border-color: var(--primary);
-    background: var(--primary); /* Turns deep solid blue smoothly on hover */
+    background: var(--primary); 
     transform: translateY(-3px);
     box-shadow: 0 12px 24px rgba(37, 99, 235, 0.15);
 }
@@ -369,56 +369,60 @@ body{
             <!-- Dashboard Nav Controls System -->
             <div class="profile-actions">
                 <a href="/" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
-                <!-- EXACT ORIGINAL LOGOUT DIRECTION PATH PRESERVED -->
                 <a href="/logout" class="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout Session</a>
             </div>
         </div>
 
-        <!-- Right Active Automation Streams Grid (All 6 Sites Included) -->
+        <!-- Right Active Automation Streams Grid (Fixed Location Parameter passing inside query strings) -->
         <div class="right-section">
             <h3 class="section-title"><i class="fa-solid fa-bolt"></i> Pre-Configured Live Gateways</h3>
             
             <div class="cards">
 
-                <!-- EXACT ORIGINAL EXTERNAL BOARD TARGET PATH LINKS UNTOUCHED -->
+                <!-- LinkedIn with keywords and location parameters included -->
                 <div class="card">
                     <h3><i class="fa-brands fa-linkedin" style="color: #0077b5;"></i> LinkedIn</h3>
-                    <a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords={{ user[2] }}">
+                    <a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords={{ user[2] }}&location={{ user[3] }}">
                         Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
                     </a>
                 </div>
 
+                <!-- Naukri with structured role-in-location query string formatting -->
                 <div class="card">
                     <h3><i class="fa-solid fa-circle-notch" style="color: #ff6f00;"></i> Naukri</h3>
-                    <a target="_blank" href="https://www.naukri.com/jobs-in-india?keyword={{ user[2] }}">
+                    <a target="_blank" href="https://www.naukri.com/{{ user[2]|replace(' ','-') }}-jobs-in-{{ user[3]|replace(' ','-') }}">
                         Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
                     </a>
                 </div>
 
+                <!-- Indeed with role + location unified parameter context -->
                 <div class="card">
                     <h3><i class="fa-solid fa-briefcase" style="color: #0a66c2;"></i> Indeed</h3>
-                    <a target="_blank" href="https://in.indeed.com/jobs?q={{ user[2] }}">
+                    <a target="_blank" href="https://in.indeed.com/jobs?q={{ user[2] }}+{{ user[3] }}">
                         Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
                     </a>
                 </div>
 
+                <!-- Foundit with dedicated query and locations dynamic strings mapping -->
                 <div class="card">
                     <h3><i class="fa-solid fa-shuffle" style="color: #10b981;"></i> Foundit</h3>
-                    <a target="_blank" href="https://www.foundit.in/srp/results?query={{ user[2] }}">
+                    <a target="_blank" href="https://www.foundit.in/srp/results?query={{ user[2] }}&locations={{ user[3] }}">
                         Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
                     </a>
                 </div>
 
+                <!-- Shine with role and location endpoints attached -->
                 <div class="card">
                     <h3><i class="fa-solid fa-star" style="color: #e11d48;"></i> Shine</h3>
-                    <a target="_blank" href="https://www.shine.com/job-search/{{ user[2] }}-jobs">
+                    <a target="_blank" href="https://www.shine.com/job-search/{{ user[2] }}-jobs-in-{{ user[3] }}">
                         Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
                     </a>
                 </div>
 
+                <!-- Freshersworld with functional safe parameters passing context -->
                 <div class="card">
                     <h3><i class="fa-solid fa-user-graduate" style="color: #7c3aed;"></i> Freshersworld</h3>
-                    <a target="_blank" href="https://www.freshersworld.com/jobs/jobsearch/{{ user[2] }}-jobs">
+                    <a target="_blank" href="https://www.freshersworld.com/jobs/jobsearch/{{ user[2]|replace(' ','-') }}-jobs-in-{{ user[3]|replace(' ','-') }}">
                         Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
                     </a>
                 </div>
