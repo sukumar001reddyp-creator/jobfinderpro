@@ -5,24 +5,24 @@
 <title>JobFinder Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Font Awesome UI Icons & Google Fonts -->
+<!-- Font Awesome UI Icons -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root {
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-glow: rgba(37, 99, 235, 0.15);
-    --primary-gradient: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     --dark: #0f172a;
     --slate: #475569;
     --light-slate: #94a3b8;
+    --bg-surface: #ffffff;
     --bg-body: #f5f8ff;
-    --bg-gateway-card: #e0f2fe; 
-    --bg-gateway-hover: #bae6fd;
+    --bg-gateway-card: #e0f2fe; /* Distinct, permanent light blue background for the boxes */
+    --bg-gateway-hover: #bae6fd; /* Deeper light blue background on hover */
     --border: #e2e8f0;
-    --radius-lg: 20px;
+    --radius-lg: 16px;
     --radius-md: 12px;
 }
 
@@ -33,32 +33,31 @@
 }
 
 body{
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
     background: var(--bg-body);
     color: var(--dark);
     line-height: 1.5;
 }
 
-.bg-glow-backdrop {
+.bg-glow-1 {
     position: absolute;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 1400px;
-    height: 450px;
-    background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.08) 0%, transparent 60%);
+    right: 10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(255,255,255,0) 70%);
     z-index: -1;
     pointer-events: none;
 }
 
-/* --- Premium Navbar Layout --- */
+/* --- Premium Navbar --- */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 16px 6%;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
@@ -68,39 +67,32 @@ body{
 .nav-brand {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     text-decoration: none;
-    background: #f8fafc;
-    padding: 6px 16px;
-    border-radius: 50px;
-    border: 1px solid rgba(37, 99, 235, 0.12);
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.03);
 }
 
 .nav-logo-icon {
     background: var(--primary-gradient);
     color: white;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 15px;
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .nav-logo-text {
-    font-size: 19px;
+    font-size: 40px;
     font-weight: 800;
     color: var(--dark);
     letter-spacing: -0.5px;
 }
 
 .nav-logo-text span {
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--primary);
 }
 
 .nav-buttons {
@@ -112,8 +104,8 @@ body{
 .btn-nav {
     text-decoration: none;
     font-size: 13.5px;
-    font-weight: 700;
-    padding: 9px 20px;
+    font-weight: 600;
+    padding: 10px 22px;
     border-radius: var(--radius-md);
     transition: all 0.2s ease;
 }
@@ -121,44 +113,44 @@ body{
 .btn-secondary {
     color: var(--slate);
     border: 1px solid var(--border);
-    background: #ffffff;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .btn-secondary:hover {
-    background: #f0f7ff;
-    color: var(--primary);
+    background: var(--bg-body);
+    border-color: var(--light-slate);
 }
 
 .btn-primary {
     background: var(--primary-gradient);
     color: white;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
 }
 
 .btn-primary:hover {
     transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
 }
 
-/* --- Ultra-Compact Rich Header Panel --- */
+/* --- Compact & High-End Hero Panel --- */
 .header{
-    background: #ffffff;
-    padding: 55px 6% 40px 6%;
+    padding: 60px 6% 40px 6%;
     text-align: center;
-    border-bottom: 1px solid var(--border);
+    position: relative;
 }
 
 .logo{
     font-size: 38px;
     font-weight: 800;
     color: var(--dark);
-    letter-spacing: -1px;
+    letter-spacing: -0.5px;
     line-height: 1.2;
     margin-bottom: 12px;
 }
 
 .logo span {
-    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    background: linear-gradient(to right, #2563eb, #7c3aed);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -172,10 +164,10 @@ body{
     font-weight: 500;
 }
 
-/* --- Floating Search Console Overlay --- */
+/* --- Premium Floating Search Console --- */
 .search-box-container {
-    max-width: 1140px;
-    margin: -26px auto 0 auto;
+    max-width: 1120px;
+    margin: -10px auto 0 auto;
     padding: 0 24px;
     position: relative;
     z-index: 10;
@@ -185,11 +177,12 @@ body{
     display: grid;
     grid-template-columns: 1.2fr 1fr 1fr auto;
     gap: 12px;
-    background: #ffffff;
-    padding: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    padding: 14px;
     border-radius: var(--radius-lg);
-    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
-    border: 1px solid rgba(37, 99, 235, 0.15);
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.7);
     align-items: center;
 }
 
@@ -197,7 +190,7 @@ body{
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #f8fafc;
+    background: #ffffff;
     border: 1px solid var(--border);
     padding: 12px 14px;
     border-radius: var(--radius-md);
@@ -206,13 +199,12 @@ body{
 
 .input-group:focus-within {
     border-color: var(--primary);
-    background: #ffffff;
-    box-shadow: 0 0 0 3px var(--primary-glow);
+    box-shadow: 0 0 0 4px var(--primary-glow);
 }
 
 .input-group i {
     color: var(--primary);
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .search-box input,
@@ -223,36 +215,36 @@ body{
     background: transparent;
     color: var(--dark);
     font-size: 14.5px;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .search-btn {
-    padding: 13px 30px;
+    padding: 14px 28px;
     border: none;
     border-radius: var(--radius-md);
     background: var(--primary-gradient);
     color: white;
-    font-size: 14.5px;
+    font-size: 15px;
     cursor: pointer;
-    font-weight: 700;
+    font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-    transition: all 0.2s ease;
+    transition: all 0.2s;
 }
 
 .search-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.3);
 }
 
-/* --- Metric Counter Strips --- */
+/* --- Minimal Analytical Counter Pill Lines --- */
 .stats {
     display: flex;
     justify-content: center;
-    gap: 40px;
-    padding: 24px 24px 10px 24px;
+    gap: 50px;
+    padding: 24px 24px 20px 24px;
     max-width: 1100px;
     margin: 0 auto;
     flex-wrap: wrap;
@@ -261,26 +253,27 @@ body{
 .stat {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
+    gap: 10px;
+    font-size: 13.5px;
     color: var(--slate);
     font-weight: 600;
 }
 
 .stat h2 {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 800;
     color: var(--primary);
     background: #ffffff;
     border: 1px solid var(--border);
-    padding: 3px 10px;
-    border-radius: 6px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
-/* --- Old Balanced Two-Column Layout --- */
+/* --- Premium Workspace Split Architecture --- */
 .container {
     max-width: 1150px;
-    margin: 15px auto 60px auto;
+    margin: 10px auto 80px auto;
     padding: 0 24px;
 }
 
@@ -295,19 +288,19 @@ body{
     font-size: 13px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
     color: var(--slate);
     margin-bottom: 18px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
 }
 
 .section-title i {
     color: var(--primary);
 }
 
-/* Left Sidebar: Hot Queries (Turns Blue on Hover) */
+/* Left Sidebar: Hot Queries Styling (Turns Blue on Hover) */
 .left-section-grid {
     display: flex;
     flex-direction: column;
@@ -357,8 +350,8 @@ body{
 }
 
 .card {
-    background: var(--bg-gateway-card); 
-    border: 1px solid #bae6fd; 
+    background: var(--bg-gateway-card); /* Clearly visible light blue background by default */
+    border: 1px solid #bae6fd; /* Distinct blue-tinted border line */
     border-radius: var(--radius-lg);
     padding: 24px;
     display: flex;
@@ -370,7 +363,7 @@ body{
 
 .card:hover {
     border-color: var(--primary);
-    background: var(--bg-gateway-hover); 
+    background: var(--bg-gateway-hover); /* Deepens smoothly on hover */
     transform: translateY(-2px);
     box-shadow: 0 12px 24px rgba(37, 99, 235, 0.08);
 }
@@ -413,11 +406,55 @@ body{
     box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
 }
 
-/* --- System Corporate Footer --- */
+/* --- Inline System Feature Strip Layout --- */
+.feature-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    padding: 30px;
+    border-radius: var(--radius-lg);
+    margin-top: 50px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.01);
+}
+
+.feature-pill {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.feature-pill-icon {
+    background: #eff6ff;
+    color: var(--primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.feature-pill-text h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4px;
+}
+
+.feature-pill-text p {
+    font-size: 13px;
+    color: var(--slate);
+}
+
+/* --- Premium Tech Footer Terminal --- */
 .footer {
     background: #ffffff;
     color: var(--slate);
-    border-top: 1px solid rgba(37, 99, 235, 0.08);
+    border-top: 1px solid var(--border);
     padding: 24px 6%;
     display: flex;
     justify-content: space-between;
@@ -434,88 +471,25 @@ body{
     line-height: 1.4;
 }
 
-/* --- Adaptive & Responsive Configuration (Mobile-Friendly Rules) --- */
+/* --- Adaptive Viewports Configuration --- */
 @media(max-width:920px){
-    .navbar {
-        padding: 14px 4%;
-    }
-    .nav-brand {
-        padding: 4px 12px;
-    }
-    .nav-logo-text {
-        font-size: 17px;
-    }
-    .header {
-        padding: 40px 4% 35px 4%;
-    }
-    .logo {
-        font-size: 28px;
-    }
-    .subtitle {
-        font-size: 14px;
-    }
-    .search-box-container {
-        padding: 0 16px;
-        margin: -20px auto 0 auto;
-    }
-    .search-box { 
-        grid-template-columns: 1fr; 
-        gap: 8px;
-        padding: 10px;
-        border-radius: var(--radius-md);
-    }
-    .input-group {
-        padding: 10px 12px;
-    }
-    .search-btn {
-        width: 100%;
-        justify-content: center;
-        padding: 12px;
-    }
-    .stats {
-        gap: 20px;
-        padding: 20px 16px 5px 16px;
-    }
-    .stat {
-        font-size: 12px;
-    }
-    .container {
-        padding: 0 16px;
-        margin-bottom: 40px;
-    }
-    .main-sections { 
-        grid-template-columns: 1fr; 
-        gap: 25px;
-    }
-    .website-grid { 
-        grid-template-columns: 1fr; 
-        gap: 12px;
-    }
-    .card {
-        padding: 20px;
-    }
-    .footer { 
-        flex-direction: column; 
-        gap: 12px; 
-        text-align: center; 
-        padding: 20px 4%;
-    }
-    .footer-disclaimer { 
-        text-align: center; 
-        font-size: 11px;
-    }
+    .main-sections { grid-template-columns: 1fr; }
+    .search-box { grid-template-columns: 1fr; }
+    .website-grid { grid-template-columns: 1fr; }
+    .feature-strip { grid-template-columns: 1fr; gap: 20px; }
+    .footer { flex-direction: column; gap: 14px; text-align: center; }
+    .footer-disclaimer { text-align: center; }
 }
 </style>
 </head>
 <body>
 
-<div class="bg-glow-backdrop"></div>
+<div class="bg-glow-1"></div>
 
 <!-- Systems Hub Navbar Layout -->
 <nav class="navbar">
-    <!-- Premium Designed SaaS Badge Logo applied directly inside Logo Location -->
     <a href="#" class="nav-brand">
-        <div class="nav-logo-icon"><i class="fa-solid fa-briefcase"></i></div>
+        <div class="nav-logo-icon"><i class="fa-solid fa-compass"></i></div>
         <div class="nav-logo-text">Job<span>Finder Pro</span></div>
     </a>
     <div class="nav-buttons">
@@ -534,7 +508,6 @@ body{
 
 <!-- Input Terminal Layer Box Section -->
 <div class="search-box-container">
-    <!-- EXACT ORIGINAL FORM COMPONENTS & REDIRECTIONS PRESERVED -->
     <form class="search-box" action="/search">
         <div class="input-group">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -578,7 +551,6 @@ body{
         <div class="left-section">
             <h3 class="section-title"><i class="fa-solid fa-fire"></i> Hot Queries</h3>
             <div class="left-section-grid">
-                <!-- EXACT ORIGINAL REDIRECTION TARGET PATHS MAINTAINED -->
                 <a class="role-card" href="/search?role=Graphic+Designer"><span>🎨 Graphic Designer</span> <i class="fa-solid fa-chevron-right"></i></a>
                 <a class="role-card" href="/search?role=Python+Developer"><span>💻 Python Developer</span> <i class="fa-solid fa-chevron-right"></i></a>
                 <a class="role-card" href="/search?role=Frontend+Developer"><span>📱 Frontend Developer</span> <i class="fa-solid fa-chevron-right"></i></a>
@@ -595,7 +567,6 @@ body{
             <h3 class="section-title"><i class="fa-solid fa-link"></i> Connected Gateways</h3>
             <div class="website-grid">
 
-                <!-- EXACT ORIGINAL TARGET REDIRECTIONS UNALTERED -->
                 <div class="card">
                     <div class="card-top">
                         <h3>LinkedIn Jobs</h3>
@@ -644,6 +615,31 @@ body{
                     <a href="https://www.shine.com" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <!-- Inline Modern Feature Strip Component Section -->
+    <div class="feature-strip">
+        <div class="feature-pill">
+            <div class="feature-pill-icon"><i class="fa-solid fa-bolt"></i></div>
+            <div class="feature-pill-text">
+                <h4>Unified Query Pipeline</h4>
+                <p>Run query operations across multiple host servers instantly from one terminal dashboard layout.</p>
+            </div>
+        </div>
+        <div class="feature-pill">
+            <div class="feature-pill-icon"><i class="fa-solid fa-globe"></i></div>
+            <div class="feature-pill-text">
+                <h4>Cross-Border Infrastructure</h4>
+                <p>Filter active job feeds globally across any coordinate or tech ecosystem with uniform ease.</p>
+            </div>
+        </div>
+        <div class="feature-pill">
+            <div class="feature-pill-icon"><i class="fa-solid fa-user-shield"></i></div>
+            <div class="feature-pill-text">
+                <h4>Direct Verification Handshake</h4>
+                <p>We do not store or process details. Experience pure zero-middleman transit directly to verified sources.</p>
             </div>
         </div>
     </div>
