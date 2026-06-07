@@ -1,74 +1,278 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <title>Job Search Results</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Font Awesome UI Icons -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
 <style>
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-glow: rgba(37, 99, 235, 0.15);
+    --primary-gradient: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    --dark: #0f172a;
+    --slate: #475569;
+    --light-slate: #94a3b8;
+    --bg-body: #f5f8ff;
+    --bg-gateway-card: #e0f2fe; 
+    --bg-gateway-hover: #bae6fd;
+    --border: #e2e8f0;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
 body{
-    font-family:Arial,sans-serif;
-    background:#0f172a;
-    color:white;
-    margin:0;
-    padding:30px;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    background: var(--bg-body);
+    color: var(--dark);
+    line-height: 1.5;
+    padding: 0 0 60px 0;
 }
 
+.bg-glow-1 {
+    position: absolute;
+    top: 0;
+    right: 10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(255,255,255,0) 70%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* --- Premium Navbar --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 6%;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.nav-logo-icon {
+    background: var(--primary-gradient);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.nav-logo-text {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--dark);
+    letter-spacing: -0.5px;
+}
+
+.nav-logo-text span {
+    color: var(--primary);
+}
+
+/* --- High-End Attractive Heading Block --- */
 .hero{
-    background:linear-gradient(
-    135deg,
-    #1e3a8a,
-    #7c3aed
-    );
-    color:white;
-    padding:30px;
-    border-radius:20px;
-    text-align:center;
-    margin-bottom:30px;
-    box-shadow:0 10px 30px rgba(0,0,0,.3);
+    padding: 65px 6% 50px 6%;
+    text-align: center;
+    position: relative;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
 }
 
-
-.cards{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:20px;
+.hero h1{
+    font-size: 48px; /* Bigger font size */
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    text-transform: capitalize; /* Forces first letter of each word to be Capitalized */
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
 }
 
-.card{
-    background:#1e293b;
-    padding:25px;
-    border-radius:18px;
-    text-align:center;
-    border:1px solid #334155;
-    box-shadow:0 10px 25px rgba(0,0,0,.3);
-    transition:.3s;
+.meta-container {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 5px;
 }
 
-.card:hover{
-    transform:translateY(-5px);
+.meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-body);
+    color: var(--slate);
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.01);
 }
 
-.card a{
-    display:inline-block;
-    margin-top:15px;
-    background:linear-gradient(
-    135deg,
-    #2563eb,
-    #7c3aed
-    );
-    color:white;
-    padding:12px 22px;
-    text-decoration:none;
-    border-radius:10px;
+.meta-badge i {
+    color: var(--primary);
 }
-.back{
-    display:inline-block;
-    margin-top:30px;
-    text-decoration:none;
-    background:#334155;
-    color:white;
-    padding:12px 22px;
-    border-radius:10px;
+
+/* --- Container Workspace Area --- */
+.container {
+    max-width: 1150px;
+    margin: 40px auto 0 auto;
+    padding: 0 24px;
+}
+
+.section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--slate);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-title i {
+    color: var(--primary);
+}
+
+/* --- Responsive Multi-Portal Cards Grid --- */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: var(--bg-gateway-card); 
+    border: 1px solid #bae6fd;
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.03);
+    transition: all 0.25s ease;
+}
+
+.card:hover {
+    border-color: var(--primary);
+    background: var(--primary); 
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.2);
+}
+
+.card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s ease;
+}
+
+.card p {
+    color: var(--slate);
+    font-size: 14px;
+    margin-bottom: 24px;
+    line-height: 1.5;
+    transition: color 0.2s ease;
+}
+
+.card:hover h3,
+.card:hover p {
+    color: #ffffff;
+}
+
+.card a {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    background: #ffffff;
+    color: var(--primary);
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13.5px;
+    border: 1px solid #bae6fd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: all 0.2s ease;
+}
+
+.card:hover a {
+    background: #ffffff;
+    color: var(--dark);
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card a:hover {
+    transform: scale(1.02);
+}
+
+/* --- Home Routing System Actions --- */
+.action-footer {
+    margin-top: 45px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    background: #ffffff;
+    color: var(--slate);
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.01);
+    transition: 0.2s ease;
+}
+
+.back:hover {
+    background: var(--dark);
+    color: #ffffff;
+    border-color: var(--dark);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
 }
 
 </style>
@@ -76,94 +280,105 @@ body{
 
 <body>
 
+<div class="bg-glow-1"></div>
+
+<!-- Unified Systems Navbar Navigation -->
+<nav class="navbar">
+    <a href="/" class="nav-brand">
+        <div class="nav-logo-icon"><i class="fa-solid fa-compass"></i></div>
+        <div class="nav-logo-text">Job<span>Finder Pro</span></div>
+    </a>
+</nav>
+
+<!-- Target Metric Context Header Summary -->
 <div class="hero">
-
-<h1>{{ role if role else "Jobs" }}</h1>
-
-<p>
-📍 {{ location if location else "All Locations" }}
-</p>
-
-<p>
-💼 {{ experience if experience else "Any Experience" }}
-</p>
-
+    <h1>{{ role if role else "Global Openings" }}</h1>
+    
+    <div class="meta-container">
+        <div class="meta-badge">
+            <i class="fa-solid fa-location-dot"></i> {{ location if location else "All Locations" }}
+        </div>
+        <div class="meta-badge">
+            <i class="fa-solid fa-layer-group"></i> {{ experience if experience else "Any Experience" }}
+        </div>
+    </div>
 </div>
 
-<div class="cards">
+<div class="container">
+    <h3 class="section-title"><i class="fa-solid fa-share-nodes"></i> Available Host Streams Found</h3>
 
-<div class="card">
-<h3>💼 LinkedIn Jobs</h3>
-<p>Professional jobs and networking</p>
+    <!-- External Board Target Gateway Grids Area -->
+    <div class="cards">
 
-<a target="_blank"
-href="https://www.linkedin.com/jobs/search/?keywords={{ role }}&location={{ location }}">
-View Jobs
-</a>
+        <div class="card">
+            <div>
+                <h3><i class="fa-brands fa-linkedin" style="color: #0077b5;"></i> LinkedIn Jobs</h3>
+                <p>Launch global indexing requests for professional roles and network directories instantly.</p>
+            </div>
+            <a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords={{ role }}&location={{ location }}">
+                View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
+            </a>
+        </div>
 
+        <div class="card">
+            <div>
+                <h3><i class="fa-solid fa-circle-notch" style="color: #ff6f00;"></i> Naukri</h3>
+                <p>Scan India's massive centralized technology ecosystems and cluster feeds directly.</p>
+            </div>
+            <a target="_blank" href="https://www.naukri.com/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}">
+                View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
+            </a>
+        </div>
+
+        <div class="card">
+            <div>
+                <h3><i class="fa-solid fa-briefcase" style="color: #0a66c2;"></i> Indeed</h3>
+                <p>Pull live matching vacancy strings straight from comprehensive international aggregate files.</p>
+            </div>
+            <a target="_blank" href="https://in.indeed.com/jobs?q={{ role }}+{{ location }}">
+                View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
+            </a>
+        </div>
+
+        <div class="card">
+            <div>
+                <h3><i class="fa-solid fa-bolt" style="color: #10b981;"></i> Foundit</h3>
+                <p>Query skill-based parameters securely optimized for specific developer tracks.</p>
+            </div>
+            <a target="_blank" href="https://www.foundit.in/srp/results?query={{ role }}&locations={{ location }}">
+                View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
+            </a>
+        </div>
+
+        <div class="card">
+            <div>
+                <h3><i class="fa-solid fa-star" style="color: #e11d48;"></i> Shine</h3>
+                <p>Map profile matching variables to high-growth corporate pathways instantly.</p>
+            </div>
+            <a target="_blank" href="https://www.shine.com/job-search/{{ role }}-jobs-in-{{ location }}">
+                View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
+            </a>
+        </div>
+
+        <div class="card">
+            <div>
+                <h3><i class="fa-solid fa-user-graduate" style="color: #7c3aed;"></i> Freshersworld</h3>
+                <p>Filter open early-career positions and immediate structural training opportunities.</p>
+            </div>
+            <a target="_blank" href="https://www.freshersworld.com/jobs/jobsearch/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}">
+                View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Interface Returns Control Action Links -->
+    <div class="action-footer">
+        <a href="/" class="back">
+            <i class="fa-solid fa-arrow-left"></i> Back to Engine Terminal
+        </a>
+    </div>
 </div>
-
-
-<div class="card">
-<h3>💼 Naukri</h3>
-<p>India's largest job portal</p>
-
-<a target="_blank"
-href="https://www.naukri.com/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}">
-View Jobs
-</a>
-
-</div>
-
-<div class="card">
-<h3>💼 Indeed</h3>
-<p>Millions of jobs worldwide</p>
-
-<a target="_blank"
-href="https://in.indeed.com/jobs?q={{ role }}+{{ location }}">
-View Jobs
-</a>
-
-</div>
-
-<div class="card">
-<h3>💼 Foundit</h3>
-<p>Find jobs by skills</p>
-
-<a target="_blank"
-href="https://www.foundit.in/srp/results?query={{ role }}&locations={{ location }}">
-View Jobs
-</a>
-
-</div>
-
-<div class="card">
-<h3>💼 Shine</h3>
-
-<a target="_blank"
-href="https://www.shine.com/job-search/{{ role }}-jobs-in-{{ location }}">
-View Jobs
-</a>
-
-</div>
-
-<div class="card">
-<h3>💼 Freshersworld</h3>
-
-<a target="_blank"
-href="https://www.freshersworld.com/jobs/jobsearch/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}">
-View Jobs
-</a>
-
-</div>
-
-</div>
-
-<br>
-
-<a href="/" class="back">
-⬅ Back to Home
-</a>
 
 </body>
 </html>
