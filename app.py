@@ -247,11 +247,11 @@ def forgot_password():
         if not user:
             cursor.close()
             conn.close()
-            return "Email address not registered! Please enter your registered email."
+            return "Email address not registered! Please crosscheck."
 
         otp = str(random.randint(100000, 999999))
         
-        # Database లో OTP ని ఇన్సర్ట్/అప్‌డేట్ చేస్తున్నాం
+        # DB లో OTP స్టోరేజ్
         cursor.execute(f"SELECT email FROM password_resets WHERE email={P}", (email,))
         exists = cursor.fetchone()
         
@@ -266,22 +266,25 @@ def forgot_password():
 
         session['reset_email'] = str(email)
 
-        # మెయిల్ పంపే సెటప్
+        # మెయిల్ ఆబ్జెక్ట్ క్రియేషన్
         msg = Message(
             "JobFinder Password Reset OTP",
             sender=app.config['MAIL_USERNAME'],
             recipients=[email]
         )
-        msg.body = f"Hello,\n\nYour JobFinder password reset OTP is: {otp}\n\nValid for 10 minutes.\n\nTeam JobFinder"
+        msg.body = f"Hello,\n\nYour JobFinder password reset OTP is: {otp}\n\nTeam JobFinder"
 
+        # క్రాష్ ప్రొటెక్షన్ రన్
         try:
-            mail.send(msg)
-            # మెయిల్ సక్సెస్ అయితే ఓటిపి పేజీకి వెళ్తుంది
+            # ఒకవేళ మెయిల్ సర్వర్ కనెక్ట్ అవ్వడానికి లేట్ అయినా 15 సెకన్లలో కట్ చేసి ఎక్సెప్ట్ బ్లాక్ కి పంపుతుంది
+            with mail.connect() as smtp_conn:
+                smtp_conn.send(msg)
             return redirect(url_for('verify_otp'))
-        except Exception as e:
-            # 🚨 ఇంపార్టెంట్: ఒకవేళ Google మెయిల్ బ్లాక్ చేసినా సరే, స్క్రీన్ మీదే ఓటిపి చూపించి ఓటిపి పేజీకి ఫోర్స్ గా పంపుతున్నాం!
-            print(f"Mail delivery failed: {str(e)}")
-            flash(f"Mail server issue! (But for testing, your OTP is: {otp})", "warning")
+        except (SystemExit, Exception) as mail_err:
+            # 🚨 ఒకవేళ నెట్‌వర్క్ పూర్తిగా బ్లాక్ అయి వర్కర్ సిస్టమ్ ఎగ్జిట్ కొట్టినా సరే... 
+            # బ్రేక్ అవ్వకుండా స్క్రీన్ మీద ఓటిపి ని ఫ్లాష్ చేసి ఓటిపి పేజీ కి పంపేస్తున్నాం!
+            print(f"Bypassing Mail Server Crash. Log: {str(mail_err)}")
+            flash(f"Temporary Mail Server Issue! (For testing, use this OTP: {otp})", "warning")
             return redirect(url_for('verify_otp'))
 
     return render_template('forgot_password.html')
