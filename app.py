@@ -5,28 +5,38 @@ from flask import Flask, render_template, request, redirect, session, url_for, f
 from flask_mail import Mail, Message
 
 app = Flask(__name__)
-app.secret_key = "jobfinder_secret"
 
-# Flask-Mail Configuration
+# Render production rules security wrapper sessions tracking fix
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'jobfinder_secret_strongly_hashed_2026')
+
+# Flask-Mail Strict Configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = 'jobfinderpro85@gmail.com'
 app.config['MAIL_PASSWORD'] = 'eole ihak wvty vumv'
 
+# Fail safe dynamic adjustments for cloud proxy buffers
+app.config['SESSION_COOKIE_SECURE'] = False
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+
 mail = Mail(app)
 
-# Render & Cloud instances dynamic direct matching mapping file track config
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "users.db")
+# ================= RENDER LIVE STABLE DIRECTORY FIX =================
+# Cloud container runtime dynamically maps tracking files inside isolated /tmp matrix
+if os.environ.get('RENDER') or 'ON_RENDER' in os.environ:
+    DB_PATH = "/tmp/users.db"
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    DB_PATH = os.path.join(BASE_DIR, "users.db")
 
 def get_db_connection():
-    # Multi-thread processing crashes bypass cheyadaniki settings template line model
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+    # check_same_thread constraints handle matching dynamic queries pipeline lock fix
+    conn = sqlite3.connect(DB_PATH, check_same_thread=False, timeout=30)
     conn.row_factory = sqlite3.Row
     return conn
 
-# Database schema initial layout engine validation setup
 def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -44,8 +54,12 @@ def init_db():
     conn.commit()
     conn.close()
 
-init_db()
-
+# Cloud instance safety execution initialization validation block bypass triggers
+try:
+    init_db()
+except Exception as db_init_err:
+    print(f"Cloud DB initial runtime notice: {str(db_init_err)}")
+# ====================================================================
 
 @app.route("/")
 def home():
@@ -71,9 +85,7 @@ def register():
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        
-        # Safe redirection setup variable flag
-        success_registration = False
+        success = False
         error_msg = None
 
         try:
@@ -85,18 +97,17 @@ def register():
                 (name, email, password, jobrole, location, experience)
             )
             conn.commit()
-            success_registration = True
+            success = True
         except sqlite3.IntegrityError:
             error_msg = "Email already exists"
         except Exception as e:
-            error_msg = f"Database Error: {str(e)}"
+            error_msg = f"Live Database Entry Error: {str(e)}"
         finally:
-            conn.close() # Transaction storage stream memory cleanup is mandatory
+            conn.close()
 
-        if success_registration:
+        if success:
             return redirect(url_for("login"))
-        else:
-            return error_msg
+        return error_msg
     
     return render_template("register.html")
 
@@ -186,7 +197,7 @@ def forgot_password():
         conn.close()
 
         if not user:
-            return "Email address not registered! Please enter your registered email."
+            return "Email address not registered! Please crosscheck."
 
         otp = str(random.randint(100000, 999999))
         session['otp'] = otp
@@ -200,13 +211,10 @@ def forgot_password():
         msg.body = f"Hello,\n\nYour JobFinder password reset OTP is: {otp}\n\nValid for 10 minutes.\n\nTeam JobFinder"
 
         try:
-            print(f"Attempting to send OTP email to: {email}")
             mail.send(msg)
             return redirect(url_for('verify_otp'))
         except Exception as e:
-            # Server crash avvakunda exact SMTP error screens screen meede return chesthadi bro
-            print(f"SMTP Mail Error: {str(e)}")
-            return f"Error sending email. Internal Mail Setup Broken. Details: {str(e)}"
+            return f"SMTP Mail Transfer Denied by Live Proxy Host. Details: {str(e)}"
 
     return render_template('forgot_password.html')
 
@@ -266,4 +274,5 @@ def logout():
 
 
 if __name__ == "__main__":
+    # Local fallback startup configurations
     app.run(debug=True)
