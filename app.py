@@ -31,13 +31,8 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-# ================= RENDER LIVE STABLE DIRECTORY FIX =================
-# Cloud container runtime dynamically maps tracking files inside isolated /tmp matrix
-if os.environ.get('RENDER') or 'ON_RENDER' in os.environ:
-    DB_PATH = "/tmp/users.db"
-else:
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    DB_PATH = os.path.join(BASE_DIR, "users.db")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "users.db")
 
 def get_db_connection():
     # check_same_thread constraints handle matching dynamic queries pipeline lock fix
@@ -273,7 +268,7 @@ def reset_password():
         return redirect(url_for('login'))
 
     return render_template('reset_password.html')
-    
+
 @app.route('/all-users')
 def all_users():
 
