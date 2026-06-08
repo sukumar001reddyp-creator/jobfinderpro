@@ -1,4 +1,4 @@
-Flask==3.0.2
-Flask-Mail==0.10.0
-gunicorn==21.2.0
+Flask
+Flask-Mail
 psycopg2-binary
+gunicorn
