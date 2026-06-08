@@ -49,7 +49,31 @@ def init_db():
     cursor = conn.cursor()
     
     if DATABASE_URL:
-        # Users Table
+        # ==================== FORCE DATABASE TABLE CREATION ====================
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+def get_db_connection():
+    if DATABASE_URL:
+        url = DATABASE_URL
+        if "sslmode" not in url:
+            url += "&sslmode=require" if "?" in url else "?sslmode=require"
+        conn = psycopg2.connect(url)
+        return conn
+    else:
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        DB_PATH = os.path.join(BASE_DIR, "users.db")
+        conn = sqlite3.connect(DB_PATH, check_same_thread=False, timeout=30)
+        conn.row_factory = sqlite3.Row
+        return conn
+
+P = "%s" if DATABASE_URL else "?"
+
+def init_db():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # 1. Users Table క్రియేషన్
+    if DATABASE_URL:
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
@@ -61,16 +85,7 @@ def init_db():
             experience VARCHAR(255)
         )
         """)
-        # OTP Table (క్లౌడ్ లో సెషన్స్ డిస్కనెక్ట్ అవ్వకుండా ఇక్కడ సేవ్ అవుతాయి)
-        cursor.execute("""
-        CREATE TABLE IF NOT EXISTS password_resets (
-            email VARCHAR(255) PRIMARY KEY,
-            otp VARCHAR(10),
-            verified BOOLEAN DEFAULT FALSE
-        )
-        """)
     else:
-        # SQLite Tables
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -82,21 +97,36 @@ def init_db():
             experience TEXT
         )
         """)
-        cursor.execute("""
-        CREATE TABLE IF NOT EXISTS password_resets (
-            email TEXT PRIMARY KEY,
-            otp TEXT,
-            verified INTEGER DEFAULT 0
-        )
-        """)
     conn.commit()
+
+    # 2. Password Resets Table (🚨 దీని కోసమే క్రాష్ అవుతోంది, ఫోర్స్ గా క్రియేట్ చేస్తున్నాం)
+    try:
+        if DATABASE_URL:
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS password_resets (
+                email VARCHAR(255) PRIMARY KEY,
+                otp VARCHAR(10),
+                verified BOOLEAN DEFAULT FALSE
+            )
+            """)
+        else:
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS password_resets (
+                email TEXT PRIMARY KEY,
+                otp TEXT,
+                verified INTEGER DEFAULT 0
+            )
+            """)
+        conn.commit()
+    except Exception as t_err:
+        print(f"Table creation bypass log: {str(t_err)}")
+        
     cursor.close()
     conn.close()
 
-try:
-    init_db()
-except Exception as db_init_err:
-    print(f"Database initial runtime notice: {str(db_init_err)}")
+# ఎర్రర్ ని స్కిప్ చేయకుండా రన్ అవ్వనిద్దాం
+init_db()
+# ===========================================================================
 # ===========================================================================
 
 
