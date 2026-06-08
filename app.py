@@ -183,7 +183,7 @@ def dashboard():
         return redirect(url_for("login"))
 
     conn = get_db_connection()
-    cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
+    cursor = conn.cursor()
     cursor.execute(
         f"SELECT name, email, jobrole, location, experience FROM users WHERE email={P}",
         (session["user"],)
@@ -196,6 +196,7 @@ def dashboard():
         return "User session expired or not found."
 
     return render_template("dashboard.html", user=user)
+
 
 
 @app.route("/search")
