@@ -26,14 +26,15 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 
 def get_db_connection():
     if DATABASE_URL:
-        # Cloud: PostgreSQL ਕਨੈਕਸ਼ਨ
+        # Cloud: PostgreSQL Connection
         url = DATABASE_URL
         if "sslmode" not in url:
             url += "&sslmode=require" if "?" in url else "?sslmode=require"
-        conn = psycopg2.connect(url, cursor_factory=RealDictCursor)
+        # RealDictCursor ని అవసరమైన రూట్స్ లోనే వాడుకుందాం బూట్ టైమ్ లో క్రాష్ అవ్వకుండా
+        conn = psycopg2.connect(url)
         return conn
     else:
-        # Local: SQLite కనెక్షన్
+        # Local: SQLite Connection
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         DB_PATH = os.path.join(BASE_DIR, "users.db")
         conn = sqlite3.connect(DB_PATH, check_same_thread=False, timeout=30)
@@ -48,6 +49,7 @@ def init_db():
     cursor = conn.cursor()
     
     if DATABASE_URL:
+        # Users Table
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
@@ -59,7 +61,16 @@ def init_db():
             experience VARCHAR(255)
         )
         """)
+        # OTP Table (క్లౌడ్ లో సెషన్స్ డిస్కనెక్ట్ అవ్వకుండా ఇక్కడ సేవ్ అవుతాయి)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS password_resets (
+            email VARCHAR(255) PRIMARY KEY,
+            otp VARCHAR(10),
+            verified BOOLEAN DEFAULT FALSE
+        )
+        """)
     else:
+        # SQLite Tables
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -69,6 +80,13 @@ def init_db():
             jobrole TEXT,
             location TEXT,
             experience TEXT
+        )
+        """)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS password_resets (
+            email TEXT PRIMARY KEY,
+            otp TEXT,
+            verified INTEGER DEFAULT 0
         )
         """)
     conn.commit()
@@ -119,10 +137,8 @@ def register():
             )
             conn.commit()
             success = True
-        except (sqlite3.IntegrityError, psycopg2.errors.UniqueViolation if DATABASE_URL else sqlite3.Error):
-            error_msg = "Email already exists"
         except Exception as e:
-            error_msg = f"Database Entry Error: {str(e)}"
+            error_msg = "Email already exists or Database Error occurred."
         finally:
             cursor.close()
             conn.close()
@@ -141,7 +157,7 @@ def login():
         password = request.form.get("password", "").strip()
 
         conn = get_db_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
         cursor.execute(
             f"SELECT * FROM users WHERE email={P} AND password={P}",
             (email, password)
@@ -165,7 +181,7 @@ def dashboard():
         return redirect(url_for("login"))
 
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
     cursor.execute(
         f"SELECT name, email, jobrole, location, experience FROM users WHERE email={P}",
         (session["user"],)
@@ -187,9 +203,8 @@ def search():
     experience = request.args.get("experience", "").strip()
 
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
     
-    # SQLite / Postgres Case-Insensitive Search Keyword Mapping
     like_op = "ILIKE" if DATABASE_URL else "LIKE"
     
     query = "SELECT name, email, jobrole, location, experience FROM users WHERE 1=1"
@@ -225,18 +240,32 @@ def forgot_password():
         email = request.form.get('email', '').strip()
         
         conn = get_db_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
         cursor.execute(f"SELECT email FROM users WHERE email={P}", (email,))
         user = cursor.fetchone()
-        cursor.close()
-        conn.close()
-
+        
         if not user:
+            cursor.close()
+            conn.close()
             return "Email address not registered! Please crosscheck."
 
         otp = str(random.randint(100000, 999999))
-        session['otp'] = otp
-        session['reset_email'] = email
+        
+        # OTP ని డేటాబేస్ టేబుల్ లో స్టోర్/అప్‌డేట్ చేస్తున్నాం
+        cursor.execute(f"SELECT email FROM password_resets WHERE email={P}", (email,))
+        exists = cursor.fetchone()
+        
+        if exists:
+            cursor.execute(f"UPDATE password_resets SET otp={P}, verified={P} WHERE email={P}", (otp, 0, email))
+        else:
+            cursor.execute(f"INSERT INTO password_resets (email, otp, verified) VALUES ({P}, {P}, {P})", (email, otp, 0))
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        # బ్రౌజర్ సెషన్ లో కేవలం ఇమెయిల్ ని మాత్రమే హోల్డ్ చేస్తాం
+        session['reset_email'] = str(email)
 
         msg = Message(
             "JobFinder Password Reset OTP",
@@ -256,17 +285,28 @@ def forgot_password():
 
 @app.route('/verify-otp', methods=['GET', 'POST'])
 def verify_otp():
-    if 'reset_email' not in session:
+    email = session.get('reset_email')
+    if not email:
         return redirect(url_for('forgot_password'))
 
     if request.method == 'POST':
         entered_otp = request.form.get('otp', '').strip()
-        saved_otp = str(session.get('otp', ''))
 
-        if entered_otp == saved_otp and entered_otp != '':
-            session['otp_verified'] = True
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
+        cursor.execute(f"SELECT otp FROM password_resets WHERE email={P}", (email,))
+        row = cursor.fetchone()
+
+        if row and str(row['otp']).strip() == entered_otp:
+            # OTP మ్యాచ్ అయితే వెరిఫైడ్ స్టేటస్ ని True (1) చేస్తాం
+            cursor.execute(f"UPDATE password_resets SET verified={P} WHERE email={P}", (1, email))
+            conn.commit()
+            cursor.close()
+            conn.close()
             return redirect(url_for('reset_password'))
-
+        
+        cursor.close()
+        conn.close()
         return "Wrong OTP. Try again."
 
     return render_template('verify_otp.html')
@@ -274,7 +314,19 @@ def verify_otp():
 
 @app.route('/reset-password', methods=['GET', 'POST'])
 def reset_password():
-    if not session.get('otp_verified') or 'reset_email' not in session:
+    email = session.get('reset_email')
+    if not email:
+        return redirect(url_for('forgot_password'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
+    cursor.execute(f"SELECT verified FROM password_resets WHERE email={P}", (email,))
+    row = cursor.fetchone()
+
+    # ఒకవేళ టేబుల్ లో వెరిఫై అవ్వకుండా డైరెక్ట్ గా పేజీ లోకి వస్తే రిజెక్ట్ చేస్తుంది
+    if not row or not row['verified']:
+        cursor.close()
+        conn.close()
         return redirect(url_for('forgot_password'))
 
     if request.method == 'POST':
@@ -282,31 +334,31 @@ def reset_password():
         confirm_password = request.form.get('confirm_password', '').strip()
 
         if new_password != confirm_password:
+            cursor.close()
+            conn.close()
             return "Passwords do not match!"
 
-        email = session['reset_email']
-        
-        conn = get_db_connection()
-        cursor = conn.cursor()
+        # పాస్‌వర్డ్ ని అప్‌డేట్ చేసి, రీసెట్ లాగ్ ని క్లీన్ చేస్తుంది
         cursor.execute(f"UPDATE users SET password={P} WHERE email={P}", (new_password, email))
+        cursor.execute(f"DELETE FROM password_resets WHERE email={P}", (email,))
         conn.commit()
         cursor.close()
         conn.close()
 
-        session.pop('otp', None)
         session.pop('reset_email', None)
-        session.pop('otp_verified', None)
 
         flash("Password successfully reset! Please login with your new password.", "success")
         return redirect(url_for('login'))
 
+    cursor.close()
+    conn.close()
     return render_template('reset_password.html')
 
 
 @app.route('/all-users')
 def all_users():
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
     cursor.execute("SELECT email, password FROM users")
     users = cursor.fetchall()
     cursor.close()
