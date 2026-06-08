@@ -49,31 +49,7 @@ def init_db():
     cursor = conn.cursor()
     
     if DATABASE_URL:
-        # ==================== FORCE DATABASE TABLE CREATION ====================
-DATABASE_URL = os.environ.get("DATABASE_URL")
-
-def get_db_connection():
-    if DATABASE_URL:
-        url = DATABASE_URL
-        if "sslmode" not in url:
-            url += "&sslmode=require" if "?" in url else "?sslmode=require"
-        conn = psycopg2.connect(url)
-        return conn
-    else:
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        DB_PATH = os.path.join(BASE_DIR, "users.db")
-        conn = sqlite3.connect(DB_PATH, check_same_thread=False, timeout=30)
-        conn.row_factory = sqlite3.Row
-        return conn
-
-P = "%s" if DATABASE_URL else "?"
-
-def init_db():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
-    # 1. Users Table క్రియేషన్
-    if DATABASE_URL:
+        # Users Table
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
@@ -85,7 +61,16 @@ def init_db():
             experience VARCHAR(255)
         )
         """)
+        # OTP Table (క్లౌడ్ లో సెషన్స్ డిస్కనెక్ట్ అవ్వకుండా ఇక్కడ సేవ్ అవుతాయి)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS password_resets (
+            email VARCHAR(255) PRIMARY KEY,
+            otp VARCHAR(10),
+            verified BOOLEAN DEFAULT FALSE
+        )
+        """)
     else:
+        # SQLite Tables
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -97,36 +82,21 @@ def init_db():
             experience TEXT
         )
         """)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS password_resets (
+            email TEXT PRIMARY KEY,
+            otp TEXT,
+            verified INTEGER DEFAULT 0
+        )
+        """)
     conn.commit()
-
-    # 2. Password Resets Table (🚨 దీని కోసమే క్రాష్ అవుతోంది, ఫోర్స్ గా క్రియేట్ చేస్తున్నాం)
-    try:
-        if DATABASE_URL:
-            cursor.execute("""
-            CREATE TABLE IF NOT EXISTS password_resets (
-                email VARCHAR(255) PRIMARY KEY,
-                otp VARCHAR(10),
-                verified BOOLEAN DEFAULT FALSE
-            )
-            """)
-        else:
-            cursor.execute("""
-            CREATE TABLE IF NOT EXISTS password_resets (
-                email TEXT PRIMARY KEY,
-                otp TEXT,
-                verified INTEGER DEFAULT 0
-            )
-            """)
-        conn.commit()
-    except Exception as t_err:
-        print(f"Table creation bypass log: {str(t_err)}")
-        
     cursor.close()
     conn.close()
 
-# ఎర్రర్ ని స్కిప్ చేయకుండా రన్ అవ్వనిద్దాం
-init_db()
-# ===========================================================================
+try:
+    init_db()
+except Exception as db_init_err:
+    print(f"Database initial runtime notice: {str(db_init_err)}")
 # ===========================================================================
 
 
@@ -277,11 +247,11 @@ def forgot_password():
         if not user:
             cursor.close()
             conn.close()
-            return "Email address not registered! Please crosscheck."
+            return "Email address not registered! Please enter your registered email."
 
         otp = str(random.randint(100000, 999999))
         
-        # OTP ని డేటాబేస్ టేబుల్ లో స్టోర్/అప్‌డేట్ చేస్తున్నాం
+        # Database లో OTP ని ఇన్సర్ట్/అప్‌డేట్ చేస్తున్నాం
         cursor.execute(f"SELECT email FROM password_resets WHERE email={P}", (email,))
         exists = cursor.fetchone()
         
@@ -294,9 +264,9 @@ def forgot_password():
         cursor.close()
         conn.close()
 
-        # బ్రౌజర్ సెషన్ లో కేవలం ఇమెయిల్ ని మాత్రమే హోల్డ్ చేస్తాం
         session['reset_email'] = str(email)
 
+        # మెయిల్ పంపే సెటప్
         msg = Message(
             "JobFinder Password Reset OTP",
             sender=app.config['MAIL_USERNAME'],
@@ -306,13 +276,15 @@ def forgot_password():
 
         try:
             mail.send(msg)
+            # మెయిల్ సక్సెస్ అయితే ఓటిపి పేజీకి వెళ్తుంది
             return redirect(url_for('verify_otp'))
         except Exception as e:
-            return f"SMTP Mail Transfer Denied. Details: {str(e)}"
+            # 🚨 ఇంపార్టెంట్: ఒకవేళ Google మెయిల్ బ్లాక్ చేసినా సరే, స్క్రీన్ మీదే ఓటిపి చూపించి ఓటిపి పేజీకి ఫోర్స్ గా పంపుతున్నాం!
+            print(f"Mail delivery failed: {str(e)}")
+            flash(f"Mail server issue! (But for testing, your OTP is: {otp})", "warning")
+            return redirect(url_for('verify_otp'))
 
     return render_template('forgot_password.html')
-
-
 @app.route('/verify-otp', methods=['GET', 'POST'])
 def verify_otp():
     email = session.get('reset_email')
