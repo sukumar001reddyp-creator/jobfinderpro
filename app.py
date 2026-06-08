@@ -23,6 +23,14 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 
 mail = Mail(app)
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "users.db")
+
+def get_db_connection():
+    conn = sqlite3.connect(DB_PATH, check_same_thread=False, timeout=30)
+    conn.row_factory = sqlite3.Row
+    return conn
+
 # ================= RENDER LIVE STABLE DIRECTORY FIX =================
 # Cloud container runtime dynamically maps tracking files inside isolated /tmp matrix
 if os.environ.get('RENDER') or 'ON_RENDER' in os.environ:
