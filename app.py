@@ -281,10 +281,13 @@ def forgot_password():
         @copy_current_request_context
         def send_email_with_context(email_msg):
             try:
-                mail.send(email_msg)
-                print("🎉 Cloud Background Mail Sent Successfully!")
-            except Exception as e:
-                print(f"❌ Cloud SMTP Background Error: {str(e)}")
+    mail.send(msg)
+    print("MAIL SENT SUCCESSFULLY")
+    return redirect(url_for('verify_otp'))
+
+except Exception as e:
+    print("MAIL ERROR:", str(e))
+    return "Mail failed"
 
         # బ్యాక్‌గ్రౌండ్ థ్రెడ్ స్టార్ట్
         threading.Thread(target=send_email_with_context, args=(msg,)).start()
