@@ -1,3 +1,5 @@
+import threading
+from flask import copy_current_request_context
 import os
 import random
 import sqlite3
@@ -251,12 +253,12 @@ def forgot_password():
 
         otp = str(random.randint(100000, 999999))
         
-        # DB లో OTP స్టోరేజ్
+        # Database లో OTP స్టోరేజ్
         cursor.execute(f"SELECT email FROM password_resets WHERE email={P}", (email,))
         exists = cursor.fetchone()
         
         if exists:
-            cursor.execute(f"UPDATE password_resets SET otp={P}, verified={P} WHERE email={P}", (otp, False, email))
+            cursor.execute(f"UPDATE password_resets SET otp={P}, verified={P} WHERE email={P}", (otp, false, email))
         else:
             cursor.execute(f"INSERT INTO password_resets (email, otp, verified) VALUES ({P}, {P}, {P})", (email, otp, False))
         
@@ -266,7 +268,7 @@ def forgot_password():
 
         session['reset_email'] = str(email)
 
-        # మెయిల్ ఆబ్జెక్ట్ క్రియేషన్
+        # మెయిల్ ఆబ్జెక్ట్
         msg = Message(
             "JobFinder Password Reset OTP",
             sender=app.config['MAIL_USERNAME'],
@@ -274,18 +276,24 @@ def forgot_password():
         )
         msg.body = f"Hello,\n\nYour JobFinder password reset OTP is: {otp}\n\nTeam JobFinder"
 
-        # క్రాష్ ప్రొటెక్షన్ రన్
-        try:
-            # ఒకవేళ మెయిల్ సర్వర్ కనెక్ట్ అవ్వడానికి లేట్ అయినా 15 సెకన్లలో కట్ చేసి ఎక్సెప్ట్ బ్లాక్ కి పంపుతుంది
-            with mail.connect() as smtp_conn:
-                smtp_conn.send(msg)
-            return redirect(url_for('verify_otp'))
-        except (SystemExit, Exception) as mail_err:
-            # 🚨 ఒకవేళ నెట్‌వర్క్ పూర్తిగా బ్లాక్ అయి వర్కర్ సిస్టమ్ ఎగ్జిట్ కొట్టినా సరే... 
-            # బ్రేక్ అవ్వకుండా స్క్రీన్ మీద ఓటిపి ని ఫ్లాష్ చేసి ఓటిపి పేజీ కి పంపేస్తున్నాం!
-            print(f"Bypassing Mail Server Crash. Log: {str(mail_err)}")
-            flash(f"Temporary Mail Server Issue! (For testing, use this OTP: {otp})", "warning")
-            return redirect(url_for('verify_otp'))
+        # 🚨 క్లౌడ్ (Render) లో సెషన్/కాంటెక్స్ట్ డ్రాప్ అవ్వకుండా కాపీ చేస్తున్నాం
+        @copy_current_request_context
+        def send_email_with_context(email_msg):
+            try:
+                mail.send(email_msg)
+                print("🎉 Cloud Background Mail Sent Successfully!")
+            except Exception as e:
+                print(f"❌ Cloud SMTP Background Error: {str(e)}")
+
+        # బ్యాక్‌గ్రౌండ్ థ్రెడ్ స్టార్ట్
+        threading.Thread(target=send_email_with_context, args=(msg,)).start()
+
+        # లోకల్ లో వెరిఫికేషన్ కోసం స్క్రీన్ మీద ఫ్లాష్
+        if not DATABASE_URL:
+            flash(f"Local test mode active. Your OTP is: {otp}", "info")
+
+        # 1 సెకండ్ లో పేజీ ఓపెన్ అయిపోతుంది
+        return redirect(url_for('verify_otp'))
 
     return render_template('forgot_password.html')
 @app.route('/verify-otp', methods=['GET', 'POST'])
