@@ -1,8 +1,8 @@
 import os
 import random
 import sqlite3
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.extras import RealDictCursor
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 from flask_mail import Mail, Message
 
@@ -28,7 +28,7 @@ def get_db_connection():
         if "sslmode" not in url:
             url += "&sslmode=require" if "?" in url else "?sslmode=require"
         # RealDictCursor ని కేవలం క్వెరీ రన్ చేసేటప్పుడే వాడుకుందాం, క్రాష్ అవ్వకుండా ఉంటుంది
-        conn = psycopg2.connect(url)
+        conn = psycopg.connect(url)
         return conn
     else:
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
