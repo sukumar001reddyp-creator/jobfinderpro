@@ -50,22 +50,24 @@ def home():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        name = request.form.get("name")
-        email = request.form.get("email")
+        # Data extracting blocks directly using spaces removal validation .strip()
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip()
         password = request.form.get("password", "").strip()
         confirm_password = request.form.get("confirm_password", "").strip()
-        jobrole = request.form.get("jobrole")
-        location = request.form.get("location")
-        experience = request.form.get("experience")
+        jobrole = request.form.get("jobrole", "").strip()
+        location = request.form.get("location", "").strip()
+        experience = request.form.get("experience", "").strip()
 
         if not all([name, email, password, jobrole, location, experience]):
             return "All fields are required!"
 
         if password != confirm_password:
-            return "Passwords do not match"
+            return "Passwords do not match!"
 
         conn = get_db_connection()
         cursor = conn.cursor()
+        
         try:
             cursor.execute(
                 """
@@ -74,12 +76,14 @@ def register():
                 """,
                 (name, email, password, jobrole, location, experience)
             )
-            conn.commit()
-            conn.close()
+            conn.commit()  # Ee line absolute ga execute avali bro appude local storage completely write avthadi
             return redirect(url_for("login"))
         except sqlite3.IntegrityError:
-            conn.close()
             return "Email already exists"
+        except Exception as e:
+            return f"Database Error: {str(e)}"
+        finally:
+            conn.close() # Connections drop complete clean execution memory cleanup
     
     return render_template("register.html")
 
@@ -87,11 +91,13 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")
+        email = request.form.get("email", "").strip()
+        password = request.form.get("password", "").strip()
 
         conn = get_db_connection()
         cursor = conn.cursor()
+        
+        # Cross track parameters matching query execution loop
         cursor.execute("SELECT * FROM users WHERE email=? AND password=?", (email, password))
         user = cursor.fetchone()
         conn.close()
