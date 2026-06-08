@@ -256,9 +256,9 @@ def forgot_password():
         exists = cursor.fetchone()
         
         if exists:
-            cursor.execute(f"UPDATE password_resets SET otp={P}, verified={P} WHERE email={P}", (otp, 0, email))
+            cursor.execute(f"UPDATE password_resets SET otp={P}, verified={P} WHERE email={P}", (otp, false, email))
         else:
-            cursor.execute(f"INSERT INTO password_resets (email, otp, verified) VALUES ({P}, {P}, {P})", (email, otp, 0))
+            cursor.execute(f"INSERT INTO password_resets (email, otp, verified) VALUES ({P}, {P}, {P})", (email, otp, false))
         
         conn.commit()
         cursor.close()
