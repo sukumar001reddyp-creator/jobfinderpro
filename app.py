@@ -273,6 +273,19 @@ def reset_password():
         return redirect(url_for('login'))
 
     return render_template('reset_password.html')
+    
+@app.route('/all-users')
+def all_users():
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT email,password FROM users")
+    users = cursor.fetchall()
+
+    conn.close()
+
+    return str([dict(x) for x in users])
 
 
 @app.route("/logout")
