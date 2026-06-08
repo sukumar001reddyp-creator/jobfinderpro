@@ -186,7 +186,7 @@ def forgot_password():
         conn.close()
 
         if not user:
-            return "Email address not registered!"
+            return "Email address not registered! Please enter your registered email."
 
         otp = str(random.randint(100000, 999999))
         session['otp'] = otp
@@ -197,13 +197,16 @@ def forgot_password():
             sender=app.config['MAIL_USERNAME'],
             recipients=[email]
         )
-        msg.body = f"Hello,\n\nYour OTP is: {otp}\n\nValid for 10 mins."
+        msg.body = f"Hello,\n\nYour JobFinder password reset OTP is: {otp}\n\nValid for 10 minutes.\n\nTeam JobFinder"
 
         try:
+            print(f"Attempting to send OTP email to: {email}")
             mail.send(msg)
             return redirect(url_for('verify_otp'))
         except Exception as e:
-            return f"Error sending email: {str(e)}"
+            # Server crash avvakunda exact SMTP error screens screen meede return chesthadi bro
+            print(f"SMTP Mail Error: {str(e)}")
+            return f"Error sending email. Internal Mail Setup Broken. Details: {str(e)}"
 
     return render_template('forgot_password.html')
 
