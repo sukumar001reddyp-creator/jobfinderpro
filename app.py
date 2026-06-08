@@ -1,8 +1,8 @@
+import os
 import random
 import sqlite3
-from flask import Flask, render_template, request, redirect, session, url_for
-from flask_mail import Mail, Message
 from flask import Flask, render_template, request, redirect, session, url_for, flash
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
 app.secret_key = "jobfinder_secret"
@@ -16,12 +16,17 @@ app.config['MAIL_PASSWORD'] = 'eole ihak wvty vumv'
 
 mail = Mail(app)
 
+# Render & Cloud instances dynamic direct matching mapping file track config
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "users.db")
+
 def get_db_connection():
-    conn = sqlite3.connect("users.db")
-    conn.row_factory = sqlite3.Row  # Enforces dictionary-like access
+    # Multi-thread processing crashes bypass cheyadaniki settings template line model
+    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+    conn.row_factory = sqlite3.Row
     return conn
 
-# Database Initialization
+# Database schema initial layout engine validation setup
 def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -50,7 +55,6 @@ def home():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        # Data extracting blocks directly using spaces removal validation .strip()
         name = request.form.get("name", "").strip()
         email = request.form.get("email", "").strip()
         password = request.form.get("password", "").strip()
@@ -68,6 +72,10 @@ def register():
         conn = get_db_connection()
         cursor = conn.cursor()
         
+        # Safe redirection setup variable flag
+        success_registration = False
+        error_msg = None
+
         try:
             cursor.execute(
                 """
@@ -76,14 +84,19 @@ def register():
                 """,
                 (name, email, password, jobrole, location, experience)
             )
-            conn.commit()  # Ee line absolute ga execute avali bro appude local storage completely write avthadi
-            return redirect(url_for("login"))
+            conn.commit()
+            success_registration = True
         except sqlite3.IntegrityError:
-            return "Email already exists"
+            error_msg = "Email already exists"
         except Exception as e:
-            return f"Database Error: {str(e)}"
+            error_msg = f"Database Error: {str(e)}"
         finally:
-            conn.close() # Connections drop complete clean execution memory cleanup
+            conn.close() # Transaction storage stream memory cleanup is mandatory
+
+        if success_registration:
+            return redirect(url_for("login"))
+        else:
+            return error_msg
     
     return render_template("register.html")
 
@@ -96,8 +109,6 @@ def login():
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        
-        # Cross track parameters matching query execution loop
         cursor.execute("SELECT * FROM users WHERE email=? AND password=?", (email, password))
         user = cursor.fetchone()
         conn.close()
@@ -134,7 +145,6 @@ def search():
     location = request.args.get("location", "").strip()
     experience = request.args.get("experience", "").strip()
 
-    # Dynamic database matching logic
     conn = get_db_connection()
     cursor = conn.cursor()
     
@@ -167,9 +177,8 @@ def search():
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     if request.method == 'POST':
-        email = request.form.get('email')
+        email = request.form.get('email', '').strip()
         
-        # Verify if email exists
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT email FROM users WHERE email=?", (email,))
@@ -205,11 +214,9 @@ def verify_otp():
         return redirect(url_for('forgot_password'))
 
     if request.method == 'POST':
-        # Added .strip() to remove accidental spaces typed by user
         entered_otp = request.form.get('otp', '').strip()
         saved_otp = str(session.get('otp', ''))
 
-        # Direct string to string strict check
         if entered_otp == saved_otp and entered_otp != '':
             session['otp_verified'] = True
             return redirect(url_for('reset_password'))
@@ -225,52 +232,34 @@ def reset_password():
         return redirect(url_for('forgot_password'))
 
     if request.method == 'POST':
-        new_password = request.form.get('password')
-        confirm_password = request.form.get('confirm_password')
+        new_password = request.form.get('password', '').strip()
+        confirm_password = request.form.get('confirm_password', '').strip()
 
         if new_password != confirm_password:
             return "Passwords do not match!"
 
         email = session['reset_email']
         
-        # Database verification update
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("UPDATE users SET password=? WHERE email=?", (new_password, email))
         conn.commit()
         conn.close()
 
-        # Session clean-up tracking parameters 
         session.pop('otp', None)
         session.pop('reset_email', None)
         session.pop('otp_verified', None)
 
-        # Flash dynamic setup (Only single string insertion)
         flash("Password successfully reset! Please login with your new password.", "success")
-
         return redirect(url_for('login'))
 
     return render_template('reset_password.html')
+
 
 @app.route("/logout")
 def logout():
     session.pop("user", None)
     return redirect(url_for("home"))
-
-
-@app.route('/test-mail')
-def test_mail():
-    msg = Message(
-        'Test Mail',
-        sender=app.config['MAIL_USERNAME'],
-        recipients=['jobfinderpro85@gmail.com']
-    )
-    msg.body = 'Mail working bro'
-    try:
-        mail.send(msg)
-        return "Mail Sent Successfully"
-    except Exception as e:
-        return f"Mail setup broken: {str(e)}"
 
 
 if __name__ == "__main__":
