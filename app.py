@@ -7,8 +7,6 @@ from flask import Flask, render_template, request, redirect, session, url_for, f
 from flask_mail import Mail, Message
 
 app = Flask(__name__)
-
-# Static key ఇస్తున్నా క్లౌడ్ లో మల్టీ-వర్కర్స్ కన్ఫ్యూజ్ అవ్వకుండా ఉండటానికి
 app.secret_key = "jobfinder_super_stable_secret_key_2026"
 
 # Flask-Mail Configuration
@@ -21,7 +19,7 @@ app.config['MAIL_PASSWORD'] = 'eole ihak wvty vumv'
 
 mail = Mail(app)
 
-# ==================== HYBRID DATABASE WITH OTP FIX ====================
+# ==================== HYBRID DATABASE FIX ====================
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 def get_db_connection():
@@ -29,7 +27,8 @@ def get_db_connection():
         url = DATABASE_URL
         if "sslmode" not in url:
             url += "&sslmode=require" if "?" in url else "?sslmode=require"
-        conn = psycopg2.connect(url, cursor_factory=RealDictCursor)
+        # RealDictCursor ని కేవలం క్వెరీ రన్ చేసేటప్పుడే వాడుకుందాం, క్రాష్ అవ్వకుండా ఉంటుంది
+        conn = psycopg2.connect(url)
         return conn
     else:
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -45,7 +44,6 @@ def init_db():
     cursor = conn.cursor()
     
     if DATABASE_URL:
-        # Users Table
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
@@ -57,7 +55,6 @@ def init_db():
             experience VARCHAR(255)
         )
         """)
-        # OTPs Table (సెషన్స్ తో పనిలేకుండా ఇక్కడ సేవ్ అవుతుంది)
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS password_resets (
             email VARCHAR(255) PRIMARY KEY,
@@ -66,7 +63,6 @@ def init_db():
         )
         """)
     else:
-        # SQLite Users Table
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -78,7 +74,6 @@ def init_db():
             experience TEXT
         )
         """)
-        # SQLite OTPs Table
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS password_resets (
             email TEXT PRIMARY KEY,
@@ -90,10 +85,11 @@ def init_db():
     cursor.close()
     conn.close()
 
+# సర్వర్ రన్ అయ్యేటప్పుడు డేటాబేస్ లేకపోయినా 502 క్రాష్ అవ్వకుండా bypass ప్రొటెక్షన్
 try:
     init_db()
 except Exception as db_init_err:
-    print(f"Database initial runtime notice: {str(db_init_err)}")
+    print(f"Database initial boot warning: {str(db_init_err)}")
 # ===========================================================================
 
 
@@ -151,7 +147,9 @@ def login():
         password = request.form.get("password", "").strip()
 
         conn = get_db_connection()
-        cursor = conn.cursor()
+        # Postgres లో Dict ఫార్మాట్ లో రీడ్ చేయడానికి ఇక్కడ యాడ్ చేశా
+        cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
+        
         cursor.execute(f"SELECT * FROM users WHERE email={P} AND password={P}", (email, password))
         user = cursor.fetchone()
         cursor.close()
@@ -172,7 +170,8 @@ def dashboard():
         return redirect(url_for("login"))
 
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
+    
     cursor.execute(f"SELECT name, email, jobrole, location, experience FROM users WHERE email={P}", (session["user"],))
     user = cursor.fetchone()
     cursor.close()
@@ -191,7 +190,7 @@ def search():
     experience = request.args.get("experience", "").strip()
 
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
     
     like_op = "ILIKE" if DATABASE_URL else "LIKE"
     query = "SELECT name, email, jobrole, location, experience FROM users WHERE 1=1"
@@ -221,7 +220,7 @@ def forgot_password():
         email = request.form.get('email', '').strip()
         
         conn = get_db_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
         cursor.execute(f"SELECT email FROM users WHERE email={P}", (email,))
         user = cursor.fetchone()
         
@@ -232,7 +231,6 @@ def forgot_password():
 
         otp = str(random.randint(100000, 999999))
         
-        # Database లో OTP ని ఇన్సర్ట్ లేదా అప్డేట్ చేస్తున్నాం
         cursor.execute(f"SELECT email FROM password_resets WHERE email={P}", (email,))
         exists = cursor.fetchone()
         
@@ -245,7 +243,6 @@ def forgot_password():
         cursor.close()
         conn.close()
 
-        # బ్రౌజర్ కి కేవలం Reset ఇమెయిల్ మాత్రమే సెషన్ లో ఇస్తాం (చిన్న కుకీ కాబట్టి క్రాష్ అవ్వదు)
         session['reset_email'] = str(email)
 
         msg = Message(
@@ -273,14 +270,12 @@ def verify_otp():
     if request.method == 'POST':
         entered_otp = request.form.get('otp', '').strip()
 
-        # Database నుంచి OTP ని తెచ్చుకుంటున్నాం
         conn = get_db_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
         cursor.execute(f"SELECT otp FROM password_resets WHERE email={P}", (email,))
         row = cursor.fetchone()
 
         if row and str(row['otp']).strip() == entered_otp:
-            # Verified స్టేటస్ ని 1 (True) చేస్తున్నాం
             cursor.execute(f"UPDATE password_resets SET verified={P} WHERE email={P}", (1, email))
             conn.commit()
             cursor.close()
@@ -300,9 +295,8 @@ def reset_password():
     if not email:
         return redirect(url_for('forgot_password'))
 
-    # DB లో ఈ ఇమెయిల్ కి OTP వెరిఫై అయిందో లేదో చెక్ చేస్తున్నాం
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
     cursor.execute(f"SELECT verified FROM password_resets WHERE email={P}", (email,))
     row = cursor.fetchone()
 
@@ -320,7 +314,6 @@ def reset_password():
             conn.close()
             return "Passwords do not match!"
 
-        # Password ని అప్డేట్ చేసి, టేబుల్ నుంచి ఆ రీసెట్ రికార్డ్ ని డిలీట్ చేస్తున్నాం
         cursor.execute(f"UPDATE users SET password={P} WHERE email={P}", (new_password, email))
         cursor.execute(f"DELETE FROM password_resets WHERE email={P}", (email,))
         conn.commit()
@@ -340,7 +333,7 @@ def reset_password():
 @app.route('/all-users')
 def all_users():
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
     cursor.execute("SELECT email, password FROM users")
     users = cursor.fetchall()
     cursor.close()
