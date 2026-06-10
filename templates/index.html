@@ -5,7 +5,6 @@
 <title>JobFinder Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Font Awesome UI Icons -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
 <style>
@@ -19,8 +18,8 @@
     --light-slate: #94a3b8;
     --bg-surface: #ffffff;
     --bg-body: #f5f8ff;
-    --bg-gateway-card: #e0f2fe; /* Distinct, permanent light blue background for the boxes */
-    --bg-gateway-hover: #bae6fd; /* Deeper light blue background on hover */
+    --bg-gateway-card: #e0f2fe; 
+    --bg-gateway-hover: #bae6fd; 
     --border: #e2e8f0;
     --radius-lg: 16px;
     --radius-md: 12px;
@@ -37,6 +36,40 @@ body{
     background: var(--bg-body);
     color: var(--dark);
     line-height: 1.5;
+    position: relative;
+}
+
+/* --- Fixed Floating Background Layer for the Image --- */
+.page-bg-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1; 
+    pointer-events: none;
+}
+
+.woman-bg-layout {
+    position: absolute;
+    top: 80px;
+    right: 1%;
+    width: 44%; 
+    height: 720px;
+    /* Flask/Django static ఫోల్డర్ పాత్ ఇక్కడ ఫిక్స్ చేశాను బ్రో */
+    background: url('/static/woman.png') no-repeat top right;
+    background-size: contain;
+    /* కింద కార్డ్‌లతో నీట్‌గా బ్లెండ్ అవ్వడానికి సాఫ్ట్ మాస్క్ */
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+    opacity: 0.98;
+}
+
+/* --- Content Wrapper on Top --- */
+.app-content-wrapper {
+    position: relative;
+    z-index: 10; 
 }
 
 .bg-glow-1 {
@@ -300,7 +333,7 @@ body{
     color: var(--primary);
 }
 
-/* Left Sidebar: Hot Queries Styling (Turns Blue on Hover) */
+/* Left Sidebar: Hot Queries Styling */
 .left-section-grid {
     display: flex;
     flex-direction: column;
@@ -342,7 +375,7 @@ body{
     color: #ffffff; 
 }
 
-/* Right Content: Connected Gateways (Visually Solid Light Blue Boxes Normally) */
+/* Right Content: Connected Gateways */
 .website-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -350,8 +383,8 @@ body{
 }
 
 .card {
-    background: var(--bg-gateway-card); /* Clearly visible light blue background by default */
-    border: 1px solid #bae6fd; /* Distinct blue-tinted border line */
+    background: var(--bg-gateway-card); 
+    border: 1px solid #bae6fd; 
     border-radius: var(--radius-lg);
     padding: 24px;
     display: flex;
@@ -363,7 +396,7 @@ body{
 
 .card:hover {
     border-color: var(--primary);
-    background: var(--bg-gateway-hover); /* Deepens smoothly on hover */
+    background: var(--bg-gateway-hover); 
     transform: translateY(-2px);
     box-shadow: 0 12px 24px rgba(37, 99, 235, 0.08);
 }
@@ -472,7 +505,12 @@ body{
 }
 
 /* --- Adaptive Viewports Configuration --- */
+@media(max-width:1150px){
+    .woman-bg-layout { width: 40%; opacity: 0.5; }
+}
+
 @media(max-width:920px){
+    .woman-bg-layout { display: none; }
     .main-sections { grid-template-columns: 1fr; }
     .search-box { grid-template-columns: 1fr; }
     .website-grid { grid-template-columns: 1fr; }
@@ -480,178 +518,300 @@ body{
     .footer { flex-direction: column; gap: 14px; text-align: center; }
     .footer-disclaimer { text-align: center; }
 }
+.profile-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.profile-icon{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#2563eb;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.profile-box a{
+    text-decoration:none;
+    color:red;
+    font-weight:bold;
+}
+.profile-dropdown{
+    position:relative;
+    display:inline-block;
+}
+
+.profile-icon{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#2563eb;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.dropdown-menu{
+    position:absolute;
+    top:100%;
+    right:0;
+    min-width:180px;
+    background:white;
+    border-radius:10px;
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+    display:none;
+    overflow:hidden;
+    z-index:999;
+}
+
+.dropdown-menu a{
+    display:block;
+    padding:12px 15px;
+    text-decoration:none;
+    color:#333;
+}
+
+.dropdown-menu a:hover{
+    background:#f3f4f6;
+}
+
+.user-name{
+    padding:12px 15px;
+    font-weight:bold;
+    border-bottom:1px solid #eee;
+}
+
+.profile-dropdown{
+    position:relative;
+    display:inline-block;
+}
+.profile-dropdown:hover .dropdown-menu{
+    display:block;
+}
 </style>
 </head>
 <body>
 
-<div class="bg-glow-1"></div>
+<div class="page-bg-container">
+    <div class="woman-bg-layout"></div>
+</div>
 
-<!-- Systems Hub Navbar Layout -->
-<nav class="navbar">
-    <a href="#" class="nav-brand">
-        <div class="nav-logo-icon"><i class="fa-solid fa-compass"></i></div>
-        <div class="nav-logo-text">Job<span>Finder Pro</span></div>
+<div class="app-content-wrapper">
+
+    <div class="bg-glow-1"></div>
+
+    <nav class="navbar">
+
+    <a href="/" class="nav-brand">
+        <div class="nav-logo-icon">
+            <i class="fa-solid fa-compass"></i>
+        </div>
+
+        <div class="nav-logo-text">
+            Job<span>Finder Pro</span>
+        </div>
     </a>
+
     <div class="nav-buttons">
-        <a href="/login" class="btn-nav btn-secondary">Login</a>
-        <a href="/register" class="btn-nav btn-primary">Register</a>
+
+        {% if logged_user %}
+
+<div class="profile-dropdown">
+
+    <div class="profile-icon">
+        {{ logged_user[0]|upper }}
     </div>
+
+    <div class="dropdown-menu">
+
+        <div class="user-name">
+            {{ logged_user }}
+        </div>
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</div>
+
+{% else %}
+
+<a href="/login" class="btn-nav btn-secondary">
+    Login
+</a>
+
+<a href="/register" class="btn-nav btn-primary">
+    Register
+</a>
+
+{% endif %}
+
+    </div>
+
 </nav>
 
-<!-- Compact Operational Header Block -->
-<div class="header">
-    <h1 class="logo">Search Across Global <span>Job Boards</span></h1>
-    <p class="subtitle">
-        An advanced worldwide aggregation engine mapping real-time open listings from top external endpoints seamlessly into a unified control interface.
-    </p>
-</div>
+    <div class="header">
+        <h1 class="logo">Search Across Global <span>Job Boards</span></h1>
+        <p class="subtitle">
+            An advanced worldwide aggregation engine mapping real-time open listings from top external endpoints seamlessly into a unified control interface.
+        </p>
+    </div>
 
-<!-- Input Terminal Layer Box Section -->
-<div class="search-box-container">
-    <form class="search-box" action="/search">
-        <div class="input-group">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" name="role" placeholder="Job Role or Skill">
-        </div>
+    <div class="search-box-container">
+        <form class="search-box" action="/search">
+            <div class="input-group">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" name="role" placeholder="Job Role or Skill">
+            </div>
 
-        <div class="input-field input-group">
-            <i class="fa-solid fa-location-dot"></i>
-            <input type="text" name="location" placeholder="Global Location">
-        </div>
+            <div class="input-field input-group">
+                <i class="fa-solid fa-location-dot"></i>
+                <input type="text" name="location" placeholder="Global Location">
+            </div>
 
-        <div class="input-group">
-            <i class="fa-solid fa-layer-group"></i>
-            <select name="experience">
-                <option value="">Experience Range</option>
-                <option>Fresher</option>
-                <option>1-3 Years</option>
-                <option>3-5 Years</option>
-                <option>5+ Years</option>
-            </select>
-        </div>
+            <div class="input-group">
+                <i class="fa-solid fa-layer-group"></i>
+                <select name="experience">
+                    <option value="">Experience Range</option>
+                    <option>Fresher</option>
+                    <option>1-3 Years</option>
+                    <option>3-5 Years</option>
+                    <option>5+ Years</option>
+                </select>
+            </div>
 
-        <button type="submit" class="search-btn">
-            Find Openings <i class="fa-solid fa-arrow-right"></i>
-        </button>
-    </form>
-</div>
+            <button type="submit" class="search-btn">
+                Find Openings <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </form>
+    </div>
 
-<!-- Metric Analytical Counter Strips -->
-<div class="stats">
-    <div class="stat"><h2>10K+</h2> <p>Active Global Feeds</p></div>
-    <div class="stat"><h2>500+</h2> <p>Monitored Corporate Entities</p></div>
-    <div class="stat"><h2>50K+</h2> <p>Engine Queries Handled</p></div>
-</div>
+    <div class="stats">
+        <div class="stat"><h2>10K+</h2> <p>Active Global Feeds</p></div>
+        <div class="stat"><h2>500+</h2> <p>Monitored Corporate Entities</p></div>
+        <div class="stat"><h2>50K+</h2> <p>Engine Queries Handled</p></div>
+    </div>
 
-<!-- Main System Container Frame Layout -->
-<div class="container">
-    <div class="main-sections">
+    <div class="container">
+        <div class="main-sections">
 
-        <!-- Left Segment: Hot Search Parameters Tracking -->
-        <div class="left-section">
-            <h3 class="section-title"><i class="fa-solid fa-fire"></i> Hot Queries</h3>
-            <div class="left-section-grid">
-                <a class="role-card" href="/search?role=Graphic+Designer"><span>🎨 Graphic Designer</span> <i class="fa-solid fa-chevron-right"></i></a>
-                <a class="role-card" href="/search?role=Python+Developer"><span>💻 Python Developer</span> <i class="fa-solid fa-chevron-right"></i></a>
-                <a class="role-card" href="/search?role=Frontend+Developer"><span>📱 Frontend Developer</span> <i class="fa-solid fa-chevron-right"></i></a>
-                <a class="role-card" href="/search?role=Data+Analyst"><span>📊 Data Analyst</span> <i class="fa-solid fa-chevron-right"></i></a>
-                <a class="role-card" href="/search?role=Digital+Marketing"><span>📢 Digital Marketing</span> <i class="fa-solid fa-chevron-right"></i></a>
-                <a class="role-card" href="/search?role=Video+Editor"><span>🎬 Video Editor</span> <i class="fa-solid fa-chevron-right"></i></a>
-                <a class="role-card" href="/search?role=UI+UX+Designer"><span>🎯 UI/UX Designer</span> <i class="fa-solid fa-chevron-right"></i></a>
-                <a class="role-card" href="/search?role=Accountant"><span>💰 Accountant</span> <i class="fa-solid fa-chevron-right"></i></a>
+            <div class="left-section">
+                <h3 class="section-title"><i class="fa-solid fa-fire"></i> Hot Queries</h3>
+                <div class="left-section-grid">
+                    <a class="role-card" href="/search?role=Graphic+Designer"><span>🎨 Graphic Designer</span> <i class="fa-solid fa-chevron-right"></i></a>
+                    <a class="role-card" href="/search?role=Python+Developer"><span>💻 Python Developer</span> <i class="fa-solid fa-chevron-right"></i></a>
+                    <a class="role-card" href="/search?role=Frontend+Developer"><span>📱 Frontend Developer</span> <i class="fa-solid fa-chevron-right"></i></a>
+                    <a class="role-card" href="/search?role=Data+Analyst"><span>📊 Data Analyst</span> <i class="fa-solid fa-chevron-right"></i></a>
+                    <a class="role-card" href="/search?role=Digital+Marketing"><span>📢 Digital Marketing</span> <i class="fa-solid fa-chevron-right"></i></a>
+                    <a class="role-card" href="/search?role=Video+Editor"><span>🎬 Video Editor</span> <i class="fa-solid fa-chevron-right"></i></a>
+                    <a class="role-card" href="/search?role=UI+UX+Designer"><span>🎯 UI/UX Designer</span> <i class="fa-solid fa-chevron-right"></i></a>
+                    <a class="role-card" href="/search?role=Accountant"><span>💰 Accountant</span> <i class="fa-solid fa-chevron-right"></i></a>
+                </div>
+            </div>
+
+            <div class="right-section">
+                <h3 class="section-title"><i class="fa-solid fa-link"></i> Connected Gateways</h3>
+                <div class="website-grid">
+
+                    <div class="card">
+                        <div class="card-top">
+                            <h3>LinkedIn Jobs</h3>
+                            <p>Global professional networking matrix, asset databases, and high-tier openings.</p>
+                        </div>
+                        <a href="https://www.linkedin.com/jobs/" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-top">
+                            <h3>Naukri</h3>
+                            <p>Deep cluster data mapping technology and development sectors internationally.</p>
+                        </div>
+                        <a href="https://www.naukri.com/jobs?k={{ role }}" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-top">
+                            <h3>Indeed</h3>
+                            <p>Comprehensive worldwide directory tracking cross-industry corporate deployments.</p>
+                        </div>
+                        <a href="https://in.indeed.com" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-top">
+                            <h3>Foundit</h3>
+                            <p>Skill-based smart search layers targeting custom specialized candidate tracks.</p>
+                        </div>
+                        <a href="https://www.foundit.in" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-top">
+                            <h3>Freshersworld</h3>
+                            <p>Focused early-stage opportunity boards prioritizing placement pathways.</p>
+                        </div>
+                        <a href="https://www.freshersworld.com" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-top">
+                            <h3>Shine</h3>
+                            <p>Optimized index streams offering rapid matching vectors into high-growth firms.</p>
+                        </div>
+                        <a href="https://www.shine.com" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
+                    </div>
+
+                </div>
             </div>
         </div>
 
-        <!-- Right Segment: Central External Portals Routing Grid -->
-        <div class="right-section">
-            <h3 class="section-title"><i class="fa-solid fa-link"></i> Connected Gateways</h3>
-            <div class="website-grid">
-
-                <div class="card">
-                    <div class="card-top">
-                        <h3>LinkedIn Jobs</h3>
-                        <p>Global professional networking matrix, asset databases, and high-tier openings.</p>
-                    </div>
-                    <a href="https://www.linkedin.com/jobs/" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
+        <div class="feature-strip">
+            <div class="feature-pill">
+                <div class="feature-pill-icon"><i class="fa-solid fa-bolt"></i></div>
+                <div class="feature-pill-text">
+                    <h4>Unified Query Pipeline</h4>
+                    <p>Run query operations across multiple host servers instantly from one terminal dashboard layout.</p>
                 </div>
-
-                <div class="card">
-                    <div class="card-top">
-                        <h3>Naukri</h3>
-                        <p>Deep cluster data mapping technology and development sectors internationally.</p>
-                    </div>
-                    <a href="https://www.naukri.com/jobs?k={{ role }}" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
+            </div>
+            <div class="feature-pill">
+                <div class="feature-pill-icon"><i class="fa-solid fa-globe"></i></div>
+                <div class="feature-pill-text">
+                    <h4>Cross-Border Infrastructure</h4>
+                    <p>Filter active job feeds globally across any coordinate or tech ecosystem with uniform ease.</p>
                 </div>
-
-                <div class="card">
-                    <div class="card-top">
-                        <h3>Indeed</h3>
-                        <p>Comprehensive worldwide directory tracking cross-industry corporate deployments.</p>
-                    </div>
-                    <a href="https://in.indeed.com" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
+            </div>
+            <div class="feature-pill">
+                <div class="feature-pill-icon"><i class="fa-solid fa-user-shield"></i></div>
+                <div class="feature-pill-text">
+                    <h4>Direct Verification Handshake</h4>
+                    <p>We do not store or process details. Experience pure zero-middleman transit directly to verified sources.</p>
                 </div>
-
-                <div class="card">
-                    <div class="card-top">
-                        <h3>Foundit</h3>
-                        <p>Skill-based smart search layers targeting custom specialized candidate tracks.</p>
-                    </div>
-                    <a href="https://www.foundit.in" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
-                </div>
-
-                <div class="card">
-                    <div class="card-top">
-                        <h3>Freshersworld</h3>
-                        <p>Focused early-stage opportunity boards prioritizing placement pathways.</p>
-                    </div>
-                    <a href="https://www.freshersworld.com" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
-                </div>
-
-                <div class="card">
-                    <div class="card-top">
-                        <h3>Shine</h3>
-                        <p>Optimized index streams offering rapid matching vectors into high-growth firms.</p>
-                    </div>
-                    <a href="https://www.shine.com" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
-                </div>
-
             </div>
         </div>
     </div>
 
-    <!-- Inline Modern Feature Strip Component Section -->
-    <div class="feature-strip">
-        <div class="feature-pill">
-            <div class="feature-pill-icon"><i class="fa-solid fa-bolt"></i></div>
-            <div class="feature-pill-text">
-                <h4>Unified Query Pipeline</h4>
-                <p>Run query operations across multiple host servers instantly from one terminal dashboard layout.</p>
-            </div>
+    <footer class="footer">
+        <div>© 2026 JobFinder Pro Hub | Metasearch Platform</div>
+        <div class="footer-disclaimer">
+            Disclaimer: JobFinder Pro operates strictly as an open index search utility. We do not act as job recruiters or direct employers. Source visual assets remain copyrighted intellectual property of their respective official organizations.
         </div>
-        <div class="feature-pill">
-            <div class="feature-pill-icon"><i class="fa-solid fa-globe"></i></div>
-            <div class="feature-pill-text">
-                <h4>Cross-Border Infrastructure</h4>
-                <p>Filter active job feeds globally across any coordinate or tech ecosystem with uniform ease.</p>
-            </div>
-        </div>
-        <div class="feature-pill">
-            <div class="feature-pill-icon"><i class="fa-solid fa-user-shield"></i></div>
-            <div class="feature-pill-text">
-                <h4>Direct Verification Handshake</h4>
-                <p>We do not store or process details. Experience pure zero-middleman transit directly to verified sources.</p>
-            </div>
-        </div>
-    </div>
-</div>
+    </footer>
 
-<!-- System Terminal Corporate Footer -->
-<footer class="footer">
-    <div>© 2026 JobFinder Pro Hub | Metasearch Platform</div>
-    <div class="footer-disclaimer">
-        Disclaimer: JobFinder Pro operates strictly as an open index search utility. We do not act as job recruiters or direct employers. Source visual assets remain copyrighted intellectual property of their respective official organizations.
-    </div>
-</footer>
+</div>
 
 </body>
 </html>
