@@ -7,11 +7,12 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 from flask_mail import Mail, Message
-
+from datetime import timedelta
 app = Flask(__name__)
 
 # Render/Local Security Wrapper Settings
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'jobfinder_secret_strongly_hashed_2026')
+app.permanent_session_lifetime = timedelta(days=30)
 
 # Flask-Mail Configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -101,7 +102,36 @@ except Exception as db_init_err:
     print(f"Database initial runtime notice: {str(db_init_err)}")
 # ===========================================================================
 
+@app.context_processor
+def inject_user():
 
+    if "user" not in session:
+        return dict(logged_user=None)
+
+    conn = get_db_connection()
+
+    if DATABASE_URL:
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+    else:
+        cursor = conn.cursor()
+
+    cursor.execute(
+        f"SELECT name FROM users WHERE email={P}",
+        (session["user"],)
+    )
+
+    user = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if user:
+        try:
+            return dict(logged_user=user["name"])
+        except:
+            return dict(logged_user=user[0])
+
+    return dict(logged_user=None)
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -169,12 +199,15 @@ def login():
         conn.close()
 
         if user:
+            session.permanent = True
             session["user"] = user["email"]
             return redirect(url_for("dashboard"))
 
         return "Invalid Login Credentials"
 
-    return render_template("login.html")
+    return render_template("login.html") 
+
+  
 
 
 @app.route("/dashboard")
@@ -276,27 +309,17 @@ def forgot_password():
             recipients=[email]
         )
         msg.body = f"Hello,\n\nYour JobFinder password reset OTP is: {otp}\n\nTeam JobFinder"
+        try:
+            mail.send(msg)
+            print("MAIL SENT SUCCESSFULLY")
+        except Exception as e:
+            print("MAIL ERROR:", str(e))
+            flash("Unable to send OTP email.", "danger")
+            return redirect(url_for('forgot_password'))
 
-        # 🚨 క్లౌడ్ (Render) లో సెషన్/కాంటెక్స్ట్ డ్రాప్ అవ్వకుండా కాపీ చేస్తున్నాం
-        @copy_current_request_context
-        def send_email_with_context(email_msg):
-            try:
-    mail.send(msg)
-    print("MAIL SENT SUCCESSFULLY")
-    return redirect(url_for('verify_otp'))
-
-except Exception as e:
-    print("MAIL ERROR:", str(e))
-    return "Mail failed"
-
-        # బ్యాక్‌గ్రౌండ్ థ్రెడ్ స్టార్ట్
-        threading.Thread(target=send_email_with_context, args=(msg,)).start()
-
-        # లోకల్ లో వెరిఫికేషన్ కోసం స్క్రీన్ మీద ఫ్లాష్
         if not DATABASE_URL:
             flash(f"Local test mode active. Your OTP is: {otp}", "info")
 
-        # 1 సెకండ్ లో పేజీ ఓపెన్ అయిపోతుంది
         return redirect(url_for('verify_otp'))
 
     return render_template('forgot_password.html')
