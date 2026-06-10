@@ -230,7 +230,62 @@ def dashboard():
 
     return render_template("dashboard.html", user=user)
 
+@app.route("/edit-profile", methods=["GET", "POST"])
+def edit_profile():
 
+    if "user" not in session:
+        return redirect("/login")
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if request.method == "POST":
+
+        name = request.form["name"]
+        jobrole = request.form["jobrole"]
+        location = request.form["location"]
+        experience = request.form["experience"]
+
+        cursor.execute(
+    f"""
+    UPDATE users
+    SET name={P},
+        jobrole={P},
+        location={P},
+        experience={P}
+    WHERE email={P}
+    """,
+    (
+        name,
+        jobrole,
+        location,
+        experience,
+        session["user"]
+    )
+)
+
+        conn.commit()
+        conn.close()
+
+        return redirect("/dashboard")
+
+    cursor.execute(
+    f"""
+    SELECT name,email,jobrole,location,experience
+    FROM users
+    WHERE email={P}
+    """,
+    (session["user"],)
+)
+
+    user = cursor.fetchone()
+
+    conn.close()
+
+    return render_template(
+        "edit_profile.html",
+        user=user
+    )
 
 @app.route("/search")
 def search():
