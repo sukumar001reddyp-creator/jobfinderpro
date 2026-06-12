@@ -89,22 +89,25 @@ body{
 }
 
 /* --- Compact & Sleek Heading Block (Size Reduced) --- */
-.hero{
-    padding: 24px 6%; /* Super compact padding */
+.hero {
+    padding: 40px 6% 35px 6%;
     text-align: center;
     position: relative;
-    background: #ffffff;
+    background: radial-gradient(100% 150% at 50% 0%, rgba(37, 99, 235, 0.05) 0%, rgba(255, 255, 255, 0) 100%), #ffffff;
     border-bottom: 1px solid var(--border);
-    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
+    box-shadow: 0 4px 30px rgba(15, 23, 42, 0.015);
 }
 
-.hero h1{
-    font-size: 32px; /* Balanced clean size */
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    color: #0f172a;
-    margin-bottom: 10px;
+.hero h1 {
+    font-size: 36px;
+    font-weight: 850;
+    letter-spacing: -1px;
+    margin-bottom: 14px;
     text-transform: capitalize;
+    background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
 }
 
 .meta-container {
