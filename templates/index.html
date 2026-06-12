@@ -18,8 +18,6 @@
     --light-slate: #94a3b8;
     --bg-surface: #ffffff;
     --bg-body: #f5f8ff;
-    --bg-gateway-card: #e0f2fe; 
-    --bg-gateway-hover: #bae6fd; 
     --border: #e2e8f0;
     --radius-lg: 16px;
     --radius-md: 12px;
@@ -36,40 +34,6 @@ body{
     background: var(--bg-body);
     color: var(--dark);
     line-height: 1.5;
-    position: relative;
-}
-
-/* --- Fixed Floating Background Layer for the Image --- */
-.page-bg-container {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 1; 
-    pointer-events: none;
-}
-
-.woman-bg-layout {
-    position: absolute;
-    top: 80px;
-    right: 1%;
-    width: 44%; 
-    height: 720px;
-    /* Flask/Django static ఫోల్డర్ పాత్ ఇక్కడ ఫిక్స్ చేశాను బ్రో */
-    background: url('/static/woman.png') no-repeat top right;
-    background-size: contain;
-    /* కింద కార్డ్‌లతో నీట్‌గా బ్లెండ్ అవ్వడానికి సాఫ్ట్ మాస్క్ */
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
-    opacity: 0.98;
-}
-
-/* --- Content Wrapper on Top --- */
-.app-content-wrapper {
-    position: relative;
-    z-index: 10; 
 }
 
 .bg-glow-1 {
@@ -88,8 +52,8 @@ body{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 6%;
-    background: rgba(255, 255, 255, 0.85);
+    padding: 16px 4%; 
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     position: sticky;
@@ -118,14 +82,10 @@ body{
 }
 
 .nav-logo-text {
-    font-size: 40px;
+    font-size: 22px;
     font-weight: 800;
     color: var(--dark);
     letter-spacing: -0.5px;
-}
-
-.nav-logo-text span {
-    color: var(--primary);
 }
 
 .nav-buttons {
@@ -166,42 +126,37 @@ body{
     box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
 }
 
-/* --- Compact & High-End Hero Panel --- */
+/* --- Compact Hero Panel --- */
 .header{
-    padding: 60px 6% 40px 6%;
+    padding: 50px 4% 35px 4%;
     text-align: center;
     position: relative;
 }
 
-.logo{
-    font-size: 38px;
+/* ఇక్కడ కలర్ మార్చాను బ్రో - హెడ్డింగ్ ఇప్పుడు పక్కాగా కనిపిస్తుంది */
+.logo {
+    font-size: 42px;
     font-weight: 800;
-    color: var(--dark);
+    color: #0f172a !important; 
     letter-spacing: -0.5px;
     line-height: 1.2;
     margin-bottom: 12px;
 }
 
-.logo span {
-    background: linear-gradient(to right, #2563eb, #7c3aed);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
 .subtitle{
     font-size: 16px;
     color: var(--slate);
-    max-width: 650px;
+    max-width: 750px;
     margin-left: auto;
     margin-right: auto;
     font-weight: 500;
 }
 
-/* --- Premium Floating Search Console --- */
+/* --- Search Console Layout --- */
 .search-box-container {
-    max-width: 1120px;
-    margin: -10px auto 0 auto;
-    padding: 0 24px;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 4%;
     position: relative;
     z-index: 10;
 }
@@ -210,12 +165,11 @@ body{
     display: grid;
     grid-template-columns: 1.2fr 1fr 1fr auto;
     gap: 12px;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(20px);
-    padding: 14px;
+    background: #ffffff;
+    padding: 12px;
     border-radius: var(--radius-lg);
-    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+    border: 1px solid var(--border);
     align-items: center;
 }
 
@@ -223,7 +177,7 @@ body{
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #ffffff;
+    background: #f8fafc;
     border: 1px solid var(--border);
     padding: 12px 14px;
     border-radius: var(--radius-md);
@@ -232,6 +186,7 @@ body{
 
 .input-group:focus-within {
     border-color: var(--primary);
+    background: #ffffff;
     box-shadow: 0 0 0 4px var(--primary-glow);
 }
 
@@ -252,7 +207,7 @@ body{
 }
 
 .search-btn {
-    padding: 14px 28px;
+    padding: 14px 32px;
     border: none;
     border-radius: var(--radius-md);
     background: var(--primary-gradient);
@@ -272,13 +227,13 @@ body{
     box-shadow: 0 6px 18px rgba(37, 99, 235, 0.3);
 }
 
-/* --- Minimal Analytical Counter Pill Lines --- */
+/* --- Counter Row Block --- */
 .stats {
     display: flex;
     justify-content: center;
-    gap: 50px;
-    padding: 24px 24px 20px 24px;
-    max-width: 1100px;
+    gap: 60px;
+    padding: 30px 4% 25px 4%;
+    max-width: 1320px;
     margin: 0 auto;
     flex-wrap: wrap;
 }
@@ -286,34 +241,34 @@ body{
 .stat {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 13.5px;
+    gap: 12px;
+    font-size: 14px;
     color: var(--slate);
     font-weight: 600;
 }
 
 .stat h2 {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 800;
     color: var(--primary);
     background: #ffffff;
     border: 1px solid var(--border);
-    padding: 4px 10px;
+    padding: 5px 12px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
-/* --- Premium Workspace Split Architecture --- */
+/* --- Dashboard Frame Split Architecture --- */
 .container {
-    max-width: 1150px;
-    margin: 10px auto 80px auto;
-    padding: 0 24px;
+    max-width: 1320px;
+    margin: 10px auto 40px auto;
+    padding: 0 4%;
 }
 
 .main-sections {
     display: grid;
-    grid-template-columns: 290px 1fr;
-    gap: 35px;
+    grid-template-columns: 280px 1fr;
+    gap: 30px;
     align-items: start;
 }
 
@@ -333,7 +288,7 @@ body{
     color: var(--primary);
 }
 
-/* Left Sidebar: Hot Queries Styling */
+/* Left Sidebar Layout */
 .left-section-grid {
     display: flex;
     flex-direction: column;
@@ -375,43 +330,66 @@ body{
     color: #ffffff; 
 }
 
-/* Right Content: Connected Gateways */
+/* Right Side: Uniform Grid Cards with Brand Color Accents */
 .website-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr); 
     gap: 16px;
 }
 
 .card {
-    background: var(--bg-gateway-card); 
-    border: 1px solid #bae6fd; 
+    background: var(--bg-surface); 
+    border: 1px solid var(--border); 
     border-radius: var(--radius-lg);
     padding: 24px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.03);
+    min-height: 220px; 
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
     transition: all 0.25s ease;
 }
 
+/* Top Border Subtle Colors Mapping */
+.card.brand-linkedin { border-top: 4px solid #0a66c2; }
+.card.brand-naukri { border-top: 4px solid #4a00e0; }
+.card.brand-indeed { border-top: 4px solid #2164f3; }
+.card.brand-foundit { border-top: 4px solid #ff4f00; }
+.card.brand-freshersworld { border-top: 4px solid #14b8a6; }
+.card.brand-shine { border-top: 4px solid #ec4899; }
+
 .card:hover {
-    border-color: var(--primary);
-    background: var(--bg-gateway-hover); 
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     box-shadow: 0 12px 24px rgba(37, 99, 235, 0.08);
 }
 
+.card.brand-linkedin:hover { background: #f0f7ff; }
+.card.brand-naukri:hover { background: #f7f3ff; }
+.card.brand-indeed:hover { background: #f0f4ff; }
+.card.brand-foundit:hover { background: #fff5f0; }
+.card.brand-freshersworld:hover { background: #f0fdfa; }
+.card.brand-shine:hover { background: #fdf2f8; }
+
 .card-top h3 {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 700;
-    color: var(--dark);
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
+
+/* ఐకాన్ మరియు హెడింగ్ టెక్స్ట్ కలర్స్ బ్రాండ్ కి తగ్గట్టు మార్చాను బ్రో */
+.card.brand-linkedin h3, .card.brand-linkedin h3 i { color: #0a66c2 !important; }
+.card.brand-naukri h3, .card.brand-naukri h3 i { color: #4a00e0 !important; }
+.card.brand-indeed h3, .card.brand-indeed h3 i { color: #2164f3 !important; }
+.card.brand-foundit h3, .card.brand-foundit h3 i { color: #ff4f00 !important; }
+.card.brand-freshersworld h3, .card.brand-freshersworld h3 i { color: #14b8a6 !important; }
+.card.brand-shine h3, .card.brand-shine h3 i { color: #ec4899 !important; }
 
 .card-top p {
     color: var(--slate);
     font-size: 13.5px;
-    margin-bottom: 24px;
     line-height: 1.5;
 }
 
@@ -422,24 +400,24 @@ body{
     gap: 6px;
     text-decoration: none;
     background: #ffffff; 
-    color: var(--primary);
+    color: var(--slate);
     padding: 8px 18px;
     border-radius: 8px;
     font-weight: 700;
     font-size: 13px;
-    border: 1px solid #bae6fd;
+    border: 1px solid var(--border);
     transition: all 0.2s;
+    margin-top: 15px;
 }
 
-.card:hover .card-action-btn,
-.card-action-btn:hover {
+.card:hover .card-action-btn {
     background: var(--primary-gradient);
     color: white;
     border-color: transparent;
     box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
 }
 
-/* --- Inline System Feature Strip Layout --- */
+/* --- Modern Bottom Features Block --- */
 .feature-strip {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -448,7 +426,7 @@ body{
     border: 1px solid var(--border);
     padding: 30px;
     border-radius: var(--radius-lg);
-    margin-top: 50px;
+    margin-top: 40px;
     box-shadow: 0 4px 12px rgba(15, 23, 42, 0.01);
 }
 
@@ -483,34 +461,34 @@ body{
     color: var(--slate);
 }
 
-/* --- Premium Tech Footer Terminal --- */
+/* --- Corporate Footer Area --- */
 .footer {
     background: #ffffff;
     color: var(--slate);
     border-top: 1px solid var(--border);
-    padding: 24px 6%;
+    padding: 24px 4%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 13px;
     font-weight: 600;
+    margin-top: 60px;
 }
 
 .footer-disclaimer {
-    max-width: 580px;
+    max-width: 650px;
     text-align: right;
     color: var(--light-slate);
     font-size: 11.5px;
     line-height: 1.4;
 }
 
-/* --- Adaptive Viewports Configuration --- */
-@media(max-width:1150px){
-    .woman-bg-layout { width: 40%; opacity: 0.5; }
+/* --- Responsive Configurations --- */
+@media(max-width:1024px){
+    .website-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media(max-width:920px){
-    .woman-bg-layout { display: none; }
     .main-sections { grid-template-columns: 1fr; }
     .search-box { grid-template-columns: 1fr; }
     .website-grid { grid-template-columns: 1fr; }
@@ -518,29 +496,8 @@ body{
     .footer { flex-direction: column; gap: 14px; text-align: center; }
     .footer-disclaimer { text-align: center; }
 }
-.profile-box{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
 
-.profile-icon{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    background:#2563eb;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:bold;
-}
-
-.profile-box a{
-    text-decoration:none;
-    color:red;
-    font-weight:bold;
-}
+/* User Control Profile Panel */
 .profile-dropdown{
     position:relative;
     display:inline-block;
@@ -570,6 +527,7 @@ body{
     display:none;
     overflow:hidden;
     z-index:999;
+    border: 1px solid var(--border);
 }
 
 .dropdown-menu a{
@@ -589,10 +547,6 @@ body{
     border-bottom:1px solid #eee;
 }
 
-.profile-dropdown{
-    position:relative;
-    display:inline-block;
-}
 .profile-dropdown:hover .dropdown-menu{
     display:block;
 }
@@ -600,72 +554,38 @@ body{
 </head>
 <body>
 
-<div class="page-bg-container">
-    <div class="woman-bg-layout"></div>
-</div>
-
 <div class="app-content-wrapper">
 
     <div class="bg-glow-1"></div>
 
     <nav class="navbar">
-
-    <a href="/" class="nav-brand">
-        <div class="nav-logo-icon">
-            <i class="fa-solid fa-compass"></i>
-        </div>
-
-        <div class="nav-logo-text">
-            Job<span>Finder Pro</span>
-        </div>
-    </a>
-
-    <div class="nav-buttons">
-
-        {% if logged_user %}
-
-<div class="profile-dropdown">
-
-    <div class="profile-icon">
-        {{ logged_user[0]|upper }}
-    </div>
-
-    <div class="dropdown-menu">
-
-        <div class="user-name">
-            {{ logged_user }}
-        </div>
-
-        <a href="/dashboard">
-            Dashboard
+        <a href="/" class="nav-brand">
+            <div class="nav-logo-icon"><i class="fa-solid fa-compass"></i></div>
+            <div class="nav-logo-text">JobFinder Pro</div>
         </a>
-
-        <a href="/logout">
-            Logout
-        </a>
-
-    </div>
-
-</div>
-
-{% else %}
-
-<a href="/login" class="btn-nav btn-secondary">
-    Login
-</a>
-
-<a href="/register" class="btn-nav btn-primary">
-    Register
-</a>
-
-{% endif %}
-
-    </div>
-
-</nav>
+        <div class="nav-buttons">
+            {% if logged_user %}
+            <div class="profile-dropdown">
+                <div class="profile-icon">
+                    {{ logged_user[0]|upper }}
+                </div>
+                <div class="dropdown-menu">
+                    <div class="user-name">
+                        {{ logged_user }}
+                    </div>
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="/login" class="btn-nav btn-secondary">Login</a>
+            <a href="/register" class="btn-nav btn-primary">Register</a>
+            {% endif %}
+        </div>
+    </nav>
 
     <div class="header">
-        <h1 class="logo">Search Across Global <span>Job Boards</span></h1>
+        <h1 class="logo">Search Across Global Job Boards</h1>
         <p class="subtitle">
             An advanced worldwide aggregation engine mapping real-time open listings from top external endpoints seamlessly into a unified control interface.
         </p>
@@ -727,49 +647,49 @@ body{
                 <h3 class="section-title"><i class="fa-solid fa-link"></i> Connected Gateways</h3>
                 <div class="website-grid">
 
-                    <div class="card">
+                    <div class="card brand-linkedin">
                         <div class="card-top">
-                            <h3>LinkedIn Jobs</h3>
+                            <h3><i class="fa-brands fa-linkedin"></i> LinkedIn Jobs</h3>
                             <p>Global professional networking matrix, asset databases, and high-tier openings.</p>
                         </div>
                         <a href="https://www.linkedin.com/jobs/" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
                     </div>
 
-                    <div class="card">
+                    <div class="card brand-naukri">
                         <div class="card-top">
-                            <h3>Naukri</h3>
+                            <h3><i class="fa-solid fa-paper-plane"></i> Naukri</h3>
                             <p>Deep cluster data mapping technology and development sectors internationally.</p>
                         </div>
                         <a href="https://www.naukri.com/jobs?k={{ role }}" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
                     </div>
 
-                    <div class="card">
+                    <div class="card brand-indeed">
                         <div class="card-top">
-                            <h3>Indeed</h3>
+                            <h3><i class="fa-solid fa-briefcase"></i> Indeed</h3>
                             <p>Comprehensive worldwide directory tracking cross-industry corporate deployments.</p>
                         </div>
                         <a href="https://in.indeed.com" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
                     </div>
 
-                    <div class="card">
+                    <div class="card brand-foundit">
                         <div class="card-top">
-                            <h3>Foundit</h3>
+                            <h3><i class="fa-solid fa-bolt"></i> Foundit</h3>
                             <p>Skill-based smart search layers targeting custom specialized candidate tracks.</p>
                         </div>
                         <a href="https://www.foundit.in" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
                     </div>
 
-                    <div class="card">
+                    <div class="card brand-freshersworld">
                         <div class="card-top">
-                            <h3>Freshersworld</h3>
+                            <h3><i class="fa-solid fa-user-graduate"></i> Freshersworld</h3>
                             <p>Focused early-stage opportunity boards prioritizing placement pathways.</p>
                         </div>
                         <a href="https://www.freshersworld.com" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
                     </div>
 
-                    <div class="card">
+                    <div class="card brand-shine">
                         <div class="card-top">
-                            <h3>Shine</h3>
+                            <h3><i class="fa-solid fa-star"></i> Shine</h3>
                             <p>Optimized index streams offering rapid matching vectors into high-growth firms.</p>
                         </div>
                         <a href="https://www.shine.com" target="_blank" class="card-action-btn">Launch Feed <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a>
