@@ -8,6 +8,7 @@ from psycopg2.extras import RealDictCursor
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 from flask_mail import Mail, Message
 from datetime import timedelta
+
 app = Flask(__name__)
 
 # Render/Local Security Wrapper Settings
@@ -33,7 +34,6 @@ def get_db_connection():
         url = DATABASE_URL
         if "sslmode" not in url:
             url += "&sslmode=require" if "?" in url else "?sslmode=require"
-        # RealDictCursor ని అవసరమైన రూట్స్ లోనే వాడుకుందాం బూట్ టైమ్ లో క్రాష్ అవ్వకుండా
         conn = psycopg2.connect(url)
         return conn
     else:
@@ -64,7 +64,7 @@ def init_db():
             experience VARCHAR(255)
         )
         """)
-        # OTP Table (క్లౌడ్ లో సెషన్స్ డిస్కనెక్ట్ అవ్వకుండా ఇక్కడ సేవ్ అవుతాయి)
+        # OTP Table
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS password_resets (
             email VARCHAR(255) PRIMARY KEY,
@@ -104,12 +104,10 @@ except Exception as db_init_err:
 
 @app.context_processor
 def inject_user():
-
     if "user" not in session:
         return dict(logged_user=None)
 
     conn = get_db_connection()
-
     if DATABASE_URL:
         cursor = conn.cursor(cursor_factory=RealDictCursor)
     else:
@@ -119,9 +117,7 @@ def inject_user():
         f"SELECT name FROM users WHERE email={P}",
         (session["user"],)
     )
-
     user = cursor.fetchone()
-
     cursor.close()
     conn.close()
 
@@ -132,6 +128,8 @@ def inject_user():
             return dict(logged_user=user[0])
 
     return dict(logged_user=None)
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -200,14 +198,12 @@ def login():
 
         if user:
             session.permanent = True
-            session["user"] = user["email"]
+            session["user"] = user["email"] if DATABASE_URL else user[2] # Handles sqlite row indexing if tuple
             return redirect(url_for("dashboard"))
 
         return "Invalid Login Credentials"
 
     return render_template("login.html") 
-
-  
 
 
 @app.route("/dashboard")
@@ -230,9 +226,9 @@ def dashboard():
 
     return render_template("dashboard.html", user=user)
 
+
 @app.route("/edit-profile", methods=["GET", "POST"])
 def edit_profile():
-
     if "user" not in session:
         return redirect("/login")
 
@@ -240,64 +236,47 @@ def edit_profile():
     cursor = conn.cursor()
 
     if request.method == "POST":
-
         name = request.form["name"]
         jobrole = request.form["jobrole"]
         location = request.form["location"]
         experience = request.form["experience"]
 
         cursor.execute(
-    f"""
-    UPDATE users
-    SET name={P},
-        jobrole={P},
-        location={P},
-        experience={P}
-    WHERE email={P}
-    """,
-    (
-        name,
-        jobrole,
-        location,
-        experience,
-        session["user"]
-    )
-)
-
+            f"""
+            UPDATE users
+            SET name={P}, jobrole={P}, location={P}, experience={P}
+            WHERE email={P}
+            """,
+            (name, jobrole, location, experience, session["user"])
+        )
         conn.commit()
         conn.close()
-
         return redirect("/dashboard")
 
     cursor.execute(
-    f"""
-    SELECT name,email,jobrole,location,experience
-    FROM users
-    WHERE email={P}
-    """,
-    (session["user"],)
-)
-
+        f"SELECT name, email, jobrole, location, experience FROM users WHERE email={P}",
+        (session["user"],)
+    )
     user = cursor.fetchone()
-
     conn.close()
 
-    return render_template(
-        "edit_profile.html",
-        user=user
-    )
+    return render_template("edit_profile.html", user=user)
+
 
 @app.route("/search")
 def search():
+    logged_user = None
+    if "user" in session:
+        logged_user = session["user"]
+
     role = request.args.get("role", "").strip()
     location = request.args.get("location", "").strip()
     experience = request.args.get("experience", "").strip()
 
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
-    
+
     like_op = "ILIKE" if DATABASE_URL else "LIKE"
-    
     query = "SELECT name, email, jobrole, location, experience FROM users WHERE 1=1"
     params = []
 
@@ -321,7 +300,8 @@ def search():
         results=results,
         role=role,
         location=location,
-        experience=experience
+        experience=experience,
+        logged_user=logged_user
     )
 
 
@@ -342,7 +322,6 @@ def forgot_password():
 
         otp = str(random.randint(100000, 999999))
         
-        # Database లో OTP స్టోరేజ్
         cursor.execute(f"SELECT email FROM password_resets WHERE email={P}", (email,))
         exists = cursor.fetchone()
         
@@ -357,7 +336,6 @@ def forgot_password():
 
         session['reset_email'] = str(email)
 
-        # మెయిల్ ఆబ్జెక్ట్
         msg = Message(
             "JobFinder Password Reset OTP",
             sender=app.config['MAIL_USERNAME'],
@@ -378,6 +356,8 @@ def forgot_password():
         return redirect(url_for('verify_otp'))
 
     return render_template('forgot_password.html')
+
+
 @app.route('/verify-otp', methods=['GET', 'POST'])
 def verify_otp():
     email = session.get('reset_email')
@@ -392,8 +372,9 @@ def verify_otp():
         cursor.execute(f"SELECT otp FROM password_resets WHERE email={P}", (email,))
         row = cursor.fetchone()
 
-        if row and str(row['otp']).strip() == entered_otp:
-            # OTP మ్యాచ్ అయితే వెరిఫైడ్ స్టేటస్ ని True (1) చేస్తాం
+        db_otp = row['otp'] if DATABASE_URL else row[0]
+
+        if row and str(db_otp).strip() == entered_otp:
             cursor.execute(f"UPDATE password_resets SET verified={P} WHERE email={P}", (1, email))
             conn.commit()
             cursor.close()
@@ -418,8 +399,9 @@ def reset_password():
     cursor.execute(f"SELECT verified FROM password_resets WHERE email={P}", (email,))
     row = cursor.fetchone()
 
-    # ఒకవేళ టేబుల్ లో వెరిఫై అవ్వకుండా డైరెక్ట్ గా పేజీ లోకి వస్తే రిజెక్ట్ చేస్తుంది
-    if not row or not row['verified']:
+    is_verified = row['verified'] if DATABASE_URL else (row[0] if row else None)
+
+    if not row or not is_verified:
         cursor.close()
         conn.close()
         return redirect(url_for('forgot_password'))
@@ -433,7 +415,6 @@ def reset_password():
             conn.close()
             return "Passwords do not match!"
 
-        # పాస్‌వర్డ్ ని అప్‌డేట్ చేసి, రీసెట్ లాగ్ ని క్లీన్ చేస్తుంది
         cursor.execute(f"UPDATE users SET password={P} WHERE email={P}", (new_password, email))
         cursor.execute(f"DELETE FROM password_resets WHERE email={P}", (email,))
         conn.commit()
@@ -441,7 +422,6 @@ def reset_password():
         conn.close()
 
         session.pop('reset_email', None)
-
         flash("Password successfully reset! Please login with your new password.", "success")
         return redirect(url_for('login'))
 
@@ -458,7 +438,10 @@ def all_users():
     users = cursor.fetchall()
     cursor.close()
     conn.close()
-    return str([dict(x) for x in users])
+    try:
+        return str([dict(x) for x in users])
+    except:
+        return str([list(x) for x in users])
 
 
 @app.route("/logout")
