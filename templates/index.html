@@ -560,6 +560,61 @@ body{
 .profile-dropdown:hover .dropdown-menu{
     display:block;
 }
+/* --- Mobile Responsive Layout for Home Page --- */
+@media (max-width: 850px) {
+    /* హెడర్ టెక్స్ట్ సైజ్ తగ్గించడం */
+    .logo {
+        font-size: 28px !important;
+    }
+    .subtitle {
+        font-size: 14px !important;
+    }
+    
+    /* సెర్చ్ బార్ ని సింగిల్ కాలమ్ గా మార్చడం */
+    .search-box {
+        grid-template-columns: 1fr !important;
+        border-radius: 16px !important;
+        gap: 8px !important;
+        padding: 10px !important;
+    }
+    .input-group {
+        border-right: none !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        padding: 8px 10px !important;
+    }
+    .search-btn {
+        width: 100% !important;
+        border-radius: 12px !important;
+        justify-content: center;
+    }
+
+    /* మెయిన్ లేఅవుట్ ని సింగిల్ కాలమ్ చేయడం */
+    .main-sections {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+    }
+
+    /* కనెక్టెడ్ గేట్‌వేస్ 3 కాలమ్స్ నుండి 1 కాలమ్ అవ్వడం */
+    .website-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* బాటమ్ ఫీచర్ స్ట్రిప్ */
+    .feature-strip {
+        grid-template-columns: 1fr !important;
+        padding: 20px !important;
+    }
+
+    /* ఫుటర్ */
+    .footer {
+        flex-direction: column !important;
+        gap: 12px !important;
+        text-align: center !important;
+    }
+    .footer-disclaimer {
+        text-align: center !important;
+    }
+}
 </style>
 </head>
 <body>
