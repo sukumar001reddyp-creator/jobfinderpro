@@ -127,29 +127,39 @@ body{
 }
 
 /* --- Compact Hero Panel --- */
-.header{
-    padding: 50px 4% 35px 4%;
+.header {
+    padding: 40px 4% 30px 4%; /* సైజ్ పూర్తిగా తగ్గించాను బ్రో */
     text-align: center;
     position: relative;
+    /* సాఫ్ట్ బ్లూ గ్లో బ్యాక్‌డ్రాప్ */
+    background: radial-gradient(100% 150% at 50% 0%, rgba(37, 99, 235, 0.06) 0%, rgba(255, 255, 255, 0) 100%), #ffffff;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 4px 30px rgba(15, 23, 42, 0.015);
 }
 
-/* ఇక్కడ కలర్ మార్చాను బ్రో - హెడ్డింగ్ ఇప్పుడు పక్కాగా కనిపిస్తుంది */
 .logo {
-    font-size: 42px;
-    font-weight: 800;
-    color: #0f172a !important; 
-    letter-spacing: -0.5px;
+    font-size: 38px; /* Balanced clean size */
+    font-weight: 850;
+    color: #0f172a !important;
+    letter-spacing: -1px;
     line-height: 1.2;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
-.subtitle{
-    font-size: 16px;
-    color: var(--slate);
-    max-width: 750px;
-    margin-left: auto;
-    margin-right: auto;
+.logo span {
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.subtitle {
+    font-size: 15.5px; /* Slightly more compact */
+    color: #475569;
+    max-width: 720px;
+    margin: 0 auto;
     font-weight: 500;
+    line-height: 1.5;
 }
 
 /* --- Search Console Layout --- */
@@ -585,7 +595,7 @@ body{
     </nav>
 
     <div class="header">
-        <h1 class="logo">Search Across Global Job Boards</h1>
+        <h1 class="logo">Search Across Global <span>Job Boards</span></h1>
         <p class="subtitle">
             An advanced worldwide aggregation engine mapping real-time open listings from top external endpoints seamlessly into a unified control interface.
         </p>
