@@ -89,26 +89,25 @@ body{
     letter-spacing: -0.5px;
 }
 
-.nav-logo-text span {
-    color: var(--primary);
-}
-
-/* --- Compact Welcome Panel Block (Fixed White Visibility) --- */
-.header{
-    padding: 35px 4% 25px 4%;
+/* --- Compact Welcome Panel Block --- */
+.header {
+    padding: 45px 4% 35px 4%;
     text-align: center;
     position: relative;
-    background: #ffffff;
+    background: radial-gradient(100% 150% at 50% 0%, rgba(37, 99, 235, 0.05) 0%, rgba(255, 255, 255, 0) 100%), #ffffff;
     border-bottom: 1px solid var(--border);
-    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
+    box-shadow: 0 4px 30px rgba(15, 23, 42, 0.015);
 }
 
-.header h1{
-    font-size: 36px;
-    font-weight: 800;
-    color: #0f172a !important; /* Fixed visibility */
-    letter-spacing: -0.5px;
-    margin-bottom: 6px;
+.header h1 {
+    font-size: 38px;
+    font-weight: 850;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #0f172a 30%, #2563eb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
 }
 
 .header p {
@@ -131,7 +130,7 @@ body{
     gap: 12px;
     background: #ffffff;
     padding: 10px 14px;
-    border-radius: 50px; /* Capsule Shape */
+    border-radius: 50px; 
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
     border: 1px solid var(--border);
     align-items: center;
@@ -277,7 +276,7 @@ body{
     border-color: transparent;
 }
 
-/* --- Right Active Destination Card System (Uniform 3 Column Layout) --- */
+/* --- Right Active Gateways Layout --- */
 .section-title {
     font-size: 13px;
     font-weight: 700;
@@ -296,7 +295,7 @@ body{
 
 .cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Matching Home/Search grid layout style */
+    grid-template-columns: repeat(3, 1fr); 
     gap: 16px;
 }
 
@@ -304,16 +303,18 @@ body{
     background: var(--bg-surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 24px;
+    padding: 24px 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 160px; /* Equal Heights */
+    align-items: center; /* Entire card content is centered */
+    text-align: center;
+    min-height: 175px; 
     box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
     transition: all 0.25s ease;
 }
 
-/* Border color rules mapping built dynamically */
+/* Border accents */
 .card.brand-linkedin { border-top: 4px solid #0a66c2; }
 .card.brand-naukri { border-top: 4px solid #4a00e0; }
 .card.brand-indeed { border-top: 4px solid #2164f3; }
@@ -333,15 +334,46 @@ body{
 .card.brand-shine:hover { background: #fdf2f8; }
 .card.brand-freshersworld:hover { background: #f0fdfa; }
 
+/* --- Side-by-Side Logo & Title Header (Perfect Center Realignment) --- */
+.card-brand-header {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Pushes the row to the exact middle */
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.logo-wrapper {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px; 
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.card:hover .logo-wrapper {
+    transform: scale(1.08);
+}
+
+/* Pill wrapper background and brand icon color setups */
+.brand-linkedin .logo-wrapper { background: #e0f2fe; color: #0a66c2; }
+.brand-naukri .logo-wrapper { background: #f3e8ff; color: #4a00e0; }
+.brand-indeed .logo-wrapper { background: #e0e7ff; color: #2164f3; }
+.brand-foundit .logo-wrapper { background: #ffedd5; color: #ff4f00; }
+.brand-shine .logo-wrapper { background: #fce7f3; color: #ec4899; }
+.brand-freshersworld .logo-wrapper { background: #ccfbf1; color: #14b8a6; }
+
 .card h3 {
     font-size: 18px;
     font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 10px;
 }
 
-/* Vibrant Logo Colors on Header lines */
+/* Text alignment to match logo color schemes properly */
 .card.brand-linkedin h3 { color: #0a66c2 !important; }
 .card.brand-naukri h3 { color: #4a00e0 !important; }
 .card.brand-indeed h3 { color: #2164f3 !important; }
@@ -350,27 +382,28 @@ body{
 .card.brand-freshersworld h3 { color: #14b8a6 !important; }
 
 .card a {
-    align-self: flex-start;
+    align-self: stretch; 
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     text-decoration: none;
     background: #ffffff;
     color: var(--slate);
-    padding: 8px 18px;
+    padding: 10px 18px;
     border-radius: 8px;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 13.5px;
     border: 1px solid var(--border);
     transition: all 0.2s ease;
-    margin-top: 15px;
-    width: auto;
+    margin-top: 10px;
 }
 
 .card:hover a {
     background: var(--primary-gradient);
     color: white;
     border-color: transparent;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15);
 }
 
 @media(max-width:1024px){
@@ -456,42 +489,60 @@ body{
             <div class="cards">
 
                 <div class="card brand-linkedin">
-                    <h3><i class="fa-brands fa-linkedin"></i> LinkedIn</h3>
+                    <div class="card-brand-header">
+                        <div class="logo-wrapper"><i class="fa-brands fa-linkedin"></i></div>
+                        <h3>LinkedIn</h3>
+                    </div>
                     <a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords={{ user[2] }}&location={{ user[3] }}">
                         Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
                     </a>
                 </div>
 
                 <div class="card brand-naukri">
-                    <h3><i class="fa-solid fa-paper-plane"></i> Naukri</h3>
+                    <div class="card-brand-header">
+                        <div class="logo-wrapper"><i class="fa-solid fa-paper-plane"></i></div>
+                        <h3>Naukri</h3>
+                    </div>
                     <a target="_blank" href="https://www.naukri.com/{{ user[2]|replace(' ','-') }}-jobs-in-{{ user[3]|replace(' ','-') }}">
                         Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
                     </a>
                 </div>
 
                 <div class="card brand-indeed">
-                    <h3><i class="fa-solid fa-briefcase"></i> Indeed</h3>
+                    <div class="card-brand-header">
+                        <div class="logo-wrapper"><i class="fa-solid fa-briefcase"></i></div>
+                        <h3>Indeed</h3>
+                    </div>
                     <a target="_blank" href="https://in.indeed.com/jobs?q={{ user[2] }}+{{ user[3] }}">
                         Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
                     </a>
                 </div>
 
                 <div class="card brand-foundit">
-                    <h3><i class="fa-solid fa-bolt"></i> Foundit</h3>
+                    <div class="card-brand-header">
+                        <div class="logo-wrapper"><i class="fa-solid fa-bolt"></i></div>
+                        <h3>Foundit</h3>
+                    </div>
                     <a target="_blank" href="https://www.foundit.in/srp/results?query={{ user[2] }}&locations={{ user[3] }}">
                         Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
                     </a>
                 </div>
 
                 <div class="card brand-shine">
-                    <h3><i class="fa-solid fa-star"></i> Shine</h3>
+                    <div class="card-brand-header">
+                        <div class="logo-wrapper"><i class="fa-solid fa-star"></i></div>
+                        <h3>Shine</h3>
+                    </div>
                     <a target="_blank" href="https://www.shine.com/job-search/{{ user[2] }}-jobs-in-{{ user[3] }}">
                         Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
                     </a>
                 </div>
 
                 <div class="card brand-freshersworld">
-                    <h3><i class="fa-solid fa-user-graduate"></i> Freshersworld</h3>
+                    <div class="card-brand-header">
+                        <div class="logo-wrapper"><i class="fa-solid fa-user-graduate"></i></div>
+                        <h3>Freshersworld</h3>
+                    </div>
                     <a target="_blank" href="https://www.freshersworld.com/jobs/jobsearch/{{ user[2]|replace(' ','-') }}-jobs-in-{{ user[3]|replace(' ','-') }}">
                         Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
                     </a>
