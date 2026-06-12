@@ -415,6 +415,37 @@ body{
     .cards { grid-template-columns: 1fr; }
     .dashboard-search form { grid-template-columns: 1fr; border-radius: var(--radius-lg); }
 }
+/* --- Mobile Responsive Layout for Dashboard --- */
+@media (max-width: 850px) {
+    .header h1 {
+        font-size: 26px !important;
+    }
+
+    /* డ్యాష్‌బోర్డ్ సెర్చ్ బార్ */
+    .dashboard-search form {
+        grid-template-columns: 1fr !important;
+        border-radius: 16px !important;
+        gap: 8px !important;
+    }
+    .dashboard-search input,
+    .dashboard-search select {
+        border-radius: 12px !important;
+    }
+    .dashboard-search button {
+        width: 100% !important;
+        border-radius: 12px !important;
+    }
+
+    /* ప్రొఫైల్ లెఫ్ట్ సైడ్, గేట్‌వేస్ రైట్ సైడ్ కాకుండా ఒకదాని కింద ఒకటి రావడం */
+    .main-sections {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* గేట్‌వేస్ కార్డ్స్ సింగిల్ కాలమ్ */
+    .cards {
+        grid-template-columns: 1fr !important;
+    }
+}
 </style>
 
 </head>
