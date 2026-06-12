@@ -401,6 +401,32 @@ body{
 @media(max-width:640px) {
     .cards { grid-template-columns: 1fr; }
 }
+/* --- Mobile Responsive Layout for Search Page --- */
+@media (max-width: 850px) {
+    .hero h1 {
+        font-size: 26px !important;
+    }
+    
+    /* సెర్చ్ బార్ మొబైల్ సెట్టింగ్ */
+    .search-box {
+        grid-template-columns: 1fr !important;
+        border-radius: 16px !important;
+        gap: 8px !important;
+    }
+    .input-group {
+        border-right: none !important;
+    }
+    .search-btn {
+        width: 100% !important;
+        border-radius: 30px !important;
+        justify-content: center;
+    }
+
+    /* జాబ్ కార్డ్స్ సింగిల్ కాలమ్ అవ్వడం */
+    .cards {
+        grid-template-columns: 1fr !important;
+    }
+}
 </style>
 </head>
 
