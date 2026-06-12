@@ -5,7 +5,6 @@
 <title>Job Search Results</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Font Awesome UI Icons -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
 <style>
@@ -13,13 +12,11 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-glow: rgba(37, 99, 235, 0.15);
-    --primary-gradient: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     --dark: #0f172a;
     --slate: #475569;
     --light-slate: #94a3b8;
     --bg-body: #f5f8ff;
-    --bg-gateway-card: #e0f2fe; 
-    --bg-gateway-hover: #bae6fd;
     --border: #e2e8f0;
     --radius-lg: 16px;
     --radius-md: 12px;
@@ -56,7 +53,7 @@ body{
     justify-content: space-between;
     align-items: center;
     padding: 16px 6%;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     position: sticky;
@@ -91,13 +88,9 @@ body{
     letter-spacing: -0.5px;
 }
 
-.nav-logo-text span {
-    color: var(--primary);
-}
-
-/* --- High-End Attractive Heading Block --- */
+/* --- Compact & Sleek Heading Block (Size Reduced) --- */
 .hero{
-    padding: 65px 6% 50px 6%;
+    padding: 24px 6%; /* Super compact padding */
     text-align: center;
     position: relative;
     background: #ffffff;
@@ -106,48 +99,105 @@ body{
 }
 
 .hero h1{
-    font-size: 48px; /* Bigger font size */
+    font-size: 32px; /* Balanced clean size */
     font-weight: 800;
-    letter-spacing: -1.5px;
-    line-height: 1.2;
-    margin-bottom: 20px;
-    text-transform: capitalize; /* Forces first letter of each word to be Capitalized */
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block;
+    letter-spacing: -0.5px;
+    color: #0f172a;
+    margin-bottom: 10px;
+    text-transform: capitalize;
 }
 
 .meta-container {
     display: flex;
     justify-content: center;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
-    margin-top: 5px;
 }
 
 .meta-badge {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     background: var(--bg-body);
     color: var(--slate);
-    padding: 8px 18px;
+    padding: 6px 14px;
     border-radius: 30px;
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 600;
     border: 1px solid var(--border);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.01);
 }
 
 .meta-badge i {
     color: var(--primary);
 }
 
+/* --- Premium Capsule Search Bar Console --- */
+.search-box-container {
+    max-width: 1100px;
+    margin: 24px auto 0 auto;
+    padding: 0 24px;
+}
+
+.search-box {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr auto;
+    background: #ffffff;
+    padding: 8px 12px;
+    border-radius: 50px; /* Capsule Shape matched with home page */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border);
+    align-items: center;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    padding: 10px 16px;
+    border-right: 1px solid #e2e8f0;
+}
+
+.input-group:nth-last-child(2) {
+    border-right: none;
+}
+
+.input-group i {
+    color: var(--light-slate);
+    font-size: 15px;
+}
+
+.search-box input,
+.search-box select {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--dark);
+    font-size: 14.5px;
+    font-weight: 500;
+}
+
+.search-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 40px;
+    background: var(--primary-gradient);
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.search-btn:hover {
+    background: var(--primary-hover);
+}
+
 /* --- Container Workspace Area --- */
 .container {
-    max-width: 1150px;
-    margin: 40px auto 0 auto;
+    max-width: 1100px;
+    margin: 35px auto 0 auto;
     padding: 0 24px;
 }
 
@@ -157,7 +207,7 @@ body{
     text-transform: uppercase;
     letter-spacing: 0.8px;
     color: var(--slate);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -167,87 +217,100 @@ body{
     color: var(--primary);
 }
 
-/* --- Responsive Multi-Portal Cards Grid --- */
+/* --- Balanced Cards Grid --- */
 .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(3, 1fr); /* 3 Equal columns like gateways grid */
     gap: 20px;
 }
 
 .card {
-    background: var(--bg-gateway-card); 
-    border: 1px solid #bae6fd;
+    background: #ffffff; 
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 28px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.03);
+    min-height: 220px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
     transition: all 0.25s ease;
 }
 
+/* Branding Borders on normal state */
+.card.brand-linkedin { border-top: 4px solid #0a66c2; }
+.card.brand-naukri { border-top: 4px solid #4a00e0; }
+.card.brand-indeed { border-top: 4px solid #2164f3; }
+.card.brand-foundit { border-top: 4px solid #ff4f00; }
+.card.brand-shine { border-top: 4px solid #ec4899; }
+.card.brand-freshersworld { border-top: 4px solid #14b8a6; }
+
 .card:hover {
-    border-color: var(--primary);
-    background: var(--primary); 
     transform: translateY(-3px);
-    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.2);
+    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.08);
 }
+
+.card.brand-linkedin:hover { background: #f0f7ff; }
+.card.brand-naukri:hover { background: #f7f3ff; }
+.card.brand-indeed:hover { background: #f0f4ff; }
+.card.brand-foundit:hover { background: #fff5f0; }
+.card.brand-shine:hover { background: #fdf2f8; }
+.card.brand-freshersworld:hover { background: #f0fdfa; }
 
 .card h3 {
     font-size: 18px;
     font-weight: 700;
-    color: var(--dark);
     margin-bottom: 8px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    transition: color 0.2s ease;
+    gap: 10px;
 }
+
+/* Official Branding Icon Colors */
+.card.brand-linkedin h3, .card.brand-linkedin h3 i { color: #0a66c2 !important; }
+.card.brand-naukri h3, .card.brand-naukri h3 i { color: #4a00e0 !important; }
+.card.brand-indeed h3, .card.brand-indeed h3 i { color: #2164f3 !important; }
+.card.brand-foundit h3, .card.brand-foundit h3 i { color: #ff4f00 !important; }
+.card.brand-shine h3, .card.brand-shine h3 i { color: #ec4899 !important; }
+.card.brand-freshersworld h3, .card.brand-freshersworld h3 i { color: #14b8a6 !important; }
 
 .card p {
     color: var(--slate);
-    font-size: 14px;
-    margin-bottom: 24px;
+    font-size: 13.5px;
     line-height: 1.5;
-    transition: color 0.2s ease;
+    margin-bottom: 15px;
 }
 
-.card:hover h3,
-.card:hover p {
-    color: #ffffff;
+.card action-btn-wrap {
+    margin-top: auto;
 }
 
-.card a {
+.card-action-btn {
     align-self: flex-start;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     text-decoration: none;
     background: #ffffff;
-    color: var(--primary);
-    padding: 10px 22px;
+    color: var(--slate);
+    padding: 8px 18px;
     border-radius: 8px;
     font-weight: 700;
-    font-size: 13.5px;
-    border: 1px solid #bae6fd;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    font-size: 13px;
+    border: 1px solid var(--border);
     transition: all 0.2s ease;
 }
 
-.card:hover a {
-    background: #ffffff;
-    color: var(--dark);
+.card:hover .card-action-btn {
+    background: var(--primary-gradient);
+    color: white;
     border-color: transparent;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.card a:hover {
-    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
 }
 
 /* --- Home Routing System Actions --- */
 .action-footer {
-    margin-top: 45px;
+    margin-top: 40px;
     display: flex;
     justify-content: flex-start;
 }
@@ -264,7 +327,6 @@ body{
     font-weight: 600;
     font-size: 14px;
     border: 1px solid var(--border);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.01);
     transition: 0.2s ease;
 }
 
@@ -272,9 +334,70 @@ body{
     background: var(--dark);
     color: #ffffff;
     border-color: var(--dark);
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
 }
 
+/* Dropdown component elements */
+.profile-dropdown{
+    position:relative;
+    display:inline-block;
+}
+
+.profile-icon{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#2563eb;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.dropdown-menu{
+    position:absolute;
+    top:100%;
+    right:0;
+    min-width:180px;
+    background:white;
+    border-radius:10px;
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+    display:none;
+    overflow:hidden;
+    z-index:999;
+    border: 1px solid var(--border);
+}
+
+.dropdown-menu a{
+    display:block;
+    padding:12px 15px;
+    text-decoration:none;
+    color:#333;
+}
+
+.dropdown-menu a:hover{
+    background:#f3f4f6;
+}
+
+.user-name{
+    padding:12px 15px;
+    font-weight:bold;
+    border-bottom:1px solid #eee;
+}
+
+.profile-dropdown:hover .dropdown-menu{
+    display:block;
+}
+
+@media(max-width:960px) {
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .search-box { grid-template-columns: 1fr; border-radius: var(--radius-lg); }
+    .input-group { border-right: none; border-bottom: 1px solid var(--border); }
+}
+@media(max-width:640px) {
+    .cards { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 
@@ -282,15 +405,30 @@ body{
 
 <div class="bg-glow-1"></div>
 
-<!-- Unified Systems Navbar Navigation -->
 <nav class="navbar">
     <a href="/" class="nav-brand">
-        <div class="nav-logo-icon"><i class="fa-solid fa-compass"></i></div>
-        <div class="nav-logo-text">Job<span>Finder Pro</span></div>
+        <div class="nav-logo-icon">
+            <i class="fa-solid fa-compass"></i>
+        </div>
+        <div class="nav-logo-text">JobFinder Pro</div>
     </a>
+
+    {% if logged_user %}
+    <div class="profile-dropdown">
+        <div class="profile-icon">
+            {{ logged_user[0]|upper }}
+        </div>
+        <div class="dropdown-menu">
+            <div class="user-name">
+                {{ logged_user }}
+            </div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+    {% endif %}
 </nav>
 
-<!-- Target Metric Context Header Summary -->
 <div class="hero">
     <h1>{{ role if role else "Global Openings" }}</h1>
     
@@ -298,81 +436,109 @@ body{
         <div class="meta-badge">
             <i class="fa-solid fa-location-dot"></i> {{ location if location else "All Locations" }}
         </div>
+        
         <div class="meta-badge">
             <i class="fa-solid fa-layer-group"></i> {{ experience if experience else "Any Experience" }}
         </div>
     </div>
 </div>
 
+<div class="search-box-container">
+    <form action="/search" class="search-box">
+        <div class="input-group">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="role" value="{{ role }}" placeholder="Job Role or Skill">
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-location-dot"></i>
+            <input type="text" name="location" value="{{ location }}" placeholder="Location">
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-layer-group"></i>
+            <select name="experience">
+                <option value="">Experience Range</option>
+                <option {% if experience == 'Fresher' %}selected{% endif %}>Fresher</option>
+                <option {% if experience == '1-3 Years' %}selected{% endif %}>1-3 Years</option>
+                <option {% if experience == '3-5 Years' %}selected{% endif %}>3-5 Years</option>
+                <option {% if experience == '5+ Years' %}selected{% endif %}>5+ Years</option>
+            </select>
+        </div>
+
+        <button type="submit" class="search-btn">
+            Search
+        </button>
+    </form>
+</div>
+
 <div class="container">
     <h3 class="section-title"><i class="fa-solid fa-share-nodes"></i> Available Host Streams Found</h3>
 
-    <!-- External Board Target Gateway Grids Area -->
     <div class="cards">
 
-        <div class="card">
-            <div>
-                <h3><i class="fa-brands fa-linkedin" style="color: #0077b5;"></i> LinkedIn Jobs</h3>
+        <div class="card brand-linkedin">
+            <div class="card-top">
+                <h3><i class="fa-brands fa-linkedin"></i> LinkedIn Jobs</h3>
                 <p>Launch global indexing requests for professional roles and network directories instantly.</p>
             </div>
-            <a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords={{ role }}&location={{ location }}">
+            <a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords={{ role }}&location={{ location }}" class="card-action-btn">
                 View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
             </a>
         </div>
 
-        <div class="card">
-            <div>
-                <h3><i class="fa-solid fa-circle-notch" style="color: #ff6f00;"></i> Naukri</h3>
+        <div class="card brand-naukri">
+            <div class="card-top">
+                <h3><i class="fa-solid fa-paper-plane"></i> Naukri</h3>
                 <p>Scan India's massive centralized technology ecosystems and cluster feeds directly.</p>
             </div>
-            <a target="_blank" href="https://www.naukri.com/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}">
+            <a target="_blank" href="https://www.naukri.com/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}" class="card-action-btn">
                 View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
             </a>
         </div>
 
-        <div class="card">
-            <div>
-                <h3><i class="fa-solid fa-briefcase" style="color: #0a66c2;"></i> Indeed</h3>
+        <div class="card brand-indeed">
+            <div class="card-top">
+                <h3><i class="fa-solid fa-briefcase"></i> Indeed</h3>
                 <p>Pull live matching vacancy strings straight from comprehensive international aggregate files.</p>
             </div>
-            <a target="_blank" href="https://in.indeed.com/jobs?q={{ role }}+{{ location }}">
+            <a target="_blank" href="https://in.indeed.com/jobs?q={{ role }}+{{ location }}" class="card-action-btn">
                 View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
             </a>
         </div>
 
-        <div class="card">
-            <div>
-                <h3><i class="fa-solid fa-bolt" style="color: #10b981;"></i> Foundit</h3>
+        <div class="card brand-foundit">
+            <div class="card-top">
+                <h3><i class="fa-solid fa-bolt"></i> Foundit</h3>
                 <p>Query skill-based parameters securely optimized for specific developer tracks.</p>
             </div>
-            <a target="_blank" href="https://www.foundit.in/srp/results?query={{ role }}&locations={{ location }}">
+            <a target="_blank" href="https://www.foundit.in/srp/results?query={{ role }}&locations={{ location }}" class="card-action-btn">
                 View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
             </a>
         </div>
 
-        <div class="card">
-            <div>
-                <h3><i class="fa-solid fa-star" style="color: #e11d48;"></i> Shine</h3>
+        <div class="card brand-shine">
+            <div class="card-top">
+                <h3><i class="fa-solid fa-star"></i> Shine</h3>
                 <p>Map profile matching variables to high-growth corporate pathways instantly.</p>
             </div>
-            <a target="_blank" href="https://www.shine.com/job-search/{{ role }}-jobs-in-{{ location }}">
+            <a target="_blank" href="https://www.shine.com/job-search/{{ role }}-jobs-in-{{ location }}" class="card-action-btn">
                 View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
             </a>
         </div>
 
-        <div class="card">
-            <div>
-                <h3><i class="fa-solid fa-user-graduate" style="color: #7c3aed;"></i> Freshersworld</h3>
+        <div class="card brand-freshersworld">
+            <div class="card-top">
+                <h3><i class="fa-solid fa-user-graduate"></i> Freshersworld</h3>
                 <p>Filter open early-career positions and immediate structural training opportunities.</p>
             </div>
-            <a target="_blank" href="https://www.freshersworld.com/jobs/jobsearch/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}">
+            <a target="_blank" href="https://www.freshersworld.com/jobs/jobsearch/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}" class="card-action-btn">
                 View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
             </a>
         </div>
 
     </div>
 
-    <!-- Interface Returns Control Action Links -->
     <div class="action-footer">
         <a href="/" class="back">
             <i class="fa-solid fa-arrow-left"></i> Back to Engine Terminal
