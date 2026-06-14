@@ -670,6 +670,100 @@ body{
     .feature-strip { grid-template-columns: 1fr !important; padding: 20px !important; }
     .footer { flex-direction: column !important; gap: 12px !important; text-align: center !important; }
 }
+.mobile-nav{
+    display:none;
+}
+
+@media(max-width:768px){
+
+    body{
+        padding-bottom:80px;
+    }
+
+    .navbar{
+        padding:12px 15px;
+    }
+
+    .nav-buttons .btn-nav{
+        display:none;
+    }
+
+    .search-box{
+        display:flex;
+        flex-direction:column;
+    }
+
+    .input-group{
+        width:100%;
+    }
+
+    .stats{
+        display:grid;
+        grid-template-columns:1fr;
+        gap:10px;
+    }
+
+    .website-grid{
+        grid-template-columns:repeat(2,1fr)!important;
+        gap:12px;
+    }
+
+    .card{
+        min-height:170px;
+        padding:15px;
+    }
+
+    .card h3{
+        font-size:14px;
+    }
+
+    .card p{
+        display:none;
+    }
+
+    .mobile-nav{
+        position:fixed;
+        bottom:0;
+        left:0;
+        width:100%;
+        background:white;
+        border-top:1px solid #ddd;
+        display:flex;
+        justify-content:space-around;
+        align-items:center;
+        height:65px;
+        z-index:9999;
+    }
+
+    .mobile-nav a{
+        text-decoration:none;
+        color:#2563eb;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        font-size:12px;
+        font-weight:600;
+    }
+
+    .mobile-nav i{
+        font-size:18px;
+        margin-bottom:4px;
+    }
+}
+.menu-btn{
+    display:none;
+    border:none;
+    background:none;
+    font-size:22px;
+    color:var(--primary);
+    cursor:pointer;
+}
+
+@media(max-width:768px){
+    .menu-btn{
+        display:block;
+    }
+}
 </style>
 </head>
 <body>
@@ -685,6 +779,9 @@ body{
         </a>
         
         <div class="nav-buttons">
+            <button class="menu-btn">
+   <i class="fa-solid fa-bars"></i>
+</button>
             <!-- THEME TOGGLE BUTTON MATRIX -->
             <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Theme Modes">
                 <i class="fa-solid fa-moon" id="theme-icon"></i>
@@ -901,7 +998,13 @@ body{
     <footer class="footer">
         <div>© 2026 JobFinder Pro Hub | Metasearch Platform</div>
         <div class="footer-disclaimer">Disclaimer: JobFinder Pro operates strictly as an open index search utility. We do not act as job recruiters or direct employers. Source visual assets remain copyrighted intellectual property of their respective official organizations.</div>
-    </footer>
+    <div class="mobile-nav">
+    <a href="/"><i class="fa-solid fa-house"></i><span>Home</span></a>
+    <a href="/search"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></a>
+    <a href="/resume-builder"><i class="fa-solid fa-file"></i><span>Resume</span></a>
+    <a href="/dashboard"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+</div>
+</footer>
 </div>
 
 <!-- JavaScript Logic Framework Engine -->
