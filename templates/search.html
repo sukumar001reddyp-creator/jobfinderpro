@@ -352,12 +352,95 @@ body{
 .dropdown-menu a:hover{ background:var(--bg-body); }
 .profile-dropdown:hover .dropdown-menu{ display:block; }
 
-@media(max-width:960px) {
-    .cards { grid-template-columns: repeat(2, 1fr); }
-    .search-box { grid-template-columns: 1fr !important; border-radius: var(--radius-lg); gap: 10px; }
-    .input-group { border-right: none; border-bottom: 1px solid var(--border); }
+@media(max-width:768px){
+
+.search-box-container{
+    padding:0 15px;
+}
+
+.search-box{
+    display:flex;
+    flex-direction:column;
+    padding:15px;
+    border-radius:20px;
+    gap:12px;
+}
+
+.input-group{
+    border:none;
+    background:var(--bg-body);
+    border-radius:12px;
+    padding:14px;
+}
+
+.search-btn{
+    width:100%;
+    padding:15px;
+    font-size:16px;
+}
+
 }
 @media(max-width:640px) { .cards { grid-template-columns: 1fr; } }
+@media(max-width:768px){
+
+.hero{
+    padding:20px 15px;
+}
+
+.hero h1{
+    font-size:24px;
+}
+
+.meta-container{
+    gap:8px;
+}
+
+.meta-badge{
+    font-size:12px;
+}
+
+}
+@media(max-width:768px){
+
+.navbar{
+    padding:12px 15px;
+}
+
+.nav-left-wrapper{
+    gap:10px;
+}
+
+.nav-logo-text{
+    font-size:18px;
+}
+
+.nav-logo-icon{
+    width:32px;
+    height:32px;
+    font-size:15px;
+}
+
+.profile-icon{
+    width:36px;
+    height:36px;
+    font-size:14px;
+}
+
+}
+@media(max-width:480px){
+
+.nav-logo-text{
+    font-size:16px;
+}
+
+}
+@media(max-width:480px){
+
+    .nav-logo-text{
+        display:none;
+    }
+
+}
 </style>
 </head>
 <body>
@@ -423,7 +506,7 @@ body{
     <div class="cards">
         <div class="card brand-linkedin"><div class="card-top"><h3><i class="fa-brands fa-linkedin"></i> LinkedIn Jobs</h3><p>Global professional networking matrix, asset databases, and high-tier openings.</p></div><a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords={{ role }}&location={{ location }}" class="card-action-btn">View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i></a></div>
         <div class="card brand-naukri"><div class="card-top"><h3><i class="fa-solid fa-paper-plane"></i> Naukri</h3><p>Scan India's massive centralized technology ecosystems and cluster feeds directly.</p></div><a target="_blank" href="https://www.naukri.com/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}" class="card-action-btn">View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i></a></div>
-        <div class="card brand-indeed"><div class="card-top"><h3><i class="fa-solid fa-briefcase"></i> Indeed</h3><p>Pull live matching vacancy strings straight from comprehensive international aggregate files.</p></div><a target="_blank" href="https://in.indeed.com/jobs?q={{ role }}+{{ location }}" class="card-action-btn">View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i></a></div>
+        <div class="card brand-indeed"><div class="card-top"><h3><i class="fa-solid fa-briefcase"></i> Indeed</h3><p>Pull live matching vacancy strings straight from comprehensive international aggregate files.</p></div><a target="_blank"href="{{ indeed_domain }}?q={{ role|urlencode }}&l={{ location|urlencode }}" class="card-action-btn">View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i></a></div>
         <div class="card brand-foundit"><div class="card-top"><h3><i class="fa-solid fa-bolt"></i> Foundit</h3><p>Query skill-based parameters securely optimized for specific developer tracks.</p></div><a target="_blank" href="https://www.foundit.in/srp/results?query={{ role }}&locations={{ location }}" class="card-action-btn">View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i></a></div>
         <div class="card brand-shine"><div class="card-top"><h3><i class="fa-solid fa-star"></i> Shine</h3><p>Map profile matching variables to high-growth corporate pathways instantly.</p></div><a target="_blank" href="https://www.shine.com/job-search/{{ role }}-jobs-in-{{ location }}" class="card-action-btn">View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i></a></div>
         <div class="card brand-freshersworld"><div class="card-top"><h3><i class="fa-solid fa-user-graduate"></i> Freshersworld</h3><p>Filter open early-career positions and immediate structural training opportunities.</p></div><a target="_blank" href="https://www.freshersworld.com/jobs/jobsearch/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}" class="card-action-btn">View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i></a></div>
