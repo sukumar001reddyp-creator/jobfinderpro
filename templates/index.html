@@ -5,7 +5,9 @@
 <title>JobFinder Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- Font Awesome UI Icons & Chart.js Engine -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
 <style>
 :root {
@@ -23,10 +25,22 @@
     --radius-md: 12px;
 }
 
+/* 🌟 DARK MODE VARIABLES HUB */
+[data-theme="dark"] {
+    --dark: #f8fafc;
+    --slate: #94a3b8;
+    --light-slate: #64748b;
+    --bg-surface: #1e293b;
+    --bg-body: #0f172a;
+    --border: #334155;
+    --primary-glow: rgba(37, 99, 235, 0.3);
+}
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 body{
@@ -60,6 +74,9 @@ body{
     top: 0;
     z-index: 100;
 }
+[data-theme="dark"] .navbar {
+    background: rgba(30, 41, 59, 0.9);
+}
 
 .nav-brand {
     display: flex;
@@ -91,7 +108,27 @@ body{
 .nav-buttons {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
+}
+
+.theme-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--dark);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s ease;
+}
+.theme-toggle-btn:hover {
+    background: var(--bg-body);
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 .btn-nav {
@@ -106,7 +143,7 @@ body{
 .btn-secondary {
     color: var(--slate);
     border: 1px solid var(--border);
-    background: white;
+    background: var(--bg-surface);
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
@@ -126,21 +163,20 @@ body{
     box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
 }
 
-/* --- Compact Hero Panel --- */
+/* --- Compact & Premium Hero Header Block --- */
 .header {
-    padding: 40px 4% 30px 4%; /* సైజ్ పూర్తిగా తగ్గించాను బ్రో */
+    padding: 40px 4% 30px 4%;
     text-align: center;
     position: relative;
-    /* సాఫ్ట్ బ్లూ గ్లో బ్యాక్‌డ్రాప్ */
-    background: radial-gradient(100% 150% at 50% 0%, rgba(37, 99, 235, 0.06) 0%, rgba(255, 255, 255, 0) 100%), #ffffff;
+    background: radial-gradient(100% 150% at 50% 0%, rgba(37, 99, 235, 0.06) 0%, rgba(255, 255, 255, 0) 100%), var(--bg-surface);
     border-bottom: 1px solid var(--border);
     box-shadow: 0 4px 30px rgba(15, 23, 42, 0.015);
 }
 
 .logo {
-    font-size: 38px; /* Balanced clean size */
+    font-size: 38px;
     font-weight: 850;
-    color: #0f172a !important;
+    color: var(--dark) !important;
     letter-spacing: -1px;
     line-height: 1.2;
     margin-bottom: 10px;
@@ -154,8 +190,8 @@ body{
 }
 
 .subtitle {
-    font-size: 15.5px; /* Slightly more compact */
-    color: #475569;
+    font-size: 15.5px;
+    color: var(--slate);
     max-width: 720px;
     margin: 0 auto;
     font-weight: 500;
@@ -165,7 +201,7 @@ body{
 /* --- Search Console Layout --- */
 .search-box-container {
     max-width: 1320px;
-    margin: 0 auto;
+    margin: 24px auto 0 auto;
     padding: 0 4%;
     position: relative;
     z-index: 10;
@@ -173,9 +209,9 @@ body{
 
 .search-box {
     display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr auto;
+    grid-template-columns: 1.2fr 1.2fr 1fr 1fr auto;
     gap: 12px;
-    background: #ffffff;
+    background: var(--bg-surface);
     padding: 12px;
     border-radius: var(--radius-lg);
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
@@ -187,16 +223,17 @@ body{
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #f8fafc;
+    background: var(--bg-body);
     border: 1px solid var(--border);
     padding: 12px 14px;
     border-radius: var(--radius-md);
     transition: all 0.2s ease;
+    position: relative;
 }
 
 .input-group:focus-within {
     border-color: var(--primary);
-    background: #ffffff;
+    background: var(--bg-surface);
     box-shadow: 0 0 0 4px var(--primary-glow);
 }
 
@@ -214,6 +251,39 @@ body{
     color: var(--dark);
     font-size: 14.5px;
     font-weight: 500;
+}
+
+/* Custom Autocomplete suggestions popup styling */
+.autocomplete-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 999;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    margin-top: 5px;
+    display: none;
+}
+
+.suggestion-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--dark);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.suggestion-item:hover {
+    background: var(--bg-body);
+    color: var(--primary);
 }
 
 .search-btn {
@@ -261,7 +331,7 @@ body{
     font-size: 16px;
     font-weight: 800;
     color: var(--primary);
-    background: #ffffff;
+    background: var(--bg-surface);
     border: 1px solid var(--border);
     padding: 5px 12px;
     border-radius: 8px;
@@ -298,11 +368,57 @@ body{
     color: var(--primary);
 }
 
-/* Left Sidebar Layout */
-.left-section-grid {
+/* Left Sidebar Accordion Layout */
+.accordion-wrapper {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.01);
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.accordion-header {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 12px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--slate);
+    transition: color 0.2s;
+}
+
+.accordion-header:hover { color: var(--primary); }
+.accordion-header i.fa-chevron-down { font-size: 12px; transition: transform 0.3s ease; color: var(--light-slate); }
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    padding: 0 5px;
+}
+
+.accordion-wrapper.active .accordion-content {
+    max-height: 400px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+
+.accordion-wrapper.active .accordion-header i.fa-chevron-down {
+    transform: rotate(180deg);
+    color: var(--primary);
 }
 
 .role-card {
@@ -311,13 +427,12 @@ body{
     justify-content: space-between;
     text-decoration: none;
     color: var(--dark);
-    background: #ffffff;
+    background: var(--bg-surface);
     border: 1px solid var(--border);
-    padding: 14px 16px;
+    padding: 12px 14px;
     border-radius: var(--radius-md);
     font-weight: 600;
-    font-size: 14px;
-    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.01);
+    font-size: 13.5px;
     transition: all 0.25s ease;
 }
 
@@ -326,21 +441,31 @@ body{
     background: var(--primary); 
     color: #ffffff; 
     transform: translateX(4px);
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
 }
 
-.role-card i {
-    font-size: 11px;
+.role-card i.fa-chevron-right {
+    font-size: 10px;
     color: var(--light-slate);
-    transition: all 0.2s ease;
+}
+.role-card:hover i.fa-chevron-right { color: #ffffff; }
+
+/* Tech Skill Graph Matrix Analytics Box Styles */
+.analytics-chart-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-top: 25px; /* Added spacing from the card grid */
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.01);
+}
+.chart-container-wrapper {
+    position: relative;
+    width: 100%;
+    height: 260px;
+    margin-top: 15px;
 }
 
-.role-card:hover i {
-    transform: translateX(2px);
-    color: #ffffff; 
-}
-
-/* Right Side: Uniform Grid Cards with Brand Color Accents */
+/* Right Side Website Grid Cards Layout */
 .website-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr); 
@@ -373,12 +498,12 @@ body{
     box-shadow: 0 12px 24px rgba(37, 99, 235, 0.08);
 }
 
-.card.brand-linkedin:hover { background: #f0f7ff; }
-.card.brand-naukri:hover { background: #f7f3ff; }
-.card.brand-indeed:hover { background: #f0f4ff; }
-.card.brand-foundit:hover { background: #fff5f0; }
-.card.brand-freshersworld:hover { background: #f0fdfa; }
-.card.brand-shine:hover { background: #fdf2f8; }
+.card.brand-linkedin:hover { background: rgba(10, 102, 194, 0.05); }
+.card.brand-naukri:hover { background: rgba(74, 0, 224, 0.05); }
+.card.brand-indeed:hover { background: rgba(33, 100, 243, 0.05); }
+.card.brand-foundit:hover { background: rgba(255, 79, 0, 0.05); }
+.card.brand-freshersworld:hover { background: rgba(20, 184, 166, 0.05); }
+.card.brand-shine:hover { background: rgba(236, 72, 153, 0.05); }
 
 .card-top h3 {
     font-size: 18px;
@@ -389,7 +514,6 @@ body{
     gap: 10px;
 }
 
-/* ఐకాన్ మరియు హెడింగ్ టెక్స్ట్ కలర్స్ బ్రాండ్ కి తగ్గట్టు మార్చాను బ్రో */
 .card.brand-linkedin h3, .card.brand-linkedin h3 i { color: #0a66c2 !important; }
 .card.brand-naukri h3, .card.brand-naukri h3 i { color: #4a00e0 !important; }
 .card.brand-indeed h3, .card.brand-indeed h3 i { color: #2164f3 !important; }
@@ -409,7 +533,7 @@ body{
     align-items: center;
     gap: 6px;
     text-decoration: none;
-    background: #ffffff; 
+    background: var(--bg-surface); 
     color: var(--slate);
     padding: 8px 18px;
     border-radius: 8px;
@@ -432,7 +556,7 @@ body{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
-    background: #ffffff;
+    background: var(--bg-surface);
     border: 1px solid var(--border);
     padding: 30px;
     border-radius: var(--radius-lg);
@@ -447,7 +571,7 @@ body{
 }
 
 .feature-pill-icon {
-    background: #eff6ff;
+    background: var(--bg-body);
     color: var(--primary);
     width: 40px;
     height: 40px;
@@ -473,7 +597,7 @@ body{
 
 /* --- Corporate Footer Area --- */
 .footer {
-    background: #ffffff;
+    background: var(--bg-surface);
     color: var(--slate);
     border-top: 1px solid var(--border);
     padding: 24px 4%;
@@ -493,21 +617,6 @@ body{
     line-height: 1.4;
 }
 
-/* --- Responsive Configurations --- */
-@media(max-width:1024px){
-    .website-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media(max-width:920px){
-    .main-sections { grid-template-columns: 1fr; }
-    .search-box { grid-template-columns: 1fr; }
-    .website-grid { grid-template-columns: 1fr; }
-    .feature-strip { grid-template-columns: 1fr; gap: 20px; }
-    .footer { flex-direction: column; gap: 14px; text-align: center; }
-    .footer-disclaimer { text-align: center; }
-}
-
-/* User Control Profile Panel */
 .profile-dropdown{
     position:relative;
     display:inline-block;
@@ -531,113 +640,61 @@ body{
     top:100%;
     right:0;
     min-width:180px;
-    background:white;
+    background:var(--bg-surface);
     border-radius:10px;
     box-shadow:0 5px 20px rgba(0,0,0,.15);
     display:none;
     overflow:hidden;
-    z-index:999;
+    z-index: 999;
     border: 1px solid var(--border);
 }
 
-.dropdown-menu a{
-    display:block;
-    padding:12px 15px;
-    text-decoration:none;
-    color:#333;
+.dropdown-menu a{ display:block; padding:12px 15px; text-decoration:none; color:var(--dark); }
+.dropdown-menu a:hover{ background:var(--bg-body); }
+.user-name{ padding:12px 15px; font-weight:bold; border-bottom:1px solid var(--border); color: var(--dark); }
+.profile-dropdown:hover .dropdown-menu{ display:block; }
+
+/* --- Mobile Responsive Layout --- */
+@media (max-width: 1024px) {
+    .website-grid { grid-template-columns: repeat(2, 1fr) !important; }
 }
 
-.dropdown-menu a:hover{
-    background:#f3f4f6;
-}
-
-.user-name{
-    padding:12px 15px;
-    font-weight:bold;
-    border-bottom:1px solid #eee;
-}
-
-.profile-dropdown:hover .dropdown-menu{
-    display:block;
-}
-/* --- Mobile Responsive Layout for Home Page --- */
 @media (max-width: 850px) {
-    /* హెడర్ టెక్స్ట్ సైజ్ తగ్గించడం */
-    .logo {
-        font-size: 28px !important;
-    }
-    .subtitle {
-        font-size: 14px !important;
-    }
-    
-    /* సెర్చ్ బార్ ని సింగిల్ కాలమ్ గా మార్చడం */
-    .search-box {
-        grid-template-columns: 1fr !important;
-        border-radius: 16px !important;
-        gap: 8px !important;
-        padding: 10px !important;
-    }
-    .input-group {
-        border-right: none !important;
-        border-bottom: 1px solid #e2e8f0 !important;
-        padding: 8px 10px !important;
-    }
-    .search-btn {
-        width: 100% !important;
-        border-radius: 12px !important;
-        justify-content: center;
-    }
-
-    /* మెయిన్ లేఅవుట్ ని సింగిల్ కాలమ్ చేయడం */
-    .main-sections {
-        grid-template-columns: 1fr !important;
-        gap: 24px !important;
-    }
-
-    /* కనెక్టెడ్ గేట్‌వేస్ 3 కాలమ్స్ నుండి 1 కాలమ్ అవ్వడం */
-    .website-grid {
-        grid-template-columns: 1fr !important;
-    }
-
-    /* బాటమ్ ఫీచర్ స్ట్రిప్ */
-    .feature-strip {
-        grid-template-columns: 1fr !important;
-        padding: 20px !important;
-    }
-
-    /* ఫుటర్ */
-    .footer {
-        flex-direction: column !important;
-        gap: 12px !important;
-        text-align: center !important;
-    }
-    .footer-disclaimer {
-        text-align: center !important;
-    }
+    .logo { font-size: 28px !important; }
+    .subtitle { font-size: 14px !important; }
+    .search-box { grid-template-columns: 1fr !important; border-radius: 16px !important; gap: 8px !important; padding: 10px !important; }
+    .input-group { border-right: none !important; border-bottom: 1px solid var(--border) !important; padding: 8px 10px !important; }
+    .search-btn { width: 100% !important; border-radius: 12px !important; justify-content: center; }
+    .main-sections { grid-template-columns: 1fr !important; gap: 24px !important; }
+    .website-grid { grid-template-columns: 1fr !important; }
+    .feature-strip { grid-template-columns: 1fr !important; padding: 20px !important; }
+    .footer { flex-direction: column !important; gap: 12px !important; text-align: center !important; }
 }
 </style>
 </head>
 <body>
 
 <div class="app-content-wrapper">
-
     <div class="bg-glow-1"></div>
 
+    <!-- Navbar Container Component Layout -->
     <nav class="navbar">
         <a href="/" class="nav-brand">
             <div class="nav-logo-icon"><i class="fa-solid fa-compass"></i></div>
-            <div class="nav-logo-text">JobFinder Pro</div>
+            <div class="nav-logo-text">Job<span>Finder Pro</span></div>
         </a>
+        
         <div class="nav-buttons">
+            <!-- THEME TOGGLE BUTTON MATRIX -->
+            <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Theme Modes">
+                <i class="fa-solid fa-moon" id="theme-icon"></i>
+            </button>
+
             {% if logged_user %}
             <div class="profile-dropdown">
-                <div class="profile-icon">
-                    {{ logged_user[0]|upper }}
-                </div>
+                <div class="profile-icon"> {{ logged_user[0]|upper }} </div>
                 <div class="dropdown-menu">
-                    <div class="user-name">
-                        {{ logged_user }}
-                    </div>
+                    <div class="user-name"> {{ logged_user }} </div>
                     <a href="/dashboard">Dashboard</a>
                     <a href="/logout">Logout</a>
                 </div>
@@ -649,23 +706,25 @@ body{
         </div>
     </nav>
 
+    <!-- Compact Hero Header Block -->
     <div class="header">
         <h1 class="logo">Search Across Global <span>Job Boards</span></h1>
-        <p class="subtitle">
-            An advanced worldwide aggregation engine mapping real-time open listings from top external endpoints seamlessly into a unified control interface.
-        </p>
+        <p class="subtitle">An advanced worldwide aggregation engine mapping real-time open listings from top external endpoints seamlessly into a unified control interface.</p>
     </div>
 
+    <!-- Input Terminal Console Form Section -->
     <div class="search-box-container">
-        <form class="search-box" action="/search">
+        <form class="search-box" id="home-search-form" action="/search" autocomplete="off">
             <div class="input-group">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" name="role" placeholder="Job Role or Skill">
+                <input type="text" id="role-input" name="role" placeholder="Job Role or Skill">
             </div>
 
-            <div class="input-field input-group">
+            <!-- Smart Suggestion Input Field Layout -->
+            <div class="input-group">
                 <i class="fa-solid fa-location-dot"></i>
-                <input type="text" name="location" placeholder="Global Location">
+                <input type="text" id="location-input" name="location" placeholder="Type Global City or Country" oninput="handleLocationInput(this)">
+                <div id="suggestions-box" class="autocomplete-suggestions"></div>
             </div>
 
             <div class="input-group">
@@ -679,36 +738,86 @@ body{
                 </select>
             </div>
 
-            <button type="submit" class="search-btn">
-                Find Openings <i class="fa-solid fa-arrow-right"></i>
-            </button>
+            <div class="input-group">
+                <i class="fa-solid fa-house-laptop"></i>
+                <select name="work_mode">
+                    <option value="">Work Mode</option>
+                    <option value="remote">Remote (WFH)</option>
+                    <option value="hybrid">Hybrid</option>
+                    <option value="onsite">On-site</option>
+                </select>
+            </div>
+
+            <button type="submit" class="search-btn">Find Openings</button>
         </form>
     </div>
 
+    <!-- Metric Analytical Counters -->
     <div class="stats">
         <div class="stat"><h2>10K+</h2> <p>Active Global Feeds</p></div>
         <div class="stat"><h2>500+</h2> <p>Monitored Corporate Entities</p></div>
         <div class="stat"><h2>50K+</h2> <p>Engine Queries Handled</p></div>
     </div>
 
+    <!-- Main Workspace Container Split architecture -->
     <div class="container">
         <div class="main-sections">
 
-            <div class="left-section">
-                <h3 class="section-title"><i class="fa-solid fa-fire"></i> Hot Queries</h3>
-                <div class="left-section-grid">
-                    <a class="role-card" href="/search?role=Graphic+Designer"><span>🎨 Graphic Designer</span> <i class="fa-solid fa-chevron-right"></i></a>
-                    <a class="role-card" href="/search?role=Python+Developer"><span>💻 Python Developer</span> <i class="fa-solid fa-chevron-right"></i></a>
-                    <a class="role-card" href="/search?role=Frontend+Developer"><span>📱 Frontend Developer</span> <i class="fa-solid fa-chevron-right"></i></a>
-                    <a class="role-card" href="/search?role=Data+Analyst"><span>📊 Data Analyst</span> <i class="fa-solid fa-chevron-right"></i></a>
-                    <a class="role-card" href="/search?role=Digital+Marketing"><span>📢 Digital Marketing</span> <i class="fa-solid fa-chevron-right"></i></a>
-                    <a class="role-card" href="/search?role=Video+Editor"><span>🎬 Video Editor</span> <i class="fa-solid fa-chevron-right"></i></a>
-                    <a class="role-card" href="/search?role=UI+UX+Designer"><span>🎯 UI/UX Designer</span> <i class="fa-solid fa-chevron-right"></i></a>
-                    <a class="role-card" href="/search?role=Accountant"><span>💰 Accountant</span> <i class="fa-solid fa-chevron-right"></i></a>
+            <!-- Left Sidebar Container Accordion Area -->
+            <div class="left-sidebar-container">
+                <div class="accordion-wrapper active">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span><i class="fa-solid fa-graduation-cap" style="color: #10b981; margin-right:6px;"></i> Freshers Zone</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <a class="role-card" href="/search?role=Internship&experience=Fresher"><span>🚀 Immediate Internships</span> <i class="fa-solid fa-chevron-right"></i></a>
+                        <a class="role-card" href="/search?role=Software+Trainee&experience=Fresher"><span>🎓 Software Trainee Jobs</span> <i class="fa-solid fa-chevron-right"></i></a>
+                        <a class="role-card" href="/search?role=Remote&experience=Fresher"><span>🏡 WFH Freshers Roles</span> <i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="accordion-wrapper">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span><i class="fa-solid fa-fire" style="color: #ff4f00; margin-right:6px;"></i> Hot Queries</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <a class="role-card" href="/search?role=Graphic+Designer"><span>🎨 Graphic Designer</span> <i class="fa-solid fa-chevron-right"></i></a>
+                        <a class="role-card" href="/search?role=Python+Developer"><span>💻 Python Developer</span> <i class="fa-solid fa-chevron-right"></i></a>
+                        <a class="role-card" href="/search?role=Frontend+Developer"><span>📱 Frontend Developer</span> <i class="fa-solid fa-chevron-right"></i></a>
+                        <a class="role-card" href="/search?role=Data+Analyst"><span>📊 Data Analyst</span> <i class="fa-solid fa-chevron-right"></i></a>
+                        <a class="role-card" href="/search?role=Digital+Marketing"><span>📢 Digital Marketing</span> <i class="fa-solid fa-chevron-right"></i></a>
+                        <a class="role-card" href="/search?role=Video+Editor"><span>🎬 Video Editor</span> <i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="accordion-wrapper" style="border-left: 4px solid #7c3aed;">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span style="color:#7c3aed;"><i class="fa-solid fa-wand-magic-sparkles" style="margin-right:6px;"></i> AI Resources</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <a class="role-card" href="/ai-helper" style="background:transparent;">
+                            <span>📝 Resume Prompts Helper</span> 
+                            <i class="fa-solid fa-chevron-right" style="color:#7c3aed;"></i>
+                        </a>
+                        <a class="role-card" href="/resume-builder" style="background:transparent; margin-top: 4px;">
+                            <span>📄 Live AI Resume Builder</span> 
+                            <i class="fa-solid fa-chevron-right" style="color:#7c3aed;"></i>
+                        </a>
+                        <a class="role-card" href="/mock-interview" style="background:transparent; margin-top: 4px;">
+                            <span>💬 Live AI Mock Interview Bot</span> 
+                            <i class="fa-solid fa-chevron-right" style="color:#7c3aed;"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
 
+            <!-- Right Segment Layer Layout -->
             <div class="right-section">
+                
+                <!-- 🌟 1. Connected Gateways Section (Now back at the Top) -->
                 <h3 class="section-title"><i class="fa-solid fa-link"></i> Connected Gateways</h3>
                 <div class="website-grid">
 
@@ -761,42 +870,155 @@ body{
                     </div>
 
                 </div>
+
+                <!-- 🌟 2. LIVE TECH SKILL MATRIX TRACKER GRAPH BOX (Now relocated to the Bottom) -->
+                <div class="analytics-chart-box">
+                    <h3 class="section-title" style="margin-bottom:0;"><i class="fa-solid fa-chart-line" style="color:#2563eb;"></i> Live Tech Skill Matrix Tracker</h3>
+                    <div class="chart-container-wrapper">
+                        <canvas id="skillsTrendChart"></canvas>
+                    </div>
+                </div>
+
             </div>
         </div>
 
         <div class="feature-strip">
             <div class="feature-pill">
                 <div class="feature-pill-icon"><i class="fa-solid fa-bolt"></i></div>
-                <div class="feature-pill-text">
-                    <h4>Unified Query Pipeline</h4>
-                    <p>Run query operations across multiple host servers instantly from one terminal dashboard layout.</p>
-                </div>
+                <div class="feature-pill-text"><h4>Unified Query Pipeline</h4><p>Run query operations across multiple host servers instantly from one terminal dashboard layout.</p></div>
             </div>
             <div class="feature-pill">
                 <div class="feature-pill-icon"><i class="fa-solid fa-globe"></i></div>
-                <div class="feature-pill-text">
-                    <h4>Cross-Border Infrastructure</h4>
-                    <p>Filter active job feeds globally across any coordinate or tech ecosystem with uniform ease.</p>
-                </div>
+                <div class="feature-pill-text"><h4>Cross-Border Infrastructure</h4><p>Filter active job feeds globally across any coordinate or tech ecosystem with uniform ease.</p></div>
             </div>
             <div class="feature-pill">
                 <div class="feature-pill-icon"><i class="fa-solid fa-user-shield"></i></div>
-                <div class="feature-pill-text">
-                    <h4>Direct Verification Handshake</h4>
-                    <p>We do not store or process details. Experience pure zero-middleman transit directly to verified sources.</p>
-                </div>
+                <div class="feature-pill-text"><h4>Direct Verification Handshake</h4><p>We do not store or process details. Experience pure zero-middleman transit directly to verified sources.</p></div>
             </div>
         </div>
     </div>
 
     <footer class="footer">
         <div>© 2026 JobFinder Pro Hub | Metasearch Platform</div>
-        <div class="footer-disclaimer">
-            Disclaimer: JobFinder Pro operates strictly as an open index search utility. We do not act as job recruiters or direct employers. Source visual assets remain copyrighted intellectual property of their respective official organizations.
-        </div>
+        <div class="footer-disclaimer">Disclaimer: JobFinder Pro operates strictly as an open index search utility. We do not act as job recruiters or direct employers. Source visual assets remain copyrighted intellectual property of their respective official organizations.</div>
     </footer>
-
 </div>
 
+<!-- JavaScript Logic Framework Engine -->
+<script>
+const toggleBtn = document.getElementById("theme-toggle");
+const themeIcon = document.getElementById("theme-icon");
+
+let trendChartInstance = null;
+
+function initTrendingSkillsChart(themeMode) {
+    const ctx = document.getElementById('skillsTrendChart').getContext('2d');
+    
+    const isDark = (themeMode === 'dark');
+    const labelColor = isDark ? '#94a3b8' : '#475569';
+    const gridColor = isDark ? '#334155' : '#e2e8f0';
+    
+    if (trendChartInstance) { trendChartInstance.destroy(); }
+
+    trendChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Python / Flask', 'React.js', 'Generative AI', 'SQL Databases', 'Cloud (AWS)', 'Video Editing'],
+            datasets: [{
+                label: 'Market Query Trend Index (%)',
+                data: [92, 85, 89, 74, 81, 68],
+                backgroundColor: 'rgba(37, 99, 235, 0.8)',
+                hoverBackgroundColor: '#1d4ed8',
+                borderRadius: 6,
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: labelColor, font: { weight: '600', size: 11 } }
+                },
+                y: {
+                    grid: { color: gridColor },
+                    ticks: { color: labelColor, font: { size: 11 } },
+                    min: 0,
+                    max: 100
+                }
+            }
+        }
+    });
+}
+
+const currentTheme = localStorage.getItem("theme") ? localStorage.getItem("theme") : "light";
+document.documentElement.setAttribute("data-theme", currentTheme);
+if (currentTheme === "dark") {
+    themeIcon.classList.replace("fa-moon", "fa-sun");
+}
+
+initTrendingSkillsChart(currentTheme);
+
+toggleBtn.addEventListener("click", function() {
+    let theme = document.documentElement.getAttribute("data-theme");
+    if (theme === "dark") {
+        document.documentElement.setAttribute("data-theme", "light");
+        themeIcon.classList.replace("fa-sun", "fa-moon");
+        localStorage.setItem("theme", "light");
+        initTrendingSkillsChart("light"); 
+    } else {
+        document.documentElement.setAttribute("data-theme", "dark");
+        themeIcon.classList.replace("fa-moon", "fa-sun");
+        localStorage.setItem("theme", "dark");
+        initTrendingSkillsChart("dark"); 
+    }
+});
+
+const locationsList = [
+    "Remote (Worldwide)", "United States", "New York, USA", "San Francisco, USA", "Los Angeles, USA",
+    "Canada", "Toronto, Canada", "Vancouver, Canada", "United Kingdom", "London, UK", "Manchester, UK",
+    "Germany", "Berlin, Germany", "Frankfurt, Germany", "France", "Paris, France", "India", "Hyderabad, India",
+    "Bangalore, India", "Mumbai, India", "Delhi NCR, India", "Singapore", "Australia", "Sydney, Australia",
+    "Melbourne, Australia", "Tokyo, Japan", "United Arab Emirates", "Dubai, UAE", "Abu Dhabi, UAE",
+    "Saudi Arabia", "Riyadh, Saudi Arabia", "Qatar", "Doha, Qatar", "Kuwait", "Oman", "Bahrain"
+];
+
+function handleLocationInput(input) {
+    const val = input.value.trim().toLowerCase();
+    const suggestionsBox = document.getElementById("suggestions-box");
+    if (!val) { suggestionsBox.innerHTML = ""; suggestionsBox.style.display = "none"; return; }
+    const filtered = locationsList.filter(loc => loc.toLowerCase().includes(val));
+    if (filtered.length > 0) {
+        suggestionsBox.innerHTML = filtered.map(loc => 
+            `<div class="suggestion-item" onclick="selectSuggestion('${loc}')"><i class="fa-solid fa-location-dot" style="color:#2563eb; font-size:12px;"></i> ${loc}</div>`
+        ).join("");
+        suggestionsBox.style.display = "block";
+    } else { suggestionsBox.innerHTML = ""; suggestionsBox.style.display = "none"; }
+}
+
+function selectSuggestion(val) {
+    document.getElementById("location-input").value = val;
+    document.getElementById("suggestions-box").style.display = "none";
+}
+
+document.addEventListener("click", function (e) {
+    if (e.target.id !== "location-input") { document.getElementById("suggestions-box").style.display = "none"; }
+});
+
+function toggleAccordion(button) { button.parentElement.classList.toggle('active'); }
+
+document.getElementById("home-search-form").addEventListener("submit", function(event) {
+    const roleVal = document.getElementById("role-input").value.trim();
+    const locVal = document.getElementById("location-input").value.trim();
+    if (roleVal === "" && locVal === "") {
+        event.preventDefault(); 
+        alert("Please enter a Job Role or specify a Location to launch search operations! 🔍");
+    }
+});
+</script>
 </body>
 </html>
