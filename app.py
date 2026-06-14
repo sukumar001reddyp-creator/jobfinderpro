@@ -8,8 +8,14 @@ from psycopg2.extras import RealDictCursor
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 from flask_mail import Mail, Message
 from datetime import timedelta
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+from flask import Flask, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+# CORS ని ఇలా సెట్ చెయ్
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Render/Local Security Wrapper Settings
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'jobfinder_secret_strongly_hashed_2026')
@@ -217,6 +223,22 @@ def home():
         
     return render_template("index.html", graph_labels=graph_labels, graph_data=graph_data)
 
+def get_indeed_domain(location):
+
+    location = location.lower()
+
+    if "hyderabad" in location or "bangalore" in location or "india" in location:
+        return "https://in.indeed.com/jobs"
+
+    elif "london" in location or "uk" in location:
+        return "https://uk.indeed.com/jobs"
+
+    elif "toronto" in location or "canada" in location:
+        return "https://ca.indeed.com/jobs"
+
+    else:
+        return "https://www.indeed.com/jobs"
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -362,6 +384,7 @@ def edit_profile():
     conn.close()
 
     return render_template("edit_profile.html", user=user)
+    
 
 
 @app.route("/search")
@@ -374,6 +397,7 @@ def search():
     location = request.args.get("location", "").strip()
     experience = request.args.get("experience", "").strip()
     work_mode = request.args.get("work_mode", "").strip()
+    indeed_domain = get_indeed_domain(location)
 
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
@@ -430,6 +454,7 @@ def search():
         location=location,
         experience=experience,
         work_mode=work_mode,
+        indeed_domain=indeed_domain,
         logged_user=logged_user
     )
 
@@ -723,6 +748,32 @@ def mock_interview():
             
     return render_template('interview_bot.html', logged_user=logged_user, user_role=user_role)
 
+from flask import jsonify
 
+@app.route("/api/login", methods=["POST"])
+def api_login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    
+    conn = get_db_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
+    cursor.execute(f"SELECT * FROM users WHERE email={P} AND password={P}", (email, password))
+    user = cursor.fetchone()
+    conn.close()
+    
+    if user:
+        return jsonify({"status": "success", "email": email}), 200
+    return jsonify({"status": "error", "message": "Invalid Credentials"}), 401
+
+@app.route('/api/dashboard/<email>')
+def get_dashboard(email):
+    data = {
+        "user": {"name": "Sukum"},
+        "applications": [
+            {"company": "Google", "role": "Developer", "status": "Applied"}
+        ]
+    }
+    return jsonify(data)
 if __name__ == "__main__":
     app.run(debug=True)
