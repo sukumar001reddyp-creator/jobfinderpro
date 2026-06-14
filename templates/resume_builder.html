@@ -1,1 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Resume Builder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- Font Awesome UI Icons -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+<style>
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    --dark: #0f172a;
+    --slate: #475569;
+    --light-slate: #94a3b8;
+    --bg-body: #f5f8ff;
+    --border: #e2e8f0;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+}
+
+/* 🌟 DARK MODE SYNC */
+[data-theme="dark"] {
+    --dark: #f8fafc;
+    --slate: #94a3b8;
+    --light-slate: #64748b;
+    --bg-surface: #1e293b;
+    --bg-body: #0f172a;
+    --border: #334155;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: var(--bg-body); color: var(--dark); padding: 0 0 40px 0; }
+
+/* --- Navbar --- */
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 16px 4%; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+[data-theme="dark"] .navbar { background: rgba(30, 41, 59, 0.9); }
+.nav-left { display: flex; align-items: center; gap: 15px; }
+.nav-back-arrow { color: var(--dark); font-size: 20px; text-decoration: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+.nav-back-arrow:hover { background: #f1f5f9; color: var(--primary); transform: translateX(-3px); }
+.nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo-icon { background: var(--primary-gradient); color: white; width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.nav-logo-text { font-size: 22px; font-weight: 800; color: var(--dark); }
+
+/* --- Workspace Layout --- */
+.workspace { max-width: 1400px; margin: 30px auto 0 auto; padding: 0 4%; display: grid; grid-template-columns: 1fr 1.1fr; gap: 30px; align-items: start; }
+
+/* Left Input Form Panel */
+.form-panel { background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(15,23,42,0.02); }
+[data-theme="dark"] .form-panel { background: #1e293b; }
+.form-panel h2 { font-size: 22px; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+.form-section { margin-bottom: 24px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+.form-section h3 { font-size: 14px; text-transform: uppercase; color: var(--primary); letter-spacing: 0.5px; margin-bottom: 14px; font-weight: 700; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.input-block { margin-bottom: 12px; }
+.input-block label { display: block; font-size: 12px; font-weight: 700; color: var(--slate); margin-bottom: 4px; }
+.input-block input, .input-block textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; background: var(--bg-body); color: var(--dark); font-weight: 500; }
+.input-block input:focus, .input-block textarea:focus { border-color: var(--primary); background: transparent; }
+
+/* Right Preview Panel */
+.preview-panel { background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); position: sticky; top: 90px; min-height: 820px; }
+[data-theme="dark"] .preview-panel { background: #ffffff; color: #1e293b; }
+
+/* Control Bar Actions Layout (🌟 Fixed Space for 3 Buttons) */
+.preview-actions { display: flex; flex-direction: column; gap: 14px; margin-bottom: 25px; background: #f8fafc; padding: 16px 20px; border-radius: 12px; border: 1px solid #e2e8f0; }
+.control-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+
+.template-switcher { display: flex; gap: 10px; width: 100%; padding-top: 12px; border-top: 1px solid #e2e8f0; flex-wrap: nowrap; overflow-x: auto; }
+.tpl-btn { flex: 1; min-width: 100px; padding: 10px 14px; font-size: 13px; font-weight: 700; border: 1px solid #cbd5e1; border-radius: 6px; background: white; color: #475569; cursor: pointer; transition: 0.2s; white-space: nowrap; text-align: center; }
+.tpl-btn.active { background: #0f172a; color: white; border-color: #0f172a; }
+.download-btn { background: var(--primary-gradient); color: white; border: none; padding: 10px 24px; border-radius: 30px; cursor: pointer; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+
+/* --- Standard Premium Resume Template Layout --- */
+#resume-document { color: #1e293b; transition: all 0.3s ease; }
+
+/* 1. CLASSIC ATS STYLE */
+.tpl-classic .resume-header { text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 20px; }
+.tpl-classic .resume-header h1 { font-size: 26px; font-weight: 800; text-transform: uppercase; color: #0f172a; }
+.tpl-classic .resume-header h4 { font-size: 15px; color: #2563eb; font-weight: 700; margin-top: 2px; }
+.tpl-classic .resume-contacts { display: flex; justify-content: center; gap: 15px; font-size: 12.5px; margin-top: 6px; color: #475569; font-weight: 500; }
+.tpl-classic .resume-section { margin-bottom: 20px; }
+.tpl-classic .resume-section-title { font-size: 13.5px; font-weight: 800; text-transform: uppercase; color: #0f172a; border-bottom: 1px solid #94a3b8; padding-bottom: 2px; margin-bottom: 10px; }
+.tpl-classic .resume-item-header { display: flex; justify-content: space-between; font-weight: 700; font-size: 13.5px; }
+.tpl-classic .resume-item-sub { display: flex; justify-content: space-between; font-size: 12.5px; color: #475569; font-style: italic; margin-bottom: 4px; }
+.tpl-classic .resume-bullets { margin-left: 18px; font-size: 13px; }
+
+/* 2. MODERN TECH TWO-COLUMN STYLE */
+.tpl-modern { display: grid; grid-template-columns: 200px 1fr; gap: 24px; }
+.tpl-modern .resume-header { grid-column: span 2; border-bottom: 3px solid #2563eb; padding-bottom: 12px; margin-bottom: 10px; }
+.tpl-modern .resume-header h1 { font-size: 28px; font-weight: 850; color: #0f172a; }
+.tpl-modern .resume-header h4 { font-size: 15px; color: #2563eb; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.tpl-modern .resume-contacts { display: flex; flex-direction: column; gap: 4px; font-size: 12px; margin-top: 8px; display: none; }
+.tpl-modern .mod-left-col { border-right: 1px solid #e2e8f0; padding-right: 15px; display: flex; flex-direction: column; gap: 20px; }
+.tpl-modern .mod-left-col .resume-section-title { font-size: 12px; font-weight: 800; text-transform: uppercase; color: #2563eb; margin-bottom: 8px; letter-spacing: 0.5px; }
+.tpl-modern .mod-right-col { display: flex; flex-direction: column; gap: 20px; }
+.tpl-modern .mod-right-col .resume-section-title { font-size: 13px; font-weight: 800; text-transform: uppercase; color: #0f172a; border-left: 3px solid #2563eb; padding-left: 8px; margin-bottom: 10px; }
+.tpl-modern .resume-item-header { display: flex; justify-content: space-between; font-weight: 700; font-size: 13px; }
+.tpl-modern .resume-item-sub { font-size: 12px; color: #2563eb; font-weight: 600; margin-bottom: 4px; }
+.tpl-modern .resume-bullets { margin-left: 14px; font-size: 12.5px; }
+
+/* 3. MINIMALIST BOLD STYLE */
+.tpl-minimal .resume-header { text-align: left; margin-bottom: 25px; }
+.tpl-minimal .resume-header h1 { font-size: 32px; font-weight: 900; color: #0f172a; letter-spacing: -1px; }
+.tpl-minimal .resume-header h4 { font-size: 16px; color: #475569; font-weight: 600; margin-top: -2px; }
+.tpl-minimal .resume-contacts { display: flex; gap: 12px; font-size: 12px; margin-top: 6px; color: #94a3b8; }
+.tpl-minimal .resume-section { margin-bottom: 22px; display: grid; grid-template-columns: 140px 1fr; gap: 15px; }
+.tpl-minimal .resume-section-title { font-size: 12px; font-weight: 900; text-transform: uppercase; color: #94a3b8; letter-spacing: 1px; padding-top: 2px; }
+.tpl-minimal .resume-item-header { display: flex; justify-content: space-between; font-weight: 700; font-size: 13px; color: #0f172a; }
+.tpl-minimal .resume-item-sub { font-size: 12px; color: #475569; margin-bottom: 4px; font-weight: 500; }
+.tpl-minimal .resume-bullets { margin-left: 14px; font-size: 12.5px; color: #334155; }
+
+/* --- PDF Print Engine --- */
+@media print {
+    body { background: white; padding: 0; }
+    .navbar, .form-panel, .preview-actions { display: none !important; }
+    .workspace { grid-template-columns: 1fr !important; padding: 0; margin: 0; }
+    .preview-panel { border: none !important; box-shadow: none !important; padding: 0 !important; position: static !important; }
+}
+@media(max-width: 950px) { .workspace { grid-template-columns: 1fr !important; } }
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="nav-left">
+        <a href="javascript:history.back()" class="nav-back-arrow"><i class="fa-solid fa-arrow-left"></i></a>
+        <a href="/" class="nav-brand">
+            <div class="nav-logo-icon"><i class="fa-compass fa-solid"></i></div>
+            <div class="nav-logo-text">JobFinder Pro</div>
+        </a>
+    </div>
+</div>
+
+<div class="workspace">
+    
+    <!-- Left Input Fields Form Panel -->
+    <div class="form-panel">
+        <h2><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--primary);"></i> Smart Resume Editor</h2>
+        
+        <div class="form-section">
+            <h3>Personal Information</h3>
+            <div class="input-block"><label>Full Name</label><input type="text" id="form-name" value="{{ user_data[0] if user_data else '' }}" oninput="updateResume()" placeholder="John Doe"></div>
+            <div class="grid-2">
+                <div class="input-block"><label>Email Address</label><input type="text" id="form-email" value="{{ user_data[1] if user_data else '' }}" oninput="updateResume()" placeholder="john@example.com"></div>
+                <div class="input-block"><label>Phone Number</label><input type="text" id="form-phone" oninput="updateResume()" placeholder="+1 234 567 890"></div>
+            </div>
+            <div class="grid-2">
+                <div class="input-block"><label>Target Job Title</label><input type="text" id="form-title" value="{{ user_data[2] if user_data else '' }}" oninput="updateResume()" placeholder="Python Developer"></div>
+                <div class="input-block"><label>Location</label><input type="text" id="form-location" value="{{ user_data[3] if user_data else '' }}" oninput="updateResume()" placeholder="Hyderabad, India"></div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Professional Summary</h3>
+            <div class="input-block"><label>Summary Statement</label><textarea id="form-summary" rows="3" oninput="updateResume()" placeholder="Highly motivated professional with experience in building clean robust architectures..."></textarea></div>
+        </div>
+
+        <div class="form-section">
+            <h3>Work Experience</h3>
+            <div class="input-block"><label>Company Name</label><input type="text" id="form-company" oninput="updateResume()" placeholder="Google / Tech Corp"></div>
+            <div class="grid-2">
+                <div class="input-block"><label>Role / Position</label><input type="text" id="form-role" oninput="updateResume()" placeholder="Software Engineer"></div>
+                <div class="input-block"><label>Duration (Dates)</label><input type="text" id="form-duration" oninput="updateResume()" placeholder="2024 - Present"></div>
+            </div>
+            <div class="input-block">
+                <label>Key Accomplishments (Google XYZ Style)</label>
+                <textarea id="form-work-desc" rows="4" oninput="updateResume()" placeholder="• Spearheaded core software development leading to 30% performance bump.&#10;• Optimized background database layers saving overall server execution bandwidth."></textarea>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Skills & Core Strengths</h3>
+            <div class="input-block"><label>Skills (Comma Separated)</label><input type="text" id="form-skills" oninput="updateResume()" placeholder="Python, Flask, JavaScript, SQL, Git"></div>
+        </div>
+
+        <div class="form-section" style="border:none; margin:0; padding:0;">
+            <h3>Education</h3>
+            <div class="grid-2">
+                <div class="input-block"><label>Degree / Course</label><input type="text" id="form-degree" oninput="updateResume()" placeholder="B.Tech Computer Science"></div>
+                <div class="input-block"><label>University / School</label><input type="text" id="form-college" oninput="updateResume()" placeholder="JNTU University"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Preview Render Sandbox Window -->
+    <div class="preview-panel">
+        <div class="preview-actions">
+            <div class="control-top">
+                <span style="font-size:13.5px; font-weight:700; color:var(--slate);"><i class="fa-solid fa-layer-group"></i> Choose Blueprint Layout</span>
+                <button class="download-btn" onclick="window.print()"><i class="fa-solid fa-cloud-arrow-down"></i> Download PDF</button>
+            </div>
+            
+            <!-- 🌟 TEMPLATE INTERFACES CONTROLLERS (Fixed structure for all 3 names) -->
+            <div class="template-switcher">
+                <button class="tpl-btn active" onclick="switchTemplate('classic', this)">Classic ATS</button>
+                <button class="tpl-btn" onclick="switchTemplate('modern', this)">Modern Tech</button>
+                <button class="tpl-btn" onclick="switchTemplate('minimal', this)">Minimalist Bold</button>
+            </div>
+        </div>
+
+        <div id="resume-document" class="tpl-classic">
+            <!-- Header Block Layout -->
+            <div class="resume-header">
+                <h1 id="res-name">YOUR NAME</h1>
+                <h4 id="res-title">Target Position Title</h4>
+                <div class="resume-contacts" id="res-contacts-container">
+                    <span id="res-email">email@example.com</span> • 
+                    <span id="res-phone">Phone Number</span> • 
+                    <span id="res-location">Location Address</span>
+                </div>
+            </div>
+
+            <!-- Dynamic Templates Render Layout Blocks -->
+            <div id="dynamic-body-wrapper">
+                <div class="resume-section" id="sect-summary">
+                    <div class="resume-section-title" id="title-summary">Professional Summary</div>
+                    <p class="resume-text" id="res-summary">Your professional summary details will instantly sync and map into this section block.</p>
+                </div>
+
+                <div class="resume-section" id="sect-experience">
+                    <div class="resume-section-title" id="title-experience">Experience Track</div>
+                    <div class="resume-item">
+                        <div class="resume-item-header">
+                            <span id="res-role">Job Position Role</span>
+                            <span id="res-duration">Timeline Date</span>
+                        </div>
+                        <div class="resume-item-sub">
+                            <span id="res-company">Organization Firm Name</span>
+                        </div>
+                        <ul class="resume-bullets" id="res-work-desc">
+                            <li>Accomplished core feature updates resulting in high speed data delivery parameters.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="resume-section" id="sect-skills">
+                    <div class="resume-section-title" id="title-skills">Technical Expertise</div>
+                    <p class="resume-text" id="res-skills" style="font-weight: 600;">Core Skill Vector, Asset Mapping, Stack Matrix</p>
+                </div>
+
+                <div class="resume-section" id="sect-education">
+                    <div class="resume-section-title" id="title-education">Education & Credentials</div>
+                    <div class="resume-item">
+                        <div class="resume-item-header">
+                            <span id="res-degree">Degree Program Title</span>
+                        </div>
+                        <div class="resume-item-sub">
+                            <span id="res-college">University Institution Mapping</span>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End dynamic wrapper -->
+        </div>
+    </div>
+</div>
+
+<script>
+if (localStorage.getItem("theme") === "dark") { document.documentElement.setAttribute("data-theme", "dark"); }
+
+function switchTemplate(styleName, btn) {
+    document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const doc = document.getElementById("resume-document");
+    const bodyWrapper = document.getElementById("dynamic-body-wrapper");
+    
+    const sectSummary = document.getElementById("sect-summary");
+    const sectExperience = document.getElementById("sect-experience");
+    const sectSkills = document.getElementById("sect-skills");
+    const sectEducation = document.getElementById("sect-education");
+
+    doc.className = "";
+    doc.classList.add("tpl-" + styleName);
+
+    if (styleName === "modern") {
+        bodyWrapper.innerHTML = `
+            <div class="mod-left-col" id="mod-col-left"></div>
+            <div class="mod-right-col" id="mod-col-right"></div>
+        `;
+        const leftCol = document.getElementById("mod-col-left");
+        const rightCol = document.getElementById("mod-col-right");
+
+        leftCol.innerHTML = `
+            <div class="resume-section">
+                <div class="resume-section-title">Contact</div>
+                <div style="font-size:12px; line-height:1.6; color:#475569;" id="mod-contacts-box"></div>
+            </div>
+        `;
+        leftCol.appendChild(sectSkills);
+        leftCol.appendChild(sectEducation);
+
+        rightCol.appendChild(sectSummary);
+        rightCol.appendChild(sectExperience);
+    } else {
+        bodyWrapper.innerHTML = "";
+        bodyWrapper.appendChild(sectSummary);
+        bodyWrapper.appendChild(sectExperience);
+        bodyWrapper.appendChild(sectSkills);
+        bodyWrapper.appendChild(sectEducation);
+    }
+    updateResume();
+}
+
+function updateResume() {
+    const name = document.getElementById("form-name").value.trim();
+    const email = document.getElementById("form-email").value.trim();
+    const phone = document.getElementById("form-phone").value.trim();
+    const title = document.getElementById("form-title").value.trim();
+    const location = document.getElementById("form-location").value.trim();
+    const summary = document.getElementById("form-summary").value.trim();
+    const company = document.getElementById("form-company").value.trim();
+    const role = document.getElementById("form-role").value.trim();
+    const duration = document.getElementById("form-duration").value.trim();
+    const workDesc = document.getElementById("form-work-desc").value.trim();
+    const skills = document.getElementById("form-skills").value.trim();
+    const degree = document.getElementById("form-degree").value.trim();
+    const college = document.getElementById("form-college").value.trim();
+
+    document.getElementById("res-name").innerText = name ? name : "YOUR NAME";
+    document.getElementById("res-title").innerText = title ? title : "Target Position Title";
+    document.getElementById("res-summary").innerText = summary ? summary : "Your summary details sync here...";
+    document.getElementById("res-company").innerText = company ? company : "Organization Firm Name";
+    document.getElementById("res-role").innerText = role ? role : "Job Position Role";
+    document.getElementById("res-duration").innerText = duration ? duration : "Timeline Date";
+    document.getElementById("res-skills").innerText = skills ? skills : "Skills listed here...";
+    document.getElementById("res-degree").innerText = degree ? degree : "Degree Program Title";
+    document.getElementById("res-college").innerText = college ? college : "University Institution Mapping";
+
+    const emailStr = email ? email : "email@example.com";
+    const phoneStr = phone ? phone : "Phone Number";
+    const locStr = location ? location : "Location Address";
+
+    const contactsContainer = document.getElementById("res-contacts-container");
+    if(contactsContainer) { contactsContainer.innerHTML = `${emailStr} • ${phoneStr} • ${locStr}`; }
+
+    const modContactsBox = document.getElementById("mod-contacts-box");
+    if (modContactsBox) {
+        modContactsBox.innerHTML = `
+            <div><i class="fa-solid fa-envelope"></i> ${emailStr}</div>
+            <div><i class="fa-solid fa-phone"></i> ${phoneStr}</div>
+            <div><i class="fa-solid fa-location-dot"></i> ${locStr}</div>
+        `;
+    }
+
+    const bulletContainer = document.getElementById("res-work-desc");
+    if(workDesc) {
+        const lines = workDesc.split('\n');
+        bulletContainer.innerHTML = lines.map(line => {
+            let cleanLine = line.replace(/^•\s*/, '').trim();
+            return cleanLine ? `<li>${cleanLine}</li>` : '';
+        }).join("");
+    } else {
+        bulletContainer.innerHTML = "<li>Accomplished core feature updates resulting in high speed data delivery parameters.</li>";
+    }
+}
+
+window.onload = function() { updateResume(); };
+</script>
+</body>
+</html>
