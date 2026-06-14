@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Resume Prompt Helper</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+<style>
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    --dark: #0f172a;
+    --slate: #475569;
+    --light-slate: #94a3b8;
+    --bg-body: #f5f8ff;
+    --bg-surface: #ffffff;
+    --border: #e2e8f0;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+}
+
+[data-theme="dark"] {
+    --dark: #f8fafc;
+    --slate: #94a3b8;
+    --light-slate: #64748b;
+    --bg-surface: #1e293b;
+    --bg-body: #0f172a;
+    --border: #334155;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; transition: background-color 0.3s ease, border-color 0.3s ease; }
+body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif; background: var(--bg-body); color: var(--dark); padding: 40px 20px; }
+
+.bg-glow-1 { position: absolute; top: 0; right: 10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(255,255,255,0) 70%); z-index: -1; pointer-events: none; }
+
+.box { max-width: 850px; margin: 0 auto; background: var(--bg-surface); padding: 40px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); position: relative; }
+
+.back-arrow-link { color: var(--slate); font-size: 16px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; font-weight: 700; transition: all 0.2s; }
+.back-arrow-link:hover { color: var(--primary); transform: translateX(-4px); }
+
+h1 { font-size: 32px; font-weight: 850; letter-spacing: -1px; margin-bottom: 8px; background: linear-gradient(135deg, #0f172a 30%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
+[data-theme="dark"] h1 { background: linear-gradient(135deg, #ffffff 30%, #2563eb 100%); -webkit-background-clip: text; }
+.subtitle { color: var(--slate); font-size: 15.5px; margin-bottom: 30px; font-weight: 500; }
+
+.prompt-card { background: var(--bg-body); border: 1px solid var(--border); padding: 24px; border-radius: var(--radius-md); margin-bottom: 20px; position: relative; }
+.prompt-card strong { font-size: 16px; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+.prompt-text { font-size: 14px; color: var(--slate); margin-top: 12px; background: var(--bg-surface); padding: 14px; border-radius: 8px; border: 1px solid var(--border); line-height: 1.6; }
+
+.copy-btn { position: absolute; right: 24px; top: 20px; background: var(--primary-gradient); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12.5px; font-weight: 700; transition: all 0.2s; }
+.copy-btn:hover { transform: translateY(-1px); }
+.back-footer-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; text-decoration: none; color: var(--slate); font-weight: 600; font-size: 14.5px; }
+
+@media (max-width: 640px) { .copy-btn { position: static; margin-top: 12px; width: 100%; justify-content: center; } .prompt-card { padding: 16px; } }
+</style>
+</head>
+<body>
+
+<div class="bg-glow-1"></div>
+
+<div class="box">
+    <a href="javascript:history.back()" class="back-arrow-link"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    <br>
+    <h1><i class="fa-solid fa-wand-magic-sparkles" style="color: #2563eb;"></i> AI Resume Prompt Helper</h1>
+    <p class="subtitle">Copy these optimized mega-prompts and paste them into ChatGPT, Gemini, or Claude to build winning profiles instantly.</p>
+    
+    <div class="prompt-card">
+        <strong><i class="fa-solid fa-file-invoice" style="color: #2563eb;"></i> Ultimate Resume Optimizer Prompt</strong>
+        <p class="prompt-text" id="prompt1">"Act as an expert technical recruiter and professional resume writer. I am applying for a [Target Job Role] position. Here is my current background and experience: [Paste your raw details/rough resume here]. Please rewrite this content into a highly professional, ATS-optimized resume format. Ensure every bullet point follows the Google X-Y-Z formula (Accomplished [X] as measured by [Y], by doing [Z]) and incorporates strong action verbs."</p>
+        <button class="copy-btn" onclick="copyPrompt('prompt1', this)"><i class="fa-solid fa-copy"></i> Copy</button>
+    </div>
+
+    <div class="prompt-card">
+        <strong><i class="fa-solid fa-envelope-open-text" style="color: #10b981;"></i> High-Conversion Cover Letter Builder</strong>
+        <p class="prompt-text" id="prompt2">"Write a compelling, tailored cover letter for a [Job Title] role at [Company Name]. The tone should be confident, professional, and genuinely enthusiastic about the company's culture. Use the following skills and achievements to prove my cultural and technical fit: [Paste 2-3 key skills or projects]. Keep it under 300 words and format it into 3 structured, high-impact paragraphs."</p>
+        <button class="copy-btn" onclick="copyPrompt('prompt2', this)"><i class="fa-solid fa-copy"></i> Copy</button>
+    </div>
+
+    <div class="prompt-card">
+        <strong><i class="fa-solid fa-comments" style="color: #7c3aed;"></i> AI Interview Simulation Matrix</strong>
+        <p class="prompt-text" id="prompt3">"I have an upcoming interview for a [Job Role] role. Please act as a strict hiring manager for this position. Ask me 5 highly relevant technical questions and 3 behavioral questions based on standard industry frameworks. Provide the questions one by one, wait for my response to each, and give constructive feedback on my answers along with the ideal way to structure the response."</p>
+        <button class="copy-btn" onclick="copyPrompt('prompt3', this)"><i class="fa-solid fa-copy"></i> Copy</button>
+    </div>
+
+    <a href="/" class="back-footer-btn"><i class="fa-solid fa-arrow-left"></i> Back to Engine Terminal</a>
+</div>
+
+<script>
+if (localStorage.getItem("theme") === "dark") { document.documentElement.setAttribute("data-theme", "dark"); }
+
+function copyPrompt(elementId, button) {
+    var text = document.getElementById(elementId).innerText;
+    navigator.clipboard.writeText(text).then(function() {
+        var originalHTML = button.innerHTML; button.innerHTML = '<i class="fa-solid fa-check"></i> Copied!'; button.style.background = '#10b981';
+        setTimeout(function() { button.innerHTML = originalHTML; button.style.background = ''; }, 2000);
+    });
+}
+</script>
+</body>
+</html>
