@@ -17,15 +17,28 @@
     --slate: #475569;
     --light-slate: #94a3b8;
     --bg-body: #f5f8ff;
+    --bg-surface: #ffffff;
     --border: #e2e8f0;
     --radius-lg: 16px;
     --radius-md: 12px;
+}
+
+/* 🌟 DARK MODE SYSTEM CONFIGS */
+[data-theme="dark"] {
+    --dark: #f8fafc;
+    --slate: #94a3b8;
+    --light-slate: #64748b;
+    --bg-surface: #1e293b;
+    --bg-body: #0f172a;
+    --border: #334155;
+    --primary-glow: rgba(37, 99, 235, 0.3);
 }
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 body{
@@ -60,6 +73,27 @@ body{
     top: 0;
     z-index: 100;
 }
+[data-theme="dark"] .navbar { background: rgba(30, 41, 59, 0.9); }
+
+.nav-left-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.nav-back-arrow {
+    color: var(--dark);
+    font-size: 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+.nav-back-arrow:hover { background: var(--bg-surface); transform: translateX(-3px); }
 
 .nav-brand {
     display: flex;
@@ -78,7 +112,6 @@ body{
     align-items: center;
     justify-content: center;
     font-size: 18px;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .nav-logo-text {
@@ -88,26 +121,21 @@ body{
     letter-spacing: -0.5px;
 }
 
-/* --- Compact & Sleek Heading Block (Size Reduced) --- */
-.hero {
-    padding: 40px 6% 35px 6%;
+/* --- Compact Header Block --- */
+.hero{
+    padding: 30px 6% 25px 6%;
     text-align: center;
     position: relative;
-    background: radial-gradient(100% 150% at 50% 0%, rgba(37, 99, 235, 0.05) 0%, rgba(255, 255, 255, 0) 100%), #ffffff;
+    background: radial-gradient(100% 150% at 50% 0%, rgba(37, 99, 235, 0.05) 0%, rgba(255, 255, 255, 0) 100%), var(--bg-surface);
     border-bottom: 1px solid var(--border);
-    box-shadow: 0 4px 30px rgba(15, 23, 42, 0.015);
 }
 
-.hero h1 {
-    font-size: 36px;
+.hero h1{
+    font-size: 32px;
     font-weight: 850;
-    letter-spacing: -1px;
-    margin-bottom: 14px;
+    color: var(--dark);
+    margin-bottom: 10px;
     text-transform: capitalize;
-    background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block;
 }
 
 .meta-container {
@@ -129,10 +157,7 @@ body{
     font-weight: 600;
     border: 1px solid var(--border);
 }
-
-.meta-badge i {
-    color: var(--primary);
-}
+.meta-badge i { color: var(--primary); }
 
 /* --- Premium Capsule Search Bar Console --- */
 .search-box-container {
@@ -143,10 +168,10 @@ body{
 
 .search-box {
     display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr auto;
-    background: #ffffff;
+    grid-template-columns: 1.2fr 1.2fr 1fr 1fr auto;
+    background: var(--bg-surface);
     padding: 8px 12px;
-    border-radius: 50px; /* Capsule Shape matched with home page */
+    border-radius: 50px; 
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
     border: 1px solid var(--border);
     align-items: center;
@@ -158,17 +183,11 @@ body{
     gap: 10px;
     background: transparent;
     padding: 10px 16px;
-    border-right: 1px solid #e2e8f0;
+    border-right: 1px solid var(--border);
+    position: relative;
 }
-
-.input-group:nth-last-child(2) {
-    border-right: none;
-}
-
-.input-group i {
-    color: var(--light-slate);
-    font-size: 15px;
-}
+.input-group:nth-last-child(2) { border-right: none; }
+.input-group i { color: var(--light-slate); font-size: 15px; }
 
 .search-box input,
 .search-box select {
@@ -181,6 +200,22 @@ body{
     font-weight: 500;
 }
 
+.autocomplete-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 999;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    margin-top: 5px;
+    display: none;
+}
+
 .search-btn {
     padding: 12px 28px;
     border: none;
@@ -190,11 +225,6 @@ body{
     font-size: 15px;
     cursor: pointer;
     font-weight: 600;
-    transition: background 0.2s;
-}
-
-.search-btn:hover {
-    background: var(--primary-hover);
 }
 
 /* --- Container Workspace Area --- */
@@ -215,20 +245,17 @@ body{
     align-items: center;
     gap: 8px;
 }
+.section-title i { color: var(--primary); }
 
-.section-title i {
-    color: var(--primary);
-}
-
-/* --- Balanced Cards Grid --- */
+/* --- Balanced Cards Grid (All 6 Host Sites Fully Functional) --- */
 .cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 Equal columns like gateways grid */
+    grid-template-columns: repeat(3, 1fr); 
     gap: 20px;
 }
 
 .card {
-    background: #ffffff; 
+    background: var(--bg-surface); 
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     padding: 24px;
@@ -240,7 +267,6 @@ body{
     transition: all 0.25s ease;
 }
 
-/* Branding Borders on normal state */
 .card.brand-linkedin { border-top: 4px solid #0a66c2; }
 .card.brand-naukri { border-top: 4px solid #4a00e0; }
 .card.brand-indeed { border-top: 4px solid #2164f3; }
@@ -253,12 +279,12 @@ body{
     box-shadow: 0 12px 24px rgba(37, 99, 235, 0.08);
 }
 
-.card.brand-linkedin:hover { background: #f0f7ff; }
-.card.brand-naukri:hover { background: #f7f3ff; }
-.card.brand-indeed:hover { background: #f0f4ff; }
-.card.brand-foundit:hover { background: #fff5f0; }
-.card.brand-shine:hover { background: #fdf2f8; }
-.card.brand-freshersworld:hover { background: #f0fdfa; }
+.card.brand-linkedin:hover { background: rgba(10, 102, 194, 0.05); }
+.card.brand-naukri:hover { background: rgba(74, 0, 224, 0.05); }
+.card.brand-indeed:hover { background: rgba(33, 100, 243, 0.05); }
+.card.brand-foundit:hover { background: rgba(255, 79, 0, 0.05); }
+.card.brand-shine:hover { background: rgba(236, 72, 153, 0.05); }
+.card.brand-freshersworld:hover { background: rgba(20, 184, 166, 0.05); }
 
 .card h3 {
     font-size: 18px;
@@ -269,7 +295,6 @@ body{
     gap: 10px;
 }
 
-/* Official Branding Icon Colors */
 .card.brand-linkedin h3, .card.brand-linkedin h3 i { color: #0a66c2 !important; }
 .card.brand-naukri h3, .card.brand-naukri h3 i { color: #4a00e0 !important; }
 .card.brand-indeed h3, .card.brand-indeed h3 i { color: #2164f3 !important; }
@@ -284,173 +309,74 @@ body{
     margin-bottom: 15px;
 }
 
-.card action-btn-wrap {
-    margin-top: auto;
-}
-
 .card-action-btn {
     align-self: flex-start;
     display: inline-flex;
     align-items: center;
     gap: 6px;
     text-decoration: none;
-    background: #ffffff;
+    background: var(--bg-surface);
     color: var(--slate);
     padding: 8px 18px;
     border-radius: 8px;
     font-weight: 700;
     font-size: 13px;
     border: 1px solid var(--border);
-    transition: all 0.2s ease;
 }
-
 .card:hover .card-action-btn {
     background: var(--primary-gradient);
     color: white;
     border-color: transparent;
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
 }
 
-/* --- Home Routing System Actions --- */
-.action-footer {
-    margin-top: 40px;
-    display: flex;
-    justify-content: flex-start;
-}
-
+.action-footer { margin-top: 40px; display: flex; justify-content: space-between; align-items: center; }
 .back {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     text-decoration: none;
-    background: #ffffff;
+    background: var(--bg-surface);
     color: var(--slate);
     padding: 12px 24px;
     border-radius: var(--radius-md);
     font-weight: 600;
     font-size: 14px;
     border: 1px solid var(--border);
-    transition: 0.2s ease;
 }
+.back:hover { background: var(--dark); color: var(--bg-surface); }
 
-.back:hover {
-    background: var(--dark);
-    color: #ffffff;
-    border-color: var(--dark);
-}
-
-/* Dropdown component elements */
-.profile-dropdown{
-    position:relative;
-    display:inline-block;
-}
-
-.profile-icon{
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:#2563eb;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.dropdown-menu{
-    position:absolute;
-    top:100%;
-    right:0;
-    min-width:180px;
-    background:white;
-    border-radius:10px;
-    box-shadow:0 5px 20px rgba(0,0,0,.15);
-    display:none;
-    overflow:hidden;
-    z-index:999;
-    border: 1px solid var(--border);
-}
-
-.dropdown-menu a{
-    display:block;
-    padding:12px 15px;
-    text-decoration:none;
-    color:#333;
-}
-
-.dropdown-menu a:hover{
-    background:#f3f4f6;
-}
-
-.user-name{
-    padding:12px 15px;
-    font-weight:bold;
-    border-bottom:1px solid #eee;
-}
-
-.profile-dropdown:hover .dropdown-menu{
-    display:block;
-}
+.profile-dropdown{ position:relative; display:inline-block; }
+.profile-icon{ width:42px; height:42px; border-radius:50%; background:#2563eb; color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; cursor:pointer; }
+.dropdown-menu{ position:absolute; top:100%; right:0; min-width:180px; background:var(--bg-surface); border-radius:10px; box-shadow:0 5px 20px rgba(0,0,0,.15); display:none; overflow:hidden; z-index:999; border: 1px solid var(--border); }
+.dropdown-menu a{ display:block; padding:12px 15px; text-decoration:none; color:var(--dark); }
+.dropdown-menu a:hover{ background:var(--bg-body); }
+.profile-dropdown:hover .dropdown-menu{ display:block; }
 
 @media(max-width:960px) {
     .cards { grid-template-columns: repeat(2, 1fr); }
-    .search-box { grid-template-columns: 1fr; border-radius: var(--radius-lg); }
+    .search-box { grid-template-columns: 1fr !important; border-radius: var(--radius-lg); gap: 10px; }
     .input-group { border-right: none; border-bottom: 1px solid var(--border); }
 }
-@media(max-width:640px) {
-    .cards { grid-template-columns: 1fr; }
-}
-/* --- Mobile Responsive Layout for Search Page --- */
-@media (max-width: 850px) {
-    .hero h1 {
-        font-size: 26px !important;
-    }
-    
-    /* సెర్చ్ బార్ మొబైల్ సెట్టింగ్ */
-    .search-box {
-        grid-template-columns: 1fr !important;
-        border-radius: 16px !important;
-        gap: 8px !important;
-    }
-    .input-group {
-        border-right: none !important;
-    }
-    .search-btn {
-        width: 100% !important;
-        border-radius: 30px !important;
-        justify-content: center;
-    }
-
-    /* జాబ్ కార్డ్స్ సింగిల్ కాలమ్ అవ్వడం */
-    .cards {
-        grid-template-columns: 1fr !important;
-    }
-}
+@media(max-width:640px) { .cards { grid-template-columns: 1fr; } }
 </style>
 </head>
-
 <body>
 
 <div class="bg-glow-1"></div>
 
 <nav class="navbar">
-    <a href="/" class="nav-brand">
-        <div class="nav-logo-icon">
-            <i class="fa-solid fa-compass"></i>
-        </div>
-        <div class="nav-logo-text">JobFinder Pro</div>
-    </a>
+    <div class="nav-left-wrapper">
+        <a href="javascript:history.back()" class="nav-back-arrow"><i class="fa-solid fa-arrow-left"></i></a>
+        <a href="/" class="nav-brand" style="margin-left: 5px;">
+            <div class="nav-logo-icon"><i class="fa-solid fa-compass"></i></div>
+            <div class="nav-logo-text">JobFinder Pro</div>
+        </a>
+    </div>
 
     {% if logged_user %}
     <div class="profile-dropdown">
-        <div class="profile-icon">
-            {{ logged_user[0]|upper }}
-        </div>
+        <div class="profile-icon">{{ logged_user[0]|upper }}</div>
         <div class="dropdown-menu">
-            <div class="user-name">
-                {{ logged_user }}
-            </div>
             <a href="/dashboard">Dashboard</a>
             <a href="/logout">Logout</a>
         </div>
@@ -460,120 +386,79 @@ body{
 
 <div class="hero">
     <h1>{{ role if role else "Global Openings" }}</h1>
-    
     <div class="meta-container">
-        <div class="meta-badge">
-            <i class="fa-solid fa-location-dot"></i> {{ location if location else "All Locations" }}
-        </div>
-        
-        <div class="meta-badge">
-            <i class="fa-solid fa-layer-group"></i> {{ experience if experience else "Any Experience" }}
-        </div>
+        <div class="meta-badge"><i class="fa-solid fa-location-dot"></i> {{ location if location else "All Locations" }}</div>
+        <div class="meta-badge"><i class="fa-solid fa-layer-group"></i> {{ experience if experience else "Any Experience" }}</div>
+        {% if work_mode %}<div class="meta-badge"><i class="fa-solid fa-house-laptop"></i> {{ work_mode|capitalize }}</div>{% endif %}
     </div>
 </div>
 
 <div class="search-box-container">
-    <form action="/search" class="search-box">
-        <div class="input-group">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" name="role" value="{{ role }}" placeholder="Job Role or Skill">
-        </div>
-
+    <form action="/search" id="results-search-form" class="search-box" autocomplete="off">
+        <div class="input-group"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="role-res-input" name="role" value="{{ role }}" placeholder="Job Role or Skill"></div>
+        
         <div class="input-group">
             <i class="fa-solid fa-location-dot"></i>
-            <input type="text" name="location" value="{{ location }}" placeholder="Location">
+            <input type="text" id="location-res-input" name="location" value="{{ location }}" placeholder="Type Location" oninput="handleLocationInputSearch(this)">
+            <div id="suggestions-box-search" class="autocomplete-suggestions"></div>
         </div>
 
-        <div class="input-group">
-            <i class="fa-solid fa-layer-group"></i>
-            <select name="experience">
-                <option value="">Experience Range</option>
-                <option {% if experience == 'Fresher' %}selected{% endif %}>Fresher</option>
-                <option {% if experience == '1-3 Years' %}selected{% endif %}>1-3 Years</option>
-                <option {% if experience == '3-5 Years' %}selected{% endif %}>3-5 Years</option>
-                <option {% if experience == '5+ Years' %}selected{% endif %}>5+ Years</option>
-            </select>
-        </div>
-
-        <button type="submit" class="search-btn">
-            Search
-        </button>
+        <div class="input-group"><i class="fa-solid fa-layer-group"></i><select name="experience"><option value="">Experience Range</option><option {% if experience == 'Fresher' %}selected{% endif %}>Fresher</option><option {% if experience == '1-3 Years' %}selected{% endif %}>1-3 Years</option><option {% if experience == '3-5 Years' %}selected{% endif %}>3-5 Years</option><option {% if experience == '5+ Years' %}selected{% endif %}>5+ Years</option></select></div>
+        <div class="input-group"><i class="fa-solid fa-house-laptop"></i><select name="work_mode"><option value="">Work Mode</option><option value="remote" {% if work_mode == 'remote' %}selected{% endif %}>Remote (WFH)</option><option value="hybrid" {% if work_mode == 'hybrid' %}selected{% endif %}>Hybrid</option><option value="onsite" {% if work_mode == 'onsite' %}selected{% endif %}>On-site</option></select></div>
+        <button type="submit" class="search-btn">Search</button>
     </form>
 </div>
 
+{% if logged_user %}
+<div style="max-width:1100px; margin: 20px auto -10px auto; text-align: right; padding: 0 24px;">
+    <form action="/save-search" method="POST" style="display: inline-block;">
+        <input type="hidden" name="role" value="{{ role }}"><input type="hidden" name="location" value="{{ location }}"><input type="hidden" name="experience" value="{{ experience }}"><input type="hidden" name="work_mode" value="{{ work_mode }}">
+        <button type="submit" style="background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 30px; font-weight: 600; cursor: pointer; font-size: 13.5px; display: flex; align-items: center; gap: 8px;"><i class="fa-solid fa-bookmark"></i> Save Search Parameters</button>
+    </form>
+</div>
+{% endif %}
+
 <div class="container">
     <h3 class="section-title"><i class="fa-solid fa-share-nodes"></i> Available Host Streams Found</h3>
-
     <div class="cards">
-
-        <div class="card brand-linkedin">
-            <div class="card-top">
-                <h3><i class="fa-brands fa-linkedin"></i> LinkedIn Jobs</h3>
-                <p>Launch global indexing requests for professional roles and network directories instantly.</p>
-            </div>
-            <a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords={{ role }}&location={{ location }}" class="card-action-btn">
-                View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
-            </a>
-        </div>
-
-        <div class="card brand-naukri">
-            <div class="card-top">
-                <h3><i class="fa-solid fa-paper-plane"></i> Naukri</h3>
-                <p>Scan India's massive centralized technology ecosystems and cluster feeds directly.</p>
-            </div>
-            <a target="_blank" href="https://www.naukri.com/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}" class="card-action-btn">
-                View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
-            </a>
-        </div>
-
-        <div class="card brand-indeed">
-            <div class="card-top">
-                <h3><i class="fa-solid fa-briefcase"></i> Indeed</h3>
-                <p>Pull live matching vacancy strings straight from comprehensive international aggregate files.</p>
-            </div>
-            <a target="_blank" href="https://in.indeed.com/jobs?q={{ role }}+{{ location }}" class="card-action-btn">
-                View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
-            </a>
-        </div>
-
-        <div class="card brand-foundit">
-            <div class="card-top">
-                <h3><i class="fa-solid fa-bolt"></i> Foundit</h3>
-                <p>Query skill-based parameters securely optimized for specific developer tracks.</p>
-            </div>
-            <a target="_blank" href="https://www.foundit.in/srp/results?query={{ role }}&locations={{ location }}" class="card-action-btn">
-                View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
-            </a>
-        </div>
-
-        <div class="card brand-shine">
-            <div class="card-top">
-                <h3><i class="fa-solid fa-star"></i> Shine</h3>
-                <p>Map profile matching variables to high-growth corporate pathways instantly.</p>
-            </div>
-            <a target="_blank" href="https://www.shine.com/job-search/{{ role }}-jobs-in-{{ location }}" class="card-action-btn">
-                View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
-            </a>
-        </div>
-
-        <div class="card brand-freshersworld">
-            <div class="card-top">
-                <h3><i class="fa-solid fa-user-graduate"></i> Freshersworld</h3>
-                <p>Filter open early-career positions and immediate structural training opportunities.</p>
-            </div>
-            <a target="_blank" href="https://www.freshersworld.com/jobs/jobsearch/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}" class="card-action-btn">
-                View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
-            </a>
-        </div>
-
+        <div class="card brand-linkedin"><div class="card-top"><h3><i class="fa-brands fa-linkedin"></i> LinkedIn Jobs</h3><p>Global professional networking matrix, asset databases, and high-tier openings.</p></div><a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords={{ role }}&location={{ location }}" class="card-action-btn">View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i></a></div>
+        <div class="card brand-naukri"><div class="card-top"><h3><i class="fa-solid fa-paper-plane"></i> Naukri</h3><p>Scan India's massive centralized technology ecosystems and cluster feeds directly.</p></div><a target="_blank" href="https://www.naukri.com/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}" class="card-action-btn">View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i></a></div>
+        <div class="card brand-indeed"><div class="card-top"><h3><i class="fa-solid fa-briefcase"></i> Indeed</h3><p>Pull live matching vacancy strings straight from comprehensive international aggregate files.</p></div><a target="_blank" href="https://in.indeed.com/jobs?q={{ role }}+{{ location }}" class="card-action-btn">View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i></a></div>
+        <div class="card brand-foundit"><div class="card-top"><h3><i class="fa-solid fa-bolt"></i> Foundit</h3><p>Query skill-based parameters securely optimized for specific developer tracks.</p></div><a target="_blank" href="https://www.foundit.in/srp/results?query={{ role }}&locations={{ location }}" class="card-action-btn">View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i></a></div>
+        <div class="card brand-shine"><div class="card-top"><h3><i class="fa-solid fa-star"></i> Shine</h3><p>Map profile matching variables to high-growth corporate pathways instantly.</p></div><a target="_blank" href="https://www.shine.com/job-search/{{ role }}-jobs-in-{{ location }}" class="card-action-btn">View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i></a></div>
+        <div class="card brand-freshersworld"><div class="card-top"><h3><i class="fa-solid fa-user-graduate"></i> Freshersworld</h3><p>Filter open early-career positions and immediate structural training opportunities.</p></div><a target="_blank" href="https://www.freshersworld.com/jobs/jobsearch/{{ role|replace(' ','-') }}-jobs-in-{{ location|replace(' ','-') }}" class="card-action-btn">View Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i></a></div>
     </div>
-
-    <div class="action-footer">
-        <a href="/" class="back">
-            <i class="fa-solid fa-arrow-left"></i> Back to Engine Terminal
-        </a>
-    </div>
+    <div class="action-footer"><a href="/" class="back"><i class="fa-solid fa-arrow-left"></i> Back to Engine Terminal</a></div>
 </div>
 
+<script>
+// 🌟 Sync Dark Mode Theme from memory localStorage
+if (localStorage.getItem("theme") === "dark") { document.documentElement.setAttribute("data-theme", "dark"); }
+
+const locationsList = ["Remote (Worldwide)", "United States", "New York, USA", "San Francisco, USA", "Los Angeles, USA", "Canada", "Toronto, Canada", "United Kingdom", "London, UK", "Germany", "Berlin, Germany", "India", "Hyderabad, India", "Bangalore, India", "Singapore", "Australia", "United Arab Emirates", "Dubai, UAE", "Saudi Arabia", "Qatar", "Kuwait", "Oman", "Bahrain"];
+
+function handleLocationInputSearch(input) {
+    const val = input.value.trim().toLowerCase();
+    const suggestionsBox = document.getElementById("suggestions-box-search");
+    if (!val) { suggestionsBox.innerHTML = ""; suggestionsBox.style.display = "none"; return; }
+    const filtered = locationsList.filter(loc => loc.toLowerCase().includes(val));
+    if (filtered.length > 0) {
+        suggestionsBox.innerHTML = filtered.map(loc => `<div class="suggestion-item" style="padding:10px 14px; cursor:pointer;" onclick="selectSuggestionSearch('${loc}')">${loc}</div>`).join("");
+        suggestionsBox.style.display = "block";
+    } else { suggestionsBox.style.display = "none"; }
+}
+function selectSuggestionSearch(val) { document.getElementById("location-res-input").value = val; document.getElementById("suggestions-box-search").style.display = "none"; }
+
+document.addEventListener("click", function (e) {
+    if (e.target.id !== "location-res-input") { document.getElementById("suggestions-box-search").style.display = "none"; }
+});
+
+// Empty submission security blocker validation
+document.getElementById("results-search-form").addEventListener("submit", function(event) {
+    if (document.getElementById("role-res-input").value.trim() === "" && document.getElementById("location-res-input").value.trim() === "") {
+        event.preventDefault(); alert("Please enter a Job Role or specify a Location to launch search operations! 🔍");
+    }
+});
+</script>
 </body>
 </html>
