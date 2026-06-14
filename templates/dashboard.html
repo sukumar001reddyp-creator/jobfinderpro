@@ -11,7 +11,6 @@
 :root {
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
-    --primary-glow: rgba(37, 99, 235, 0.15);
     --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     --dark: #0f172a;
     --slate: #475569;
@@ -21,346 +20,89 @@
     --border: #e2e8f0;
     --radius-lg: 16px;
     --radius-md: 12px;
+    
+    /* 🌟 Kanban Status Column Colors Configuration */
+    --clr-applied: #3b82f6;
+    --clr-interview: #f59e0b;
+    --clr-offered: #10b981;
+    --clr-rejected: #ef4444;
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+/* 🌟 DARK MODE CAPABILITY SYNC */
+[data-theme="dark"] {
+    --dark: #f8fafc;
+    --slate: #94a3b8;
+    --light-slate: #64748b;
+    --bg-surface: #1e293b;
+    --bg-body: #0f172a;
+    --border: #334155;
 }
 
-body{
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-    background: var(--bg-body);
-    color: var(--dark);
-    line-height: 1.5;
-    padding: 0 0 60px 0;
-}
+*{ margin:0; padding:0; box-sizing:border-box; transition: background-color 0.3s ease, border-color 0.3s ease; }
+body{ font-family: 'Segoe UI', sans-serif; background: var(--bg-body); color: var(--dark); line-height: 1.5; padding: 0 0 60px 0; }
 
-.bg-glow-1 {
-    position: absolute;
-    top: 0;
-    right: 10%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(255,255,255,0) 70%);
-    z-index: -1;
-    pointer-events: none;
-}
+.bg-glow-1 { position: absolute; top: 0; right: 10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(255,255,255,0) 70%); z-index: -1; pointer-events: none; }
 
-/* --- Premium Navbar --- */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 4%; 
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 16px 4%; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
+[data-theme="dark"] .navbar { background: rgba(30, 41, 59, 0.9); }
 
-.nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-}
+.nav-left-wrapper { display: flex; align-items: center; gap: 18px; }
+.nav-back-arrow { color: var(--dark); font-size: 20px; text-decoration: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.nav-back-arrow:hover { background: var(--bg-surface); transform: translateX(-3px); }
+.nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo-icon { background: var(--primary-gradient); color: white; width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.nav-logo-text { font-size: 22px; font-weight: 800; color: var(--dark); }
 
-.nav-logo-icon {
-    background: var(--primary-gradient);
-    color: white;
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-}
+.header { padding: 35px 4% 25px 4%; text-align: center; position: relative; background: radial-gradient(100% 150% at 50% 0%, rgba(37, 99, 235, 0.05) 0%, rgba(255, 255, 255, 0) 100%), var(--bg-surface); border-bottom: 1px solid var(--border); box-shadow: 0 4px 30px rgba(15, 23, 42, 0.015); }
+.header h1 { font-size: 36px; font-weight: 850; letter-spacing: -1px; background: linear-gradient(135deg, #0f172a 30%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
+[data-theme="dark"] .header h1 { background: linear-gradient(135deg, #ffffff 30%, #2563eb 100%); -webkit-background-clip: text; }
+.header p { font-size: 15px; color: var(--slate); font-weight: 600; text-transform: capitalize; }
 
-.nav-logo-text {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--dark);
-    letter-spacing: -0.5px;
-}
+.dashboard-search { max-width: 1320px; margin: 24px auto 0 auto; padding: 0 4%; }
+.dashboard-search form { display: grid; grid-template-columns: 1.2fr 1.2fr 1fr 1fr auto; gap: 12px; background: var(--bg-surface); padding: 10px 14px; border-radius: 50px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); border: 1px solid var(--border); align-items: center; position: relative; }
+.dashboard-search input, .dashboard-search select { width: 100%; padding: 10px 14px; border: none; outline: none; background: var(--bg-body); border-radius: 25px; color: var(--dark); font-size: 14.5px; font-weight: 500; }
+.dashboard-search button { border: none; background: var(--primary-gradient); color: white; padding: 12px 28px; border-radius: 40px; cursor: pointer; font-weight: 600; font-size: 14.5px; }
 
-/* --- Compact Welcome Panel Block --- */
-.header {
-    padding: 45px 4% 35px 4%;
-    text-align: center;
-    position: relative;
-    background: radial-gradient(100% 150% at 50% 0%, rgba(37, 99, 235, 0.05) 0%, rgba(255, 255, 255, 0) 100%), #ffffff;
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 4px 30px rgba(15, 23, 42, 0.015);
-}
+.autocomplete-suggestions { position: absolute; top: 100%; left: 24%; right: 50%; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; max-height: 200px; overflow-y: auto; z-index: 999; box-shadow: 0 8px 24px rgba(0,0,0,0.06); display: none; }
+.suggestion-item { padding: 10px 14px; cursor: pointer; font-size: 14px; color: var(--dark); }
+.suggestion-item:hover { background: var(--bg-body); color: var(--primary); }
 
-.header h1 {
-    font-size: 38px;
-    font-weight: 850;
-    letter-spacing: -1px;
-    margin-bottom: 8px;
-    background: linear-gradient(135deg, #0f172a 30%, #2563eb 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block;
-}
+.container { max-width: 1320px; margin: 30px auto 0 auto; padding: 0 4%; }
+.main-sections { display: grid; grid-template-columns: 290px 1fr; gap: 30px; align-items: start; }
 
-.header p {
-    font-size: 15px;
-    color: var(--slate);
-    font-weight: 600;
-    text-transform: capitalize;
-}
+.profile { background: var(--bg-surface); padding: 24px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(15, 23, 42, 0.01); }
+.profile h2 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--slate); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.profile-field { margin-bottom: 16px; }
+.profile-field span { display: block; font-size: 11px; color: var(--light-slate); font-weight: 700; text-transform: uppercase; }
+.profile-field p { font-size: 14.5px; color: var(--dark); font-weight: 600; word-break: break-all; }
+.profile-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; }
+.back-btn { display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; background: var(--bg-surface); color: var(--slate); padding: 11px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 700; border: 1px solid var(--border); }
+.back-btn:hover { background: var(--dark); color: var(--bg-surface); }
+.logout { display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; background: #fef2f2; color: #ef4444; padding: 11px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 700; border: 1px solid #fee2e2; }
 
-/* --- Premium Capsule Search Console --- */
-.dashboard-search {
-    max-width: 1320px;
-    margin: 24px auto 0 auto;
-    padding: 0 4%;
-}
+.section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--slate); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+.section-title i { color: var(--primary); }
 
-.dashboard-search form {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr auto;
-    gap: 12px;
-    background: #ffffff;
-    padding: 10px 14px;
-    border-radius: 50px; 
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
-    border: 1px solid var(--border);
-    align-items: center;
-}
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px 20px; display: flex; flex-direction: column; justify-content: space-between; min-height: 165px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02); transition: all 0.25s ease; }
 
-.dashboard-search input,
-.dashboard-search select {
-    width: 100%;
-    padding: 10px 14px;
-    border: none;
-    outline: none;
-    background: #f8fafc;
-    border-radius: 25px;
-    color: var(--dark);
-    font-size: 14.5px;
-    font-weight: 500;
-}
-
-.dashboard-search input:focus,
-.dashboard-search select:focus {
-    background: #ffffff;
-    border: 1px solid var(--primary);
-}
-
-.dashboard-search button {
-    border: none;
-    background: var(--primary-gradient);
-    color: white;
-    padding: 12px 28px;
-    border-radius: 40px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14.5px;
-    transition: background 0.2s;
-}
-
-.dashboard-search button:hover {
-    background: var(--primary-hover);
-}
-
-/* --- Main Layout Container Workspace --- */
-.container {
-    max-width: 1320px;
-    margin: 30px auto 0 auto;
-    padding: 0 4%;
-}
-
-.main-sections {
-    display: grid;
-    grid-template-columns: 290px 1fr;
-    gap: 30px;
-    align-items: start;
-}
-
-/* --- Left Profile Panel Cards System --- */
-.profile {
-    background: #ffffff;
-    padding: 24px;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.01);
-}
-
-.profile h2 {
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--slate);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-}
-
-.profile-field {
-    margin-bottom: 16px;
-}
-
-.profile-field span {
-    display: block;
-    font-size: 11px;
-    color: var(--light-slate);
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 2px;
-}
-
-.profile-field p {
-    font-size: 14.5px;
-    color: var(--dark);
-    font-weight: 600;
-    word-break: break-all;
-}
-
-.profile-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 25px;
-}
-
-.back-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    text-decoration: none;
-    background: #ffffff;
-    color: var(--slate);
-    padding: 11px;
-    border-radius: var(--radius-md);
-    font-size: 13.5px;
-    font-weight: 700;
-    border: 1px solid var(--border);
-    transition: 0.2s ease;
-}
-
-.back-btn:hover {
-    background: var(--dark);
-    color: #ffffff;
-    border-color: var(--dark);
-}
-
-.logout {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    text-decoration: none;
-    background: #fef2f2;
-    color: #ef4444;
-    padding: 11px;
-    border-radius: var(--radius-md);
-    font-size: 13.5px;
-    font-weight: 700;
-    border: 1px solid #fee2e2;
-    transition: 0.2s ease;
-}
-
-.logout:hover {
-    background: #ef4444;
-    color: #ffffff;
-    border-color: transparent;
-}
-
-/* --- Right Active Gateways Layout --- */
-.section-title {
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--slate);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.section-title i {
-    color: var(--primary);
-}
-
-.cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 16px;
-}
-
-.card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 24px 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center; /* Entire card content is centered */
-    text-align: center;
-    min-height: 175px; 
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
-    transition: all 0.25s ease;
-}
-
-/* Border accents */
 .card.brand-linkedin { border-top: 4px solid #0a66c2; }
 .card.brand-naukri { border-top: 4px solid #4a00e0; }
 .card.brand-indeed { border-top: 4px solid #2164f3; }
 .card.brand-foundit { border-top: 4px solid #ff4f00; }
 .card.brand-shine { border-top: 4px solid #ec4899; }
 .card.brand-freshersworld { border-top: 4px solid #14b8a6; }
+.card:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(37, 99, 235, 0.08); }
 
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.08);
-}
+.card.brand-linkedin:hover { background: rgba(10, 102, 194, 0.05); }
+.card.brand-naukri:hover { background: rgba(74, 0, 224, 0.05); }
+.card.brand-indeed:hover { background: rgba(33, 100, 243, 0.05); }
+.card.brand-foundit:hover { background: rgba(255, 79, 0, 0.05); }
+.card.brand-shine:hover { background: rgba(236, 72, 153, 0.05); }
+.card.brand-freshersworld:hover { background: rgba(20, 184, 166, 0.05); }
 
-.card.brand-linkedin:hover { background: #f0f7ff; }
-.card.brand-naukri:hover { background: #f7f3ff; }
-.card.brand-indeed:hover { background: #f0f4ff; }
-.card.brand-foundit:hover { background: #fff5f0; }
-.card.brand-shine:hover { background: #fdf2f8; }
-.card.brand-freshersworld:hover { background: #f0fdfa; }
-
-/* --- Side-by-Side Logo & Title Header (Perfect Center Realignment) --- */
-.card-brand-header {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Pushes the row to the exact middle */
-    gap: 12px;
-    width: 100%;
-    margin-bottom: 5px;
-}
-
-.logo-wrapper {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px; 
-    flex-shrink: 0;
-    transition: transform 0.2s ease;
-}
-
-.card:hover .logo-wrapper {
-    transform: scale(1.08);
-}
-
-/* Pill wrapper background and brand icon color setups */
+.card-brand-header { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; margin-bottom: 5px; }
+.logo-wrapper { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
 .brand-linkedin .logo-wrapper { background: #e0f2fe; color: #0a66c2; }
 .brand-naukri .logo-wrapper { background: #f3e8ff; color: #4a00e0; }
 .brand-indeed .logo-wrapper { background: #e0e7ff; color: #2164f3; }
@@ -368,12 +110,7 @@ body{
 .brand-shine .logo-wrapper { background: #fce7f3; color: #ec4899; }
 .brand-freshersworld .logo-wrapper { background: #ccfbf1; color: #14b8a6; }
 
-.card h3 {
-    font-size: 18px;
-    font-weight: 700;
-}
-
-/* Text alignment to match logo color schemes properly */
+.card h3 { font-size: 18px; font-weight: 700; color: var(--dark); }
 .card.brand-linkedin h3 { color: #0a66c2 !important; }
 .card.brand-naukri h3 { color: #4a00e0 !important; }
 .card.brand-indeed h3 { color: #2164f3 !important; }
@@ -381,209 +118,335 @@ body{
 .card.brand-shine h3 { color: #ec4899 !important; }
 .card.brand-freshersworld h3 { color: #14b8a6 !important; }
 
-.card a {
-    align-self: stretch; 
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    text-decoration: none;
-    background: #ffffff;
-    color: var(--slate);
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 13.5px;
-    border: 1px solid var(--border);
-    transition: all 0.2s ease;
-    margin-top: 10px;
-}
+.card a { align-self: stretch; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; background: var(--bg-surface); color: var(--slate); padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 13.5px; border: 1px solid var(--border); transition: all 0.2s ease; margin-top: 10px; }
+.card:hover a { background: var(--primary-gradient); color: white; border-color: transparent; }
 
-.card:hover a {
-    background: var(--primary-gradient);
-    color: white;
-    border-color: transparent;
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15);
-}
+/* 🌟 KANBAN JOB TRACKER PLATFORM STYLES BLOCK */
+.kanban-section { margin-top: 35px; margin-bottom: 30px; }
+.kanban-inline-form { background: var(--bg-surface); padding: 16px 20px; border-radius: var(--radius-md); border: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.01); }
+.kanban-inline-form input, .kanban-inline-form select { background: var(--bg-body); border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; outline: none; color: var(--dark); font-size: 13.5px; font-weight: 600; }
+.kanban-inline-form input { flex: 1; min-width: 160px; }
+.kanban-inline-form button { background: var(--primary-gradient); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 13.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(37,99,235,0.15); }
 
-@media(max-width:1024px){
-    .cards { grid-template-columns: repeat(2, 1fr); }
-}
+.kanban-board-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-items: start; }
+.kanban-column { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; min-height: 400px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 4px 12px rgba(15,23,42,0.01); }
 
+.column-header { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+.kanban-column.col-applied .column-header { color: var(--clr-applied); border-bottom-color: var(--clr-applied); }
+.kanban-column.col-interview .column-header { color: var(--clr-interview); border-bottom-color: var(--clr-interview); }
+.kanban-column.col-offered .column-header { color: var(--clr-offered); border-bottom-color: var(--clr-offered); }
+.kanban-column.col-rejected .column-header { color: var(--clr-rejected); border-bottom-color: var(--clr-rejected); }
+
+.column-badge { background: var(--bg-body); color: var(--slate); font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 700; border: 1px solid var(--border); }
+
+.kanban-card { background: var(--bg-body); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; display: flex; flex-direction: column; gap: 6px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.01); }
+.kanban-card h4 { font-size: 14.5px; font-weight: 700; color: var(--dark); word-break: break-word; line-height: 1.3; }
+.kanban-card p { font-size: 12.5px; color: var(--slate); font-weight: 600; display: flex; align-items: center; gap: 4px; }
+
+.kanban-card-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); }
+.status-select-wrapper select { background: transparent; border: none; font-size: 11px; font-weight: 700; color: var(--primary); outline: none; cursor: pointer; max-width: 110px; }
+.kanban-card-delete { color: #ef4444; text-decoration: none; font-size: 12px; opacity: 0.7; transition: opacity 0.2s; }
+.kanban-card-delete:hover { opacity: 1; }
+
+@media(max-width:1150px){ .kanban-board-grid { grid-template-columns: repeat(2, 1fr); } }
+@media(max-width:650px){ .kanban-board-grid { grid-template-columns: 1fr; } }
+
+@media(max-width:1024px){ .cards { grid-template-columns: repeat(2, 1fr); } }
 @media(max-width:850px){
-    .main-sections { grid-template-columns: 1fr; }
-    .cards { grid-template-columns: 1fr; }
-    .dashboard-search form { grid-template-columns: 1fr; border-radius: var(--radius-lg); }
-}
-/* --- Mobile Responsive Layout for Dashboard --- */
-@media (max-width: 850px) {
-    .header h1 {
-        font-size: 26px !important;
-    }
-
-    /* డ్యాష్‌బోర్డ్ సెర్చ్ బార్ */
-    .dashboard-search form {
-        grid-template-columns: 1fr !important;
-        border-radius: 16px !important;
-        gap: 8px !important;
-    }
-    .dashboard-search input,
-    .dashboard-search select {
-        border-radius: 12px !important;
-    }
-    .dashboard-search button {
-        width: 100% !important;
-        border-radius: 12px !important;
-    }
-
-    /* ప్రొఫైల్ లెఫ్ట్ సైడ్, గేట్‌వేస్ రైట్ సైడ్ కాకుండా ఒకదాని కింద ఒకటి రావడం */
-    .main-sections {
-        grid-template-columns: 1fr !important;
-    }
-
-    /* గేట్‌వేస్ కార్డ్స్ సింగిల్ కాలమ్ */
-    .cards {
-        grid-template-columns: 1fr !important;
-    }
+    .main-sections { grid-template-columns: 1fr !important; }
+    .cards { grid-template-columns: 1fr !important; }
+    .dashboard-search form { grid-template-columns: 1fr !important; border-radius: var(--radius-lg) !important; gap: 10px; }
 }
 </style>
-
 </head>
-
 <body>
 
 <div class="bg-glow-1"></div>
 
 <nav class="navbar">
-    <a href="/" class="nav-brand">
-        <div class="nav-logo-icon"><i class="fa-solid fa-compass"></i></div>
-        <div class="nav-logo-text">JobFinder Pro</div>
-    </a>
+    <div class="nav-left-wrapper">
+        <a href="javascript:history.back()" class="nav-back-arrow"><i class="fa-solid fa-arrow-left"></i></a>
+        <a href="/" class="nav-brand">
+            <div class="nav-logo-icon"><i class="fa-solid fa-compass"></i></div>
+            <div class="nav-logo-text">JobFinder Pro</div>
+        </a>
+    </div>
 </nav>
 
 <div class="header">
-    <h1>Welcome back, {{ user[0] }} 👋</h1>
-    <p>{{ user[2] }} Positions in {{ user[3] }}</p>
+    <!-- 🌟 Fixed row structure compatibility to support both SQLite list and Postgres dictionary layers -->
+    <h1>Welcome back, {{ user['name'] if user['name'] is defined else user[0] }} 👋</h1>
+    <p>{{ user['jobrole'] if user['jobrole'] is defined else user[2] }} Positions in {{ user['location'] if user['location'] is defined else user[3] }}</p>
 </div>
 
 <div class="dashboard-search">
-    <form action="/search">
-        <input type="text" name="role" placeholder="Job Role">
-        <input type="text" name="location" placeholder="Location">
-        <select name="experience">
-            <option value="">Experience</option>
-            <option>Fresher</option>
-            <option>1-3 Years</option>
-            <option>3-5 Years</option>
-            <option>5+ Years</option>
-        </select>
+    <form action="/search" id="dash-search-form" autocomplete="off">
+        <input type="text" id="role-dash-input" name="role" placeholder="Job Role">
+        
+        <div style="width: 100%; position: relative;">
+            <input type="text" id="location-dash-input" name="location" placeholder="Type Location" oninput="handleDashLocation(this)">
+            <div id="suggestions-dash" class="autocomplete-suggestions"></div>
+        </div>
+
+        <select name="experience"><option value="">Experience</option><option>Fresher</option><option>1-3 Years</option><option>3-5 Years</option><option>5+ Years</option></select>
+        <select name="work_mode"><option value="">Work Mode</option><option value="remote">Remote (WFH)</option><option value="hybrid">Hybrid</option><option value="onsite">On-site</option></select>
         <button type="submit">Search</button>
     </form>
 </div>
 
 <div class="container">
     <div class="main-sections">
-
         <div class="profile">
             <h2>System Profile</h2>
-
-            <div class="profile-field">
-                <span>Email Reference</span>
-                <p>{{ user[1] }}</p>
-            </div>
-
-            <div class="profile-field">
-                <span>Targeted Job Role</span>
-                <p style="text-transform: capitalize;">{{ user[2] }}</p>
-            </div>
-
-            <div class="profile-field">
-                <span>Preferred Location</span>
-                <p style="text-transform: capitalize;">{{ user[3] }}</p>
-            </div>
-
-            <div class="profile-field">
-                <span>Experience Vector</span>
-                <p>{{ user[4] }}</p>
-            </div>
-
-            <div class="profile-actions">
-                <a href="/" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
-                <a href="/edit-profile" class="back-btn"><i class="fa-solid fa-user-pen"></i> Edit Profile</a>
-                <a href="/logout" class="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout Session</a>
-            </div>
+            <div class="profile-field"><span>Email Reference</span><p>{{ user['email'] if user['email'] is defined else user[1] }}</p></div>
+            <div class="profile-field"><span>Targeted Job Role</span><p style="text-transform: capitalize;">{{ user['jobrole'] if user['jobrole'] is defined else user[2] }}</p></div>
+            <div class="profile-field"><span>Preferred Location</span><p style="text-transform: capitalize;">{{ user['location'] if user['location'] is defined else user[3] }}</p></div>
+            <div class="profile-actions"><a href="/" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Home</a><a href="/edit-profile" class="back-btn"><i class="fa-solid fa-user-pen"></i> Edit Profile</a><a href="/logout" class="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a></div>
         </div>
         
         <div class="right-section">
-            <h3 class="section-title"><i class="fa-solid fa-bolt"></i> Pre-Configured Live Gateways</h3>
-            
-            <div class="cards">
-
-                <div class="card brand-linkedin">
-                    <div class="card-brand-header">
-                        <div class="logo-wrapper"><i class="fa-brands fa-linkedin"></i></div>
-                        <h3>LinkedIn</h3>
-                    </div>
-                    <a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords={{ user[2] }}&location={{ user[3] }}">
-                        Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
-                    </a>
+            <!-- Your Saved Search Pipelines Segment -->
+            <div class="saved-searches-section" style="margin-bottom: 30px;">
+                <h3 class="section-title"><i class="fa-solid fa-bookmark" style="color: #10b981;"></i> Your Saved Search Pipelines</h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; background: var(--bg-surface); padding: 20px; border-radius: 16px; border: 1px solid var(--border);">
+                    {% if saved_queries %}
+                        {% for q in saved_queries %}
+                            <div style="background: var(--bg-body); padding: 8px 16px; border-radius: 30px; display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--border);">
+                                <a href="/search?role={{ q[1] }}&location={{ q[2] }}&experience={{ q[3] }}&work_mode={{ q[4] }}" style="text-decoration: none; color: var(--dark); font-weight: 600; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">
+                                    <span>🔍</span> {{ q[1] if q[1] else "Any Role" }} {% if q[2] %}<span style="color:var(--slate);">in</span> {{ q[2] }}{% endif %}
+                                </a>
+                                <a href="/delete-search/{{ q[0] }}" style="color: #ef4444; text-decoration: none; font-size: 12px; margin-left: 4px;"><i class="fa-solid fa-trash-can"></i></a>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color: var(--slate); font-size: 14px; font-weight: 500;"><i class="fa-solid fa-circle-info"></i> No saved pipelines yet.</p>
+                    {% endif %}
                 </div>
-
-                <div class="card brand-naukri">
-                    <div class="card-brand-header">
-                        <div class="logo-wrapper"><i class="fa-solid fa-paper-plane"></i></div>
-                        <h3>Naukri</h3>
-                    </div>
-                    <a target="_blank" href="https://www.naukri.com/{{ user[2]|replace(' ','-') }}-jobs-in-{{ user[3]|replace(' ','-') }}">
-                        Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
-                    </a>
-                </div>
-
-                <div class="card brand-indeed">
-                    <div class="card-brand-header">
-                        <div class="logo-wrapper"><i class="fa-solid fa-briefcase"></i></div>
-                        <h3>Indeed</h3>
-                    </div>
-                    <a target="_blank" href="https://in.indeed.com/jobs?q={{ user[2] }}+{{ user[3] }}">
-                        Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
-                    </a>
-                </div>
-
-                <div class="card brand-foundit">
-                    <div class="card-brand-header">
-                        <div class="logo-wrapper"><i class="fa-solid fa-bolt"></i></div>
-                        <h3>Foundit</h3>
-                    </div>
-                    <a target="_blank" href="https://www.foundit.in/srp/results?query={{ user[2] }}&locations={{ user[3] }}">
-                        Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
-                    </a>
-                </div>
-
-                <div class="card brand-shine">
-                    <div class="card-brand-header">
-                        <div class="logo-wrapper"><i class="fa-solid fa-star"></i></div>
-                        <h3>Shine</h3>
-                    </div>
-                    <a target="_blank" href="https://www.shine.com/job-search/{{ user[2] }}-jobs-in-{{ user[3] }}">
-                        Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
-                    </a>
-                </div>
-
-                <div class="card brand-freshersworld">
-                    <div class="card-brand-header">
-                        <div class="logo-wrapper"><i class="fa-solid fa-user-graduate"></i></div>
-                        <h3>Freshersworld</h3>
-                    </div>
-                    <a target="_blank" href="https://www.freshersworld.com/jobs/jobsearch/{{ user[2]|replace(' ','-') }}-jobs-in-{{ user[3]|replace(' ','-') }}">
-                        Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
-                    </a>
-                </div>
-
             </div>
-        </div>
 
+            <!-- Pre-Configured Live Gateways Segment -->
+            <h3 class="section-title"><i class="fa-solid fa-bolt"></i> Pre-Configured Live Gateways</h3>
+            <div class="cards" style="margin-bottom: 35px;">
+                <!-- Fixed structural attributes handles to bypass row index drift patterns -->
+                {% set u_role = user['jobrole'] if user['jobrole'] is defined else user[2] %}
+                {% set u_loc = user['location'] if user['location'] is defined else user[3] %}
+                <div class="card brand-linkedin"><div class="card-brand-header"><div class="logo-wrapper"><i class="fa-brands fa-linkedin"></i></div><h3>LinkedIn</h3></div><a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords={{ u_role }}&location={{ u_loc }}">Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a></div>
+                <div class="card brand-naukri"><div class="card-brand-header"><div class="logo-wrapper"><i class="fa-solid fa-paper-plane"></i></div><h3>Naukri</h3></div><a target="_blank" href="https://www.naukri.com/{{ u_role|replace(' ','-') }}-jobs-in-{{ u_loc|replace(' ','-') }}">Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a></div>
+                <div class="card brand-indeed"><div class="card-brand-header"><div class="logo-wrapper"><i class="fa-solid fa-briefcase"></i></div><h3>Indeed</h3></div><a target="_blank" href="https://in.indeed.com/jobs?q={{ u_role }}+{{ u_loc }}">Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a></div>
+                <div class="card brand-foundit"><div class="card-brand-header"><div class="logo-wrapper"><i class="fa-solid fa-bolt"></i></div><h3>Foundit</h3></div><a target="_blank" href="https://www.foundit.in/srp/results?query={{ u_role }}&locations={{ u_loc }}">Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a></div>
+                <div class="card brand-shine"><div class="card-brand-header"><div class="logo-wrapper"><i class="fa-solid fa-star"></i></div><h3>Shine</h3></div><a target="_blank" href="https://www.shine.com/job-search/{{ u_role }}-jobs-in-{{ u_loc }}">Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a></div>
+                <div class="card brand-freshersworld"><div class="card-brand-header"><div class="logo-wrapper"><i class="fa-solid fa-user-graduate"></i></div><h3>Freshersworld</h3></div><a target="_blank" href="https://www.freshersworld.com/jobs/jobsearch/{{ u_role|replace(' ','-') }}-jobs-in-{{ u_loc|replace(' ','-') }}">Open Jobs <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i></a></div>
+            </div>
+
+            <!-- 🌟 3. NEW FEATURE LAYER: KANBAN JOB APPLICATION TRACKER BOARD -->
+            <div class="kanban-section">
+                <h3 class="section-title"><i class="fa-solid fa-layer-group" style="color:#2563eb;"></i> Kanban Job Application Tracker</h3>
+                
+                <!-- Inline Add Application Interactive Form Layer -->
+                <form action="/add-application" method="POST" class="kanban-inline-form">
+                    <input type="text" name="company" placeholder="Company Name (e.g. Google)" required>
+                    <input type="text" name="role" placeholder="Job Role (e.g. Frontend Developer)" required>
+                    <select name="status">
+                        <option value="Applied">Applied Track</option>
+                        <option value="Interviewing">Interviewing</option>
+                        <option value="Offered">Offered (Hired)</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                    <button type="submit"><i class="fa-solid fa-plus"></i> Track Job</button>
+                </form>
+
+                <!-- 4 Column Pipeline Visual Kanban Node Grid -->
+                <div class="kanban-board-grid">
+                    
+                    <!-- COLUMN 1: APPLIED -->
+                    <div class="kanban-column col-applied">
+                        <div class="column-header">
+                            <span>Applied</span>
+                            <span class="column-badge" id="badge-applied">0</span>
+                        </div>
+                        <div class="column-cards-bucket" id="bucket-applied">
+                            <!-- Loop cards dynamically with hybrid formatting protection -->
+                            {% for app in applications %}
+                                {% set app_status = app['status'] if app['status'] is defined else app[3] %}
+                                {% if app_status == 'Applied' %}
+                                    {% set app_id = app['id'] if app['id'] is defined else app[0] %}
+                                    {% set app_comp = app['company'] if app['company'] is defined else app[1] %}
+                                    {% set app_role = app['role'] if app['role'] is defined else app[2] %}
+                                    <div class="kanban-card">
+                                        <h4>{{ app_comp }}</h4>
+                                        <p><i class="fa-solid fa-briefcase"></i> {{ app_role }}</p>
+                                        <div class="kanban-card-actions">
+                                            <div class="status-select-wrapper">
+                                                <select onchange="moveApplication('{{ app_id }}', this.value)">
+                                                    <option value="Applied" selected>Move to...</option>
+                                                    <option value="Interviewing">Interviewing</option>
+                                                    <option value="Offered">Offered</option>
+                                                    <option value="Rejected">Rejected</option>
+                                                </select>
+                                            </div>
+                                            <a href="/delete-application/{{ app_id }}" class="kanban-card-delete" title="Delete application log"><i class="fa-solid fa-trash"></i></a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- COLUMN 2: INTERVIEWING -->
+                    <div class="kanban-column col-interview">
+                        <div class="column-header">
+                            <span>Interviewing</span>
+                            <span class="column-badge" id="badge-interview">0</span>
+                        </div>
+                        <div class="column-cards-bucket" id="bucket-interview">
+                            {% for app in applications %}
+                                {% set app_status = app['status'] if app['status'] is defined else app[3] %}
+                                {% if app_status == 'Interviewing' %}
+                                    {% set app_id = app['id'] if app['id'] is defined else app[0] %}
+                                    {% set app_comp = app['company'] if app['company'] is defined else app[1] %}
+                                    {% set app_role = app['role'] if app['role'] is defined else app[2] %}
+                                    <div class="kanban-card">
+                                        <h4>{{ app_comp }}</h4>
+                                        <p><i class="fa-solid fa-briefcase"></i> {{ app_role }}</p>
+                                        <div class="kanban-card-actions">
+                                            <div class="status-select-wrapper">
+                                                <select onchange="moveApplication('{{ app_id }}', this.value)">
+                                                    <option value="Interviewing" selected>Move to...</option>
+                                                    <option value="Applied">Applied</option>
+                                                    <option value="Offered">Offered</option>
+                                                    <option value="Rejected">Rejected</option>
+                                                </select>
+                                            </div>
+                                            <a href="/delete-application/{{ app_id }}" class="kanban-card-delete" title="Delete application log"><i class="fa-solid fa-trash"></i></a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- COLUMN 3: OFFERED -->
+                    <div class="kanban-column col-offered">
+                        <div class="column-header">
+                            <span>Offered</span>
+                            <span class="column-badge" id="badge-offered">0</span>
+                        </div>
+                        <div class="column-cards-bucket" id="bucket-offered">
+                            {% for app in applications %}
+                                {% set app_status = app['status'] if app['status'] is defined else app[3] %}
+                                {% if app_status == 'Offered' %}
+                                    {% set app_id = app['id'] if app['id'] is defined else app[0] %}
+                                    {% set app_comp = app['company'] if app['company'] is defined else app[1] %}
+                                    {% set app_role = app['role'] if app['role'] is defined else app[2] %}
+                                    <div class="kanban-card">
+                                        <h4>{{ app_comp }}</h4>
+                                        <p><i class="fa-solid fa-briefcase"></i> {{ app_role }}</p>
+                                        <div class="kanban-card-actions">
+                                            <div class="status-select-wrapper">
+                                                <select onchange="moveApplication('{{ app_id }}', this.value)">
+                                                    <option value="Offered" selected>Move to...</option>
+                                                    <option value="Applied">Applied</option>
+                                                    <option value="Interviewing">Interviewing</option>
+                                                    <option value="Rejected">Rejected</option>
+                                                </select>
+                                            </div>
+                                            <a href="/delete-application/{{ app_id }}" class="kanban-card-delete" title="Delete application log"><i class="fa-solid fa-trash"></i></a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- COLUMN 4: REJECTED -->
+                    <div class="kanban-column col-rejected">
+                        <div class="column-header">
+                            <span>Rejected</span>
+                            <span class="column-badge" id="badge-rejected">0</span>
+                        </div>
+                        <div class="column-cards-bucket" id="bucket-rejected">
+                            {% for app in applications %}
+                                {% set app_status = app['status'] if app['status'] is defined else app[3] %}
+                                {% if app_status == 'Rejected' %}
+                                    {% set app_id = app['id'] if app['id'] is defined else app[0] %}
+                                    {% set app_comp = app['company'] if app['company'] is defined else app[1] %}
+                                    {% set app_role = app['role'] if app['role'] is defined else app[2] %}
+                                    <div class="kanban-card">
+                                        <h4>{{ app_comp }}</h4>
+                                        <p><i class="fa-solid fa-briefcase"></i> {{ app_role }}</p>
+                                        <div class="kanban-card-actions">
+                                            <div class="status-select-wrapper">
+                                                <select onchange="moveApplication('{{ app_id }}', this.value)">
+                                                    <option value="Rejected" selected>Move to...</option>
+                                                    <option value="Applied">Applied</option>
+                                                    <option value="Interviewing">Interviewing</option>
+                                                    <option value="Offered">Offered</option>
+                                                </select>
+                                            </div>
+                                            <a href="/delete-application/{{ app_id }}" class="kanban-card-delete" title="Delete application log"><i class="fa-solid fa-trash"></i></a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 
+<script>
+if (localStorage.getItem("theme") === "dark") { document.documentElement.setAttribute("data-theme", "dark"); }
+
+const locationsList = ["Remote (Worldwide)", "United States", "New York, USA", "San Francisco, USA", "Canada", "United Kingdom", "London, UK", "Germany", "India", "Hyderabad, India", "Bangalore, India", "Singapore", "Australia", "United Arab Emirates", "Dubai, UAE", "Saudi Arabia", "Qatar", "Kuwait", "Oman", "Bahrain"];
+
+function handleDashLocation(input) {
+    const val = input.value.trim().toLowerCase();
+    const suggestionsBox = document.getElementById("suggestions-dash");
+    if (!val) { suggestionsBox.innerHTML = ""; suggestionsBox.style.display = "none"; return; }
+    const filtered = locationsList.filter(loc => loc.toLowerCase().includes(val));
+    if (filtered.length > 0) {
+        suggestionsBox.innerHTML = filtered.map(loc => `<div class="suggestion-item" onclick="selectDash('${loc}')"><i class="fa-solid fa-location-dot" style="color:#2563eb; font-size:12px; margin-right:6px;"></i> ${loc}</div>`).join("");
+        suggestionsBox.style.display = "block";
+    } else { suggestionsBox.style.display = "none"; }
+}
+function selectDash(val) { document.getElementById("location-dash-input").value = val; document.getElementById("suggestions-dash").style.display = "none"; }
+
+document.addEventListener("click", function (e) {
+    if (e.target.id !== "location-dash-input") { document.getElementById("suggestions-dash").style.display = "none"; }
+});
+
+document.getElementById("dash-search-form").addEventListener("submit", function(event) {
+    const roleVal = document.getElementById("role-dash-input").value.trim();
+    const locVal = document.getElementById("location-dash-input").value.trim();
+    if (roleVal === "" && locVal === "") {
+        event.preventDefault(); alert("Please enter a Job Role or specify a Location to launch search operations! 🔍");
+    }
+});
+
+// 🌟 DYNAMIC KANBAN OPERATIONS CONTROLLER EXECUTOR
+function moveApplication(appId, newStatus) {
+    if (newStatus) {
+        // Direct transit gateway call to backend pipeline router matrix
+        window.location.href = `/update-application-status/${appId}/${newStatus}`;
+    }
+}
+
+// 🌟 Counter Badge Matrix Sync Engine
+function updateKanbanBadges() {
+    document.getElementById('badge-applied').innerText = document.getElementById('bucket-applied').children.length;
+    document.getElementById('badge-interview').innerText = document.getElementById('bucket-interview').children.length;
+    document.getElementById('badge-offered').innerText = document.getElementById('bucket-offered').children.length;
+    document.getElementById('badge-rejected').innerText = document.getElementById('bucket-rejected').children.length;
+}
+
+// Fire calculation metrics mapping initially on window mount setup
+window.onload = function() {
+    updateKanbanBadges();
+};
+</script>
 </body>
 </html>
