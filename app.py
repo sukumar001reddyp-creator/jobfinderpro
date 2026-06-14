@@ -44,7 +44,7 @@ def get_db_connection():
         conn.row_factory = sqlite3.Row
         return conn
 
-# Dynamic Placeholder (Postgres కి %s, SQLite కి ?)
+# Dynamic Placeholder (Postgres ki %s, SQLite ki ?)
 P = "%s" if DATABASE_URL else "?"
 
 def init_db():
@@ -72,6 +72,34 @@ def init_db():
             verified BOOLEAN DEFAULT FALSE
         )
         """)
+        # Saved Searches Table for Cloud
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS saved_searches (
+            id SERIAL PRIMARY KEY,
+            email VARCHAR(255),
+            role VARCHAR(255),
+            location VARCHAR(255),
+            experience VARCHAR(255),
+            work_mode VARCHAR(255)
+        )
+        """)
+        # Trending Skills Table for Cloud (Postgres)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS skill_trends (
+            skill VARCHAR(255) PRIMARY KEY,
+            search_count INTEGER DEFAULT 0
+        )
+        """)
+        # 🌟 Kanban Job Tracker Table for Cloud (Postgres)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS job_applications (
+            id SERIAL PRIMARY KEY,
+            email VARCHAR(255),
+            company VARCHAR(255),
+            role VARCHAR(255),
+            status VARCHAR(50) DEFAULT 'Applied'
+        )
+        """)
     else:
         # SQLite Tables
         cursor.execute("""
@@ -92,6 +120,46 @@ def init_db():
             verified INTEGER DEFAULT 0
         )
         """)
+        # Saved Searches Table for Local
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS saved_searches (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT,
+            role TEXT,
+            location TEXT,
+            experience TEXT,
+            work_mode TEXT
+        )
+        """)
+        # Trending Skills Table for Local (SQLite)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS skill_trends (
+            skill TEXT PRIMARY KEY,
+            search_count INTEGER DEFAULT 0
+        )
+        """)
+        # 🌟 Kanban Job Tracker Table for Local (SQLite)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS job_applications (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT,
+            company TEXT,
+            role TEXT,
+            status TEXT DEFAULT 'Applied'
+        )
+        """)
+        
+    # Seed Default Skills Data smoothly without crashing
+    default_skills = ['Python / Flask', 'React.js', 'Generative AI', 'SQL Databases', 'Cloud (AWS)', 'Video Editing']
+    for skill in default_skills:
+        try:
+            if DATABASE_URL:
+                cursor.execute("INSERT INTO skill_trends (skill, search_count) VALUES (%s, %s) ON CONFLICT (skill) DO NOTHING", (skill, 10))
+            else:
+                cursor.execute("INSERT OR IGNORE INTO skill_trends (skill, search_count) VALUES (?, ?)", (skill, 10))
+        except:
+            pass
+        
     conn.commit()
     cursor.close()
     conn.close()
@@ -132,7 +200,22 @@ def inject_user():
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    conn = get_db_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
+    
+    cursor.execute(f"SELECT skill, search_count FROM skill_trends ORDER BY search_count DESC LIMIT 6")
+    trends = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    if DATABASE_URL:
+        graph_labels = [row['skill'] for row in trends]
+        graph_data = [row['search_count'] for row in trends]
+    else:
+        graph_labels = [row[0] for row in trends]
+        graph_data = [row[1] for row in trends]
+        
+    return render_template("index.html", graph_labels=graph_labels, graph_data=graph_data)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -198,7 +281,7 @@ def login():
 
         if user:
             session.permanent = True
-            session["user"] = user["email"] if DATABASE_URL else user[2] # Handles sqlite row indexing if tuple
+            session["user"] = user["email"] if DATABASE_URL else user[2]
             return redirect(url_for("dashboard"))
 
         return "Invalid Login Credentials"
@@ -213,18 +296,36 @@ def dashboard():
 
     conn = get_db_connection()
     cursor = conn.cursor()
+    
+    # Profile information fetch
     cursor.execute(
         f"SELECT name, email, jobrole, location, experience FROM users WHERE email={P}",
         (session["user"],)
     )
     user = cursor.fetchone()
+    
+    # Saved search pipelines fetch
+    cursor.execute(
+        f"SELECT id, role, location, experience, work_mode FROM saved_searches WHERE email={P}",
+        (session["user"],)
+    )
+    saved_queries = cursor.fetchall()
+    cursor.close()
+    
+    # 🌟 Kanban Applications Pipeline Fetch Block (Cloud and Local Safe)
+    cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
+    cursor.execute(
+        f"SELECT id, company, role, status FROM job_applications WHERE email={P}",
+        (session["user"],)
+    )
+    applications = cursor.fetchall()
     cursor.close()
     conn.close()
 
     if user is None:
         return "User session expired or not found."
 
-    return render_template("dashboard.html", user=user)
+    return render_template("dashboard.html", user=user, saved_queries=saved_queries, applications=applications)
 
 
 @app.route("/edit-profile", methods=["GET", "POST"])
@@ -272,9 +373,36 @@ def search():
     role = request.args.get("role", "").strip()
     location = request.args.get("location", "").strip()
     experience = request.args.get("experience", "").strip()
+    work_mode = request.args.get("work_mode", "").strip()
 
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
+
+    if role:
+        matched = False
+        skills_to_check = ['Python', 'React', 'AI', 'SQL', 'AWS', 'Video']
+        skill_mapping = {
+            'Python': 'Python / Flask',
+            'React': 'React.js',
+            'AI': 'Generative AI',
+            'SQL': 'SQL Databases',
+            'AWS': 'Cloud (AWS)',
+            'Video': 'Video Editing'
+        }
+        
+        for s in skills_to_check:
+            if s.lower() in role.lower():
+                db_skill = skill_mapping[s]
+                cursor.execute(f"UPDATE skill_trends SET search_count = search_count + 1 WHERE skill = {P}", (db_skill,))
+                matched = True
+                break
+                
+        if not matched:
+            if DATABASE_URL:
+                cursor.execute("INSERT INTO skill_trends (skill, search_count) VALUES (%s, 1) ON CONFLICT(skill) DO UPDATE SET search_count = skill_trends.search_count + 1", (role.title(),))
+            else:
+                cursor.execute("INSERT INTO skill_trends (skill, search_count) VALUES (?, 1) ON CONFLICT(skill) DO UPDATE SET search_count = search_count + 1", (role.title(),))
+        conn.commit()
 
     like_op = "ILIKE" if DATABASE_URL else "LIKE"
     query = "SELECT name, email, jobrole, location, experience FROM users WHERE 1=1"
@@ -301,8 +429,106 @@ def search():
         role=role,
         location=location,
         experience=experience,
+        work_mode=work_mode,
         logged_user=logged_user
     )
+
+
+@app.route("/save-search", methods=["POST"])
+def save_search():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    
+    email = session["user"]
+    role = request.form.get("role", "").strip()
+    location = request.form.get("location", "").strip()
+    experience = request.form.get("experience", "").strip()
+    work_mode = request.form.get("work_mode", "").strip()
+
+    if role or location or work_mode:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            f"INSERT INTO saved_searches (email, role, location, experience, work_mode) VALUES ({P}, {P}, {P}, {P}, {P})",
+            (email, role, location, experience, work_mode)
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+        flash("Search pipeline saved successfully!", "success")
+    
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/delete-search/<int:search_id>")
+def delete_search(search_id):
+    if "user" not in session:
+        return redirect(url_for("login"))
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        f"DELETE FROM saved_searches WHERE id={P} AND email={P}", 
+        (search_id, session["user"])
+    )
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect(url_for("dashboard"))
+
+
+# 🌟 KANBAN OPERATIONAL CORE ROUTES BACKEND PIPELINE
+@app.route("/add-application", methods=["POST"])
+def add_application():
+    if "user" not in session: return redirect(url_for("login"))
+    company = request.form.get("company", "").strip()
+    role = request.form.get("role", "").strip()
+    status = request.form.get("status", "Applied")
+    
+    if company and role:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            f"INSERT INTO job_applications (email, company, role, status) VALUES ({P}, {P}, {P}, {P})",
+            (session["user"], company, role, status)
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+    return redirect(url_for("dashboard"))
+
+@app.route("/update-application-status/<int:app_id>/<string:new_status>")
+def update_application_status(app_id, new_status):
+    if "user" not in session: return redirect(url_for("login"))
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        f"UPDATE job_applications SET status={P} WHERE id={P} AND email={P}",
+        (new_status, app_id, session["user"])
+    )
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect(url_for("dashboard"))
+
+@app.route("/delete-application/<int:app_id>")
+def delete_application(app_id):
+    if "user" not in session: return redirect(url_for("login"))
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        f"DELETE FROM job_applications WHERE id={P} AND email={P}",
+        (app_id, session["user"])
+    )
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/ai-helper")
+def ai_helper():
+    return render_template("ai_helper.html")
 
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
@@ -448,6 +674,54 @@ def all_users():
 def logout():
     session.pop("user", None)
     return redirect(url_for("home"))
+
+
+@app.route('/resume-builder')
+def resume_builder():
+    logged_user = session.get('user')
+    user_data = None
+    
+    if logged_user:
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
+            cursor.execute(f"SELECT name, email, jobrole, location FROM users WHERE email={P}", (logged_user,))
+            row = cursor.fetchone()
+            cursor.close()
+            conn.close()
+            
+            if row:
+                if DATABASE_URL:
+                    user_data = (row['name'], row['email'], row['jobrole'], row['location'], '')
+                else:
+                    user_data = (row[0], row[1], row[2], row[3], '')
+        except Exception as e:
+            print(f"Database error but bypassing: {e}")
+            user_data = None
+            
+    return render_template('resume_builder.html', user_data=user_data, logged_user=logged_user)
+
+
+@app.route('/mock-interview')
+def mock_interview():
+    logged_user = session.get('user')
+    user_role = ""
+    
+    if logged_user:
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor(cursor_factory=RealDictCursor) if DATABASE_URL else conn.cursor()
+            cursor.execute(f"SELECT jobrole FROM users WHERE email={P}", (logged_user,))
+            row = cursor.fetchone()
+            cursor.close()
+            conn.close()
+            
+            if row:
+                user_role = row['jobrole'] if DATABASE_URL else row[0]
+        except:
+            pass
+            
+    return render_template('interview_bot.html', logged_user=logged_user, user_role=user_role)
 
 
 if __name__ == "__main__":
